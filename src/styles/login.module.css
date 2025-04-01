@@ -1,4 +1,33 @@
-.content{
-    background-color: black;
+/* styles/login.module.css */
+.content {
+  padding: 2.5rem; /* Matches py-10 */
 }
 
+/* For screens up to 1477px */
+@media (max-width: 1477px) {
+  .content {
+    width: 40%;
+    padding: 2rem;
+  }
+}
+
+/* For screens up to 1100px (hides images and adjusts content) */
+@media (max-width: 1100px) {
+  .content {
+    width: 80%;
+  }
+  .loginImage {
+    display: none; /* Hides first image (/l2.png) */
+  }
+  .logoImage {
+    display: none; /* Hides second image (/newl3.png) */
+  }
+}
+
+/* For smaller screens (mobile) */
+@media (max-width: 640px) {
+  .content {
+    width: 90%;
+    padding: 1.5rem;
+  }
+}

@@ -1,57 +1,7 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { IoEye } from "react-icons/io5";
-import { IoMdEyeOff } from "react-icons/io";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import { LoginSchema } from "@/_components/Validation";
-
-const page = () => {
-  const [eye, setEye] = useState(true);
-
-  // SEE PASSWORD**********************
-  const handleClick = () => {
-    setEye(!eye);
-  };
-
-  //FOR INPUT TEXT*****************
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
-
-  // Formik hook*************
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: {
-        email: input.email,
-        password: input.password,
-      },
-      validationSchema: LoginSchema,
-      onSubmit: (values) => {
-        console.log("Signin values", values);
-      },
-    });
-
-  return (
-    <div className="flex h-screen bg-[url(/background.png)] bg-cover flex-col justify-between gap-2">
-      <div className="firstimage">
-        <Image
-          src="/l2.png"
-          width={491}
-          className="absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]"
-          height={314}
-          alt="l2"
-        />
-      </div>
-
-      {/* MAIN CONTENT ****************** */}
-
-      <div className="content flex mt-5 flex-col items-center w-full">
-        <div className="flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]">
+<div className={` flex mt-5 flex-col items-center w-full`}>
+        <div
+          className={` ${styles.content} flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[60%]  md:w-[50%] lg:w-[33%] xl:w-[30%]`}
+        >
           <Image
             src="/logo.png"
             className="lg:w-[35%] md:w-[30%]"
@@ -74,76 +24,87 @@ const page = () => {
             <form action="" onSubmit={handleSubmit}>
               <div className="lg:flex lg:flex-col md:flex md:flex-col gap-8">
                 <div>
-                  <div className="border-b lg:w-[100%]   border-b-gray-200 lg:flex md:flex gap-2">
-                    <span>
+                  <div className="flex items-center gap-2">
+                    <div className="mt-3">
                       <Image
                         src="/email.png"
-                        alt="email"
-                        width={20}
+                        alt="Email Icon"
+                        width={16}
                         height={20}
+                        className="shrink-0" // Prevents the image from shrinking
                       />
-                    </span>
-                    <input
+                    </div>
+                    <TextField
+                      id="email"
                       type="email"
                       onChange={handleChange}
                       name="email"
                       onBlur={handleBlur}
                       value={values.email}
-                      className="placeholder-gray-400 outline-none"
-                      placeholder="Email"
+                      label="Email"
+                      className="w-full"
+                      variant="standard"
+                      sx={textFieldStyles}
+                      fullWidth
                     />
                   </div>
+
+                  {/* *******error********** */}
                   <div className="mt-2">
                     {errors.email && touched.email && (
-                      <div className="error  text-red-950 text-sm">
-                        {errors.email}
-                      </div>
+                      <div className="text-red-600 text-sm">{errors.email}</div>
                     )}
                   </div>
                 </div>
 
                 <div>
-
-                <div className="border-b border-b-gray-200 flex gap-2">
-                  <span>
-                    <Image src="/pass.png" alt="email" width={20} height={20} />
-                  </span>
-                  {eye ? (
-                      <input
-                      className="w-full placeholder-gray-400 focus:outline-none"
-                      name="password"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                      type="password"
-                      placeholder="Password"
-                    />
-                  ) : (
-                    <input
-                      className="w-full placeholder-gray-400 focus:outline-none"
-                      name="password"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.password}
-                      type="text"
-                      placeholder="Password"
-                      />
-                    )}
-                  <span onClick={handleClick} className="ml-5 cursor-pointer">
-                    {eye ? <IoMdEyeOff /> : <IoEye />}
-                  </span>
+                  <div className="   flex items-center gap-2">
+                    <div className="mt-3">
+                      <span>
+                        <Image
+                          src="/pass.png"
+                          alt="email"
+                          width={20}
+                          height={20}
+                        />
+                      </span>
                     </div>
-                <div className="mt-2"> 
 
-                {errors.password && touched.password && (
-                    <div className="error text-red-950 text-sm">
-                    {errors.password}
-                </div>
-                )}
-                </div>
+                    <TextField
+                      id="standard-basic"
+                      type={eye ? "password" : "text"}
+                      onChange={handleChange}
+                      name="password"
+                      onBlur={handleBlur}
+                      value={values.password}
+                      label="Password"
+                      className="w-[100%]"
+                      variant="standard"
+                      sx={textFieldStyles}
+                      fullWidth
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={handleClick} edge="end">
+                                {eye ? <IoMdEyeOff /> : <IoEye />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </div>
+                  <div className="mt-2">
+                    {errors.password && touched.password && (
+                      <div className="error text-red-600 text-sm">
+                        {errors.password}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="button mt-3">
-                  <button className="cursor-pointer w-full sm:w-[335px] p-3 hover:bg-[#ecdb76] font-bold bg-[#FCC827]">
+                  <button className="cursor-pointer w-full sm:w-[335px] p-3 duration-200 hover:bg-[#ecdb76] font-bold bg-[#FCC827]">
                     Login
                   </button>
                 </div>
@@ -157,19 +118,3 @@ const page = () => {
           </div>
         </div>
       </div>
-
-      {/* SECOND IMAGE ************** */}
-      <div className="secondimage">
-        <Image
-          src="/newl3.png"
-          width={520}
-          className="absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]"
-          height={350}
-          alt="l3"
-        />
-      </div>
-    </div>
-  );
-};
-
-export default page;

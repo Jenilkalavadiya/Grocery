@@ -8,7 +8,9 @@ import { IoMdEyeOff } from "react-icons/io";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { LoginSchema } from "@/_components/Validation";
-
+import { textFieldStyles } from "@/_components/textFieldStyles";
+import { TextField } from "@mui/material";
+import { FaArrowLeftLong } from "react-icons/fa6";
 const page = () => {
   //FOR INPUT TEXT*****************
   const [input, setInput] = useState({
@@ -44,6 +46,11 @@ const page = () => {
 
       <div className="content flex mt-5 flex-col items-center w-full">
         <div className="flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]">
+          <div className=" flex items-start justify-start w-[90%] ">
+            <span className="">
+              <FaArrowLeftLong />
+            </span>
+          </div>
           <h2 className="font-bold text-xl">Forgot Password?</h2>
           <p className="text-sm text-center  text-gray-500 mt-4">
             Don't worry! It happens.Please Enter address <br />
@@ -63,23 +70,28 @@ const page = () => {
             <form action="" onSubmit={handleSubmit}>
               <div className="lg:flex lg:flex-col md:flex md:flex-col gap-8">
                 <div>
-                  <div className="border-b lg:w-[100%]   border-b-gray-200 lg:flex md:flex gap-2">
-                    <span>
+                  <div className="flex items-center gap-2">
+                    <div className="mt-3">
                       <Image
                         src="/email.png"
-                        alt="email"
-                        width={20}
+                        alt="Email Icon"
+                        width={16}
                         height={20}
+                        className="shrink-0"
                       />
-                    </span>
-                    <input
+                    </div>
+                    <TextField
+                      id="email"
                       type="email"
                       onChange={handleChange}
                       name="email"
                       onBlur={handleBlur}
                       value={values.email}
-                      className="placeholder-gray-400 outline-none"
-                      placeholder="Email"
+                      label="Email"
+                      className="w-full"
+                      variant="standard"
+                      sx={textFieldStyles}
+                      fullWidth
                     />
                   </div>
                   <div className="mt-2">
