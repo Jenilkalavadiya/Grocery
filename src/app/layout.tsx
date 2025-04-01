@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono,Poppins } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,6 +24,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <style
+          // Inline styles for font variables to prevent hydration issues
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root {
+                --font-geist-sans: ${geistSans.style.fontFamily};
+                --font-geist-mono: ${geistMono.style.fontFamily};
+              }
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

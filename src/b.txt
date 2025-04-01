@@ -1,0 +1,85 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react"; // Import useState for managing state
+
+const sidebarItems = [
+  { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
+  { name: "Users", image: "./images/2.svg", link: "/users" },
+  { name: "Products", image: "./images/3.svg", link: "/products" },
+  { name: "Orders", image: "./images/4.svg", link: "/orders" },
+  { name: "Category", image: "./images/5.svg", link: "/category", subCategories: [
+      { name: "Subcategory 1", link: "/category/sub1" },
+      { name: "Subcategory 2", link: "/category/sub2" },
+      { name: "Subcategory 3", link: "/category/sub3" }
+    ] 
+  },
+  { name: "Brands", image: "./images/6.svg", link: "/brands" },
+  { name: "Coupen Management", image: "./images/7.svg", link: "/brands" },
+  { name: "Home Management", image: "./images/8.svg", link: "/brands" },
+  { name: "Pages", image: "./images/9.svg", link: "/brands" },
+  { name: "FAQ", image: "./images/10.svg", link: "/brands" },
+];
+
+const handleClick = () => {};
+
+export default function Sidebar() {
+  const [categoryOpen, setCategoryOpen] = useState(false); // State for toggling category dropdown
+
+  const toggleCategory = () => {
+    setCategoryOpen(!categoryOpen); // Toggle category dropdown visibility
+  };
+
+  return (
+    <div className="absolute top-0">
+      <div className="drawer lg:drawer-open">
+        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col items-center justify-center">
+          {/* Page content here */}
+          <label
+            htmlFor="my-drawer-2"
+            className="btn btn-primary drawer-button lg:hidden"
+          >
+            Open drawer
+          </label>
+        </div>
+        <div className="drawer-side">
+          <label
+            htmlFor="my-drawer-2"
+            aria-label="close sidebar"
+            className="drawer-overlay"
+          ></label>
+          <ul className="menu bg-[#202020] text-white min-h-full w-75 text-[20px] leading-12 !px-0">
+            {/* Sidebar content here */}
+            <li className="mb-10 mt-2">
+              <Link href="#" className="flex justify-center">
+                <img src="./Path 410.png" alt="" />
+              </Link>
+            </li>
+            {sidebarItems.map((item, index) => (
+              <li className="flex flex-col" key={index}>
+                <div className="flex flex-row">
+                  <img src={item.image} alt="" className="ml-3" />
+                  <Link onClick={item.name === "Category" ? toggleCategory : handleClick} href={item.link}>
+                    {item.name}
+                  </Link>
+                </div>
+                {/* If the current item is "Category" and the dropdown is open, render subcategories */}
+                {item.name === "Category" && categoryOpen && item.subCategories && (
+                  <ul className="ml-6">
+                    {item.subCategories.map((sub, subIndex) => (
+                      <li key={subIndex}>
+                        <Link href={sub.link}>{sub.name}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {/* Line separator */}
+                <div className="border-b border-b-gray-[#878F92] w-full overflow-hidden !p-0"></div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
