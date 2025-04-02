@@ -61,7 +61,7 @@ const Page = () => {
         >
           <Image
             src="/logo.png"
-            className="lg:w-[35%] md:w-[30%]"
+            className={` ${styles.logo} lg:w-[35%] md:w-[30%]`}
             width={250}
             height={60}
             alt="logo"
@@ -70,7 +70,7 @@ const Page = () => {
           <div className="logo flex mt-8 items-center justify-center">
             <Image
               src="/l1.png"
-              className="w-[60%] sm:w-[50%] md:w-[40%] lg:w-[35%]"
+              className={` ${styles.login} w-[60%] sm:w-[50%] md:w-[40%] lg:w-[35%]`}
               width={215}
               height={115}
               alt="login"

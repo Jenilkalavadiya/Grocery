@@ -48,7 +48,10 @@ const page = () => {
         <div className="flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]">
           <div className=" flex items-start justify-start w-[90%] ">
             <span className="">
-              <FaArrowLeftLong />
+              <Link href="/login" className="cursor-pointer">
+                {" "}
+                <FaArrowLeftLong />
+              </Link>
             </span>
           </div>
           <h2 className="font-bold text-xl">Forgot Password?</h2>
