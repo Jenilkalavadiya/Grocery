@@ -13,7 +13,8 @@ import IconButton from "@mui/material/IconButton";
 import { TextField } from "@mui/material";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
-
+import axios from "axios";
+import { toast } from "react-toastify";
 const Page = () => {
   const [eye, setEye] = useState(true);
 
@@ -36,8 +37,23 @@ const Page = () => {
         password: input.password,
       },
       validationSchema: LoginSchema,
-      onSubmit: (values) => {
-        console.log("Signin values", values);
+      onSubmit: async (values) => {
+        try {
+          const res = await axios.post(
+            "http://192.168.2.181:3000/admin/login",
+            values,
+            {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            }
+          );
+          console.log("Signin values", await res.data);
+          toast.success(res?.data?.data);
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response.data.status);
+        }
       },
     });
 
@@ -61,7 +77,7 @@ const Page = () => {
         >
           <Image
             src="/logo.png"
-            className={` ${styles.logo} lg:w-[35%] md:w-[30%]`}
+            className={` ${styles.logo} lg:w-[40%] md:w-[30%]`}
             width={250}
             height={60}
             alt="logo"
@@ -70,7 +86,7 @@ const Page = () => {
           <div className="logo flex mt-8 items-center justify-center">
             <Image
               src="/l1.png"
-              className={` ${styles.login} w-[60%] sm:w-[50%] md:w-[40%] lg:w-[35%]`}
+              className={` ${styles.login}   md:w-[40%] lg:w-[40%]`}
               width={215}
               height={115}
               alt="login"

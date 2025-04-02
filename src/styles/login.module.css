@@ -33,4 +33,28 @@
   .logo {
     width: 40%;
   }
+  .login {
+    width: 40%;
+  }
+}
+@media (max-width: 768) {
+  .login {
+    width: 40%;
+  }
+}
+/* 768-640 */
+
+@media (max-width: 1550px) {
+  .loginImage {
+    width: 25%;
+    position: absolute;
+    top: 390px;
+    left: 0;
+  }
+  .logoImage {
+    width: 25%;
+    position: absolute;
+    top: 450;
+    right: 3;
+  }
 }
