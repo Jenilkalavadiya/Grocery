@@ -61,7 +61,12 @@ export default function Sidebar({}) {
                 className="flex flex-row gap-4 border-b border-b-[#353737] "
                 key={index}
               >
-                <img src={item.image} alt="" className="ml-5" />
+                <img
+                  onClick={handleClick}
+                  className="ml-5"
+                  src={item.image}
+                  alt=""
+                />
                 <Link
                   onClick={handleClick}
                   href={item.link}
