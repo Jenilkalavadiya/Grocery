@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 
+import { ToastContainer } from "react-toastify";
+// import { usePathname } from "next/navigation";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,16 +26,29 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const pathname = usePathname();
+  // const header = pathname == "/login" || pathname == "/forgot" ? false : true;
   return (
     <html lang="en">
+      <head>
+        <style
+          // Inline styles for font variables to prevent hydration issues
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root {
+                --font-geist-sans: ${geistSans.style.fontFamily};
+                --font-geist-mono: ${geistMono.style.fontFamily};
+              }
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <div className="mt-[80px]">{children}</div>
-        </div>
+        <div>{children}</div>
+        <ToastContainer />
+      
       </body>
     </html>
   );
