@@ -56,6 +56,7 @@ const Page = () => {
           const data = await res?.data?.data;
           console.log("data", data);
           localStorage.setItem("loginuser", JSON.stringify(data?.email));
+          localStorage.setItem("userName", JSON.stringify(data?.name));
           localStorage.setItem("loginjwt", data?.token);
           // toast.error(res?.data?.message);
 
