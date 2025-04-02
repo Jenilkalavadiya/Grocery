@@ -16,57 +16,85 @@ import styles from "@/styles/login.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-const Page = () => {
-  const [eye, setEye] = useState(true);
+import jwtDecode from "jwt-decode";
 
-  // SEE PASSWORD
-  const handleClick = () => {
-    setEye(!eye);
-  };
+// Helper functions for token management
+const checkIfTokenExpired = (token) => {
+  const decodedToken = jwtDecode(token);
+  const currentTime = Date.now() / 1000; // Current time in seconds
+  return decodedToken.exp < currentTime;
+};
 
-  // FOR INPUT TEXT
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
+const refreshAccessToken = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
 
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-  // Formik hook
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: {
-        email: input.email,
-        password: input.password,
-      },
-      validationSchema: LoginSchema,
-      onSubmit: async (values) => {
-        try {
-          const res = await axios.post(
-            "http://192.168.2.181:3000/admin/login",
-            values,
-            {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            }
-          );
-          // console.log("Signin values", await res.data);
-          toast.success(res?.data?.data?.msg);
-          const data = await res?.data?.data;
-          console.log("data", data);
-          localStorage.setItem("loginuser", JSON.stringify(data?.email));
-          localStorage.setItem("userName", JSON.stringify(data?.name));
-          localStorage.setItem("loginjwt", data?.token);
-          // toast.error(res?.data?.message);
-
-          router.push('/dashboard')
-        } catch (error) {
-          console.log("error", error);
-          toast.error(error?.message);
-        }
+  try {
+    const response = await axios.post("http://localhost:3000/admin/refresh_token", {}, {
+      headers: {
+        refresh_token: refreshToken,
       },
     });
+
+    const newAccessToken = response?.data?.data?.accessToken;
+    localStorage.setItem("loginjwt", newAccessToken); // Save new access token
+    return newAccessToken;
+  } catch (error) {
+    console.error("Error refreshing access token", error);
+    throw error;
+  }
+};
+
+const getAccessToken = async () => {
+  let accessToken = localStorage.getItem("loginjwt");
+  if (accessToken && checkIfTokenExpired(accessToken)) {
+    accessToken = await refreshAccessToken(); // Refresh if token expired
+  }
+  return accessToken;
+};
+
+const Page = () => {
+  const [eye, setEye] = useState(true);
+  const [input, setInput] = useState({ email: "", password: "" });
+  const router = useRouter();
+
+  const handleClick = () => setEye(!eye);
+
+  // Formik hook for form handling
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+    initialValues: { email: input.email, password: input.password },
+    validationSchema: LoginSchema,
+    onSubmit: async (values) => {
+      try {
+        // Get access token before submitting login request
+        const accessToken = await getAccessToken();
+
+        const res = await axios.post(
+          "http://192.168.2.181:3000/admin/login",
+          values,
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": `Bearer ${accessToken}`, // Add the access token here
+            },
+          }
+        );
+
+        toast.success(res?.data?.data?.msg);
+        const data = res?.data?.data;
+
+        // Store tokens in localStorage
+        localStorage.setItem("loginuser", JSON.stringify(data?.email));
+        localStorage.setItem("userName", JSON.stringify(data?.name));
+        localStorage.setItem("loginjwt", data?.token);
+        localStorage.setItem("refreshToken", data?.refreshToken); // Store refresh token
+
+        router.push('/dashboard'); // Redirect to dashboard after successful login
+      } catch (error) {
+        console.error("Error logging in", error);
+        toast.error(error?.message || "Login failed.");
+      }
+    },
+  });
 
   return (
     <div className="flex min-h-screen bg-[url(/background.png)] bg-cover flex-col justify-between gap-4 px-4 py-6">
@@ -75,8 +103,7 @@ const Page = () => {
         <Image
           src="/l2.png"
           width={491}
-          // className={`w-[50%] absolute bottom-0 left-0 sm:w-[40%] md:w-[35%] lg:w-[33%] ${styles.loginImage}`}
-          className={` ${styles.loginImage} absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
+          className={`${styles.loginImage} absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
           height={314}
           alt="l2"
         />
@@ -89,7 +116,7 @@ const Page = () => {
         >
           <Image
             src="/logo.png"
-            className={` ${styles.logo} lg:w-[40%] md:w-[30%]`}
+            className={`${styles.logo} lg:w-[40%] md:w-[30%]`}
             width={250}
             height={60}
             alt="logo"
@@ -98,7 +125,7 @@ const Page = () => {
           <div className="logo flex mt-8 items-center justify-center">
             <Image
               src="/l1.png"
-              className={` ${styles.login}   md:w-[40%] lg:w-[40%]`}
+              className={`${styles.login} md:w-[40%] lg:w-[40%]`}
               width={215}
               height={115}
               alt="login"
@@ -146,7 +173,7 @@ const Page = () => {
                       <span>
                         <Image
                           src="/pass.png"
-                          alt="email"
+                          alt="password"
                           width={20}
                           height={20}
                         />
@@ -179,9 +206,7 @@ const Page = () => {
                   </div>
                   <div className="mt-2">
                     {errors.password && touched.password && (
-                      <div className="text-red-600 text-sm">
-                        {errors.password}
-                      </div>
+                      <div className="text-red-600 text-sm">{errors.password}</div>
                     )}
                   </div>
                 </div>
@@ -207,7 +232,6 @@ const Page = () => {
         <Image
           src="/newl3.png"
           width={520}
-          // className={`w-[50%] absolute bottom-0 right-0 sm:w-[40%] md:w-[35%] lg:w-[35%] ${styles.logoImage}`}
           className={`${styles.logoImage} absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]`}
           height={350}
           alt="l3"

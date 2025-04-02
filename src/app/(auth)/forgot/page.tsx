@@ -9,11 +9,18 @@ import { textFieldStyles } from "@/_components/textFieldStyles";
 import { TextField } from "@mui/material";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from "axios";
+import styles from "@/styles/login.module.css";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
 const page = () => {
   //FOR INPUT TEXT*****************
   const [input, setInput] = useState({
     email: "",
   });
+  const [otp, setOtp] = useState("");
+
+  const router = useRouter();
 
   // Formik hook*************
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -33,8 +40,14 @@ const page = () => {
               },
             }
           );
-          console.log("Signin values", await res.data);
-          // toast.success(res?.data?.data);
+          console.log("Signin values", await res?.data);
+          const data = await res?.data?.data;
+          console.log("OTP", await data?.otp);
+
+          setOtp(await data?.otp);
+          localStorage.setItem("otp", await data?.otp);
+          toast.success(res?.data?.message);
+          router.push("/verifyotp");
         } catch (error) {
           console.log(error);
           // toast.error(error.response.data.status);
@@ -48,7 +61,7 @@ const page = () => {
         <Image
           src="/l2.png"
           width={491}
-          className="absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]"
+          className={` ${styles.loginImage} absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
           height={314}
           alt="l2"
         />
@@ -57,16 +70,19 @@ const page = () => {
       {/* MAIN CONTENT ****************** */}
 
       <div className="content flex mt-5 flex-col items-center w-full">
-        <div className="flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]">
+        <div
+          className={`flex ${styles.content} bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]`}
+        >
           <div className=" flex items-start justify-start w-[90%] ">
-            <span className="">
-              <Link href="/login" className="cursor-pointer ">
-                {" "}
-                <FaArrowLeftLong />
-              </Link>
-            </span>
+            <div className="flex items-center ">
+              <span className="">
+                <Link href="/" className="cursor-pointer ">
+                  <FaArrowLeftLong />
+                </Link>
+              </span>
+              <h2 className="font-bold text-xl ml-22">Forgot Password?</h2>
+            </div>
           </div>
-          <h2 className="font-bold text-xl ">Forgot Password?</h2>
           <p className="text-sm text-center  text-gray-500 mt-4">
             Don't worry! It happens.Please Enter address <br />
             associated with your account.
@@ -92,7 +108,7 @@ const page = () => {
                         alt="Email Icon"
                         width={16}
                         height={20}
-                        className="shrink-0"
+                        className={` ${styles.login}  shrink-0`}
                       />
                     </div>
                     <TextField
@@ -139,7 +155,7 @@ const page = () => {
         <Image
           src="/newl3.png"
           width={520}
-          className="absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]"
+          className={`${styles.logoImage} absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]`}
           height={350}
           alt="l3"
         />

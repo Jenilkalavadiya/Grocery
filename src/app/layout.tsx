@@ -26,29 +26,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const pathname = usePathname();
-  // const header = pathname == "/login" || pathname == "/forgot" ? false : true;
   return (
     <html lang="en">
-      <head>
-        <style
-          // Inline styles for font variables to prevent hydration issues
-          dangerouslySetInnerHTML={{
-            __html: `
-              :root {
-                --font-geist-sans: ${geistSans.style.fontFamily};
-                --font-geist-mono: ${geistMono.style.fontFamily};
-              }
-            `,
-          }}
-        />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
         <div>{children}</div>
         <ToastContainer />
-      
       </body>
     </html>
   );

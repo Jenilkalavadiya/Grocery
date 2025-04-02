@@ -1,9 +1,12 @@
+"use client";
 import React from "react";
 
 function Header() {
+  const userName = JSON.parse(localStorage.getItem("userName") || "");
+
   return (
     <div className="flex justify-end">
-      <div className="navbar fixed bg-white shadow-sm w-full h-[80px]">
+      <div className="navbar fixed bg-white shadow-lg  w-full h-[80px]">
         <div className="flex-1"></div>
         <div className="flex gap-2">
           <div className="dropdown dropdown-end">
@@ -19,7 +22,7 @@ function Header() {
                 />
               </div>
             </div>
-            <span className="text-lg text-black p-2">Admin</span>
+            <span className="text-lg text-black p-2">{userName}</span>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
