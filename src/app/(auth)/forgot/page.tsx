@@ -29,7 +29,7 @@ const Page = () => {
       onSubmit: async (values) => {
         try {
           const res = await axios.post(
-            "http://192.168.2.181:3000/admin/forgot_password",
+            `${process.env.NEXT_PUBLIC_BASEAPI}/forgot_password`,
             values,
             {
               headers: {
@@ -66,7 +66,7 @@ const Page = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-col items-center w-full z-10">
+      <div className="flex flex-col mt-30 items-center w-full z-10">
         <div
           className={`${styles.content} bg-white shadow-2xl flex flex-col items-center text-black`}
         >
@@ -99,12 +99,15 @@ const Page = () => {
               <div className="flex flex-col gap-8">
                 <div>
                   <div className="flex items-center gap-2">
-                    <Image
-                      src="/email.png"
-                      alt="Email Icon"
-                      width={16}
-                      height={20}
-                    />
+                    <div className="mt-3">
+                      <Image
+                        src="/email.png"
+                        alt="Email Icon"
+                        width={16}
+                        height={20}
+                        className="shrink-0"
+                      />
+                    </div>
                     <TextField
                       id="email"
                       type="email"

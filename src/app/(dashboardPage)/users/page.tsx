@@ -1,15 +1,14 @@
 "use client";
 
-import { filledInputClasses } from "@mui/material/FilledInput";
+
 import { inputBaseClasses } from "@mui/material/InputBase";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import { textFieldStyles } from "@/_components/textFieldStyles";
-// import { PageContainer } from "@toolpad/core/PageContainer";
-// import { AppProvider } from "@toolpad/core/AppProvider";
+
 import { useDemoRouter } from "@toolpad/core/internal";
 import { useTheme } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
+
 
 export default function users() {
   const NAVIGATION = [
@@ -27,6 +26,9 @@ export default function users() {
         <div>
           <h2 className="text-2xl ml-4 font-bold">Users</h2>
         </div>
+
+    {/* SEARCH USERS INPUT ***************** */}
+
 
         <div className="searchfiled mr-4 ">
           <TextField
@@ -61,6 +63,8 @@ export default function users() {
         </div>
       </div>
 
+      {/* USERS TABLE************  */}
+            
       
     </div>
   );

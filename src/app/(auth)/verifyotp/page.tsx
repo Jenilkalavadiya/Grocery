@@ -3,13 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useFormik } from "formik";
-import { ForgotSchema } from "@/_components/Validation";
-import { textFieldStyles } from "@/_components/textFieldStyles";
-import { TextField } from "@mui/material";
+
 import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from "axios";
-import styles from "@/styles/login.module.css";
+// import styles from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -18,7 +15,7 @@ const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
   const router = useRouter();
 
-  const handleVerifyOtp = async (e) => {
+  const handleVerifyOtp = async (e: any) => {
     e.preventDefault();
 
     if (!otp) {
@@ -28,7 +25,7 @@ const VerifyOtpPage = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.2.181:3000/admin/otp-verify",
+        `${process.env.NEXT_PUBLIC_BASEAPI}/otp-verify`,
         new URLSearchParams({ otp }),
         {
           headers: {
@@ -41,7 +38,7 @@ const VerifyOtpPage = () => {
 
       if (response?.data?.code === 1) {
         toast.success("OTP verified successfully!");
-        //   router.push("/resetpassword");
+        router.push("/resetpassword");
       } else {
         toast.error(response?.data?.message || "OTP verification failed.");
       }
@@ -56,7 +53,7 @@ const VerifyOtpPage = () => {
         <Image
           src="/l2.png"
           width={491}
-          className={` ${styles.loginImage} absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
+          className={`  absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
           height={314}
           alt="l2"
         />
@@ -64,7 +61,7 @@ const VerifyOtpPage = () => {
 
       <div className="content flex mt-5 flex-col items-center w-full">
         <div
-          className={`flex ${styles.content} bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]`}
+          className={`flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]`}
         >
           <div className=" flex items-start justify-start w-[90%] ">
             <div className="flex items-center ">
@@ -73,7 +70,7 @@ const VerifyOtpPage = () => {
                   <FaArrowLeftLong />
                 </Link>
               </span>
-              <h2 className="font-bold text-xl ml-28">Verify Otp</h2>
+              <h2 className="font-bold text-xl ml-38">Verify Otp</h2>
             </div>
           </div>
           <p className="text-sm text-center  text-gray-500 mt-4">
@@ -94,7 +91,7 @@ const VerifyOtpPage = () => {
                     renderInput={(props) => (
                       <input
                         {...props}
-                        className="w-16 h-16  text-2xl text-center border-2 border-[#FCC827] rounded-md focus:outline-none focus:border-[#ecdb76] transition-all duration-300"
+                        className="w-100   h-16 text-4xl text-center border-2 border-[#FCC827] rounded-md focus:outline-none focus:border-[#ecdb76] transition-all duration-300"
                       />
                     )}
                   />
@@ -120,7 +117,7 @@ const VerifyOtpPage = () => {
         <Image
           src="/newl3.png"
           width={520}
-          className={`${styles.logoImage} absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]`}
+          className={`absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]`}
           height={350}
           alt="l3"
         />

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
+
 
 import { ToastContainer } from "react-toastify";
-// import { usePathname } from "next/navigation";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

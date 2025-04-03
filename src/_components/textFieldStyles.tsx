@@ -5,6 +5,7 @@ import { IoEye } from "react-icons/io5";
 // styles/textfieldStyles.js
 export const textFieldStyles = {
     width: '100%',
+    
     '& .MuiInputLabel-root.Mui-focused': {
       color: 'gray', // Styling the label when the TextField is focused
     },

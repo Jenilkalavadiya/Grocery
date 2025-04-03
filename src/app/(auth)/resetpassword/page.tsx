@@ -1,49 +1,46 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { useFormik } from "formik";
-import { LoginSchema } from "@/_components/Validation";
+import { ResetPasswordSchema } from "@/_components/Validation";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { _post } from "@/api/ApiCall";
+import { toast } from "react-toastify";
+import Link from "next/link";
 
-const Page = () => {
+const ResetPassword = () => {
   const [eye, setEye] = useState(true);
   const router = useRouter();
-
   const handleClick = () => setEye(!eye);
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
-      initialValues: { email: "", password: "" },
-      validationSchema: LoginSchema,
+      initialValues: { password: "", confirmPassword: "" },
+      validationSchema: ResetPasswordSchema,
       onSubmit: async (values) => {
         try {
-          // API CALL *************
-
-          const res = await _post("/login", values);
-
-          console.log("res", res);
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_BASEAPI}/reset-password`,
+            values,
+            {
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            }
+          );
 
           if (res?.status === 200) {
-            toast.success(res?.data?.data?.msg);
-            const data = res?.data?.data;
-            localStorage.setItem("loginuser", JSON.stringify(data?.email));
-            localStorage.setItem("userName", JSON.stringify(data?.name));
-            localStorage.setItem("loginjwt", data?.token);
-            localStorage.setItem("refreshjwt", data?.refresh_token);
-            router.push("/dashboard");
+            toast.success(res?.data?.data);
+            router.push("/");
           } else {
-            toast.error(res?.data?.message);
+            toast.error("their is something error");
           }
+
+          console.log("resetPassword", res);
         } catch (error) {
           console.log("error", error);
         }
@@ -64,57 +61,55 @@ const Page = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-col items-center w-full z-10">
+      <div className="flex flex-col mt-32 items-center w-full z-10">
         <div
           className={`${styles.content} bg-white shadow-2xl flex flex-col items-center text-black`}
         >
-          <Image
-            src="/logo.png"
-            className={`${styles.logo}`}
-            width={250}
-            height={60}
-            alt="logo"
-          />
-          <div className="flex mt-8 items-center justify-center">
-            <Image
-              src="/l1.png"
-              className={`${styles.login}`}
-              width={215}
-              height={115}
-              alt="login"
-            />
-          </div>
+          <h2 className="font-bold text-2xl ">Reset Password</h2>
 
           <div className="w-full max-w-md px-4 mt-12">
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-8">
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center  gap-2">
                     <div className="mt-3">
-                      <Image
-                        src="/email.png"
-                        alt="Email Icon"
-                        width={16}
-                        height={20}
-                        className="shrink-0"
-                      />
+                      <span>
+                        <Image
+                          src="/pass.png"
+                          alt="password"
+                          width={20}
+                          height={20}
+                        />
+                      </span>
                     </div>
                     <TextField
-                      id="email"
-                      type="email"
+                      id="password"
+                      className="mt-3"
+                      type={eye ? "password" : "text"}
                       onChange={handleChange}
-                      name="email"
+                      name="password"
                       onBlur={handleBlur}
-                      value={values.email}
-                      label="Email"
+                      value={values.password}
+                      label="New Password"
                       variant="standard"
                       sx={textFieldStyles}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={handleClick} edge="end">
+                                {eye ? <IoMdEyeOff /> : <IoEye />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
                       fullWidth
                     />
                   </div>
-                  {errors.email && touched.email && (
+                  {errors.password && touched.password && (
                     <div className="text-red-600 text-sm mt-2">
-                      {errors.email}
+                      {errors.password}
                     </div>
                   )}
                 </div>
@@ -132,32 +127,21 @@ const Page = () => {
                       </span>
                     </div>
                     <TextField
-                      id="password"
-                      type={eye ? "password" : "text"}
+                      id="confirmPassword"
+                      type="password"
                       onChange={handleChange}
-                      name="password"
+                      name="confirmPassword"
                       onBlur={handleBlur}
-                      value={values.password}
-                      label="Password"
+                      value={values.confirmPassword}
+                      label="Confirm Password"
                       variant="standard"
                       sx={textFieldStyles}
                       fullWidth
-                      slotProps={{
-                        input: {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton onClick={handleClick} edge="end">
-                                {eye ? <IoMdEyeOff /> : <IoEye />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        },
-                      }}
                     />
                   </div>
-                  {errors.password && touched.password && (
+                  {errors.confirmPassword && touched.confirmPassword && (
                     <div className="text-red-600 text-sm mt-2">
-                      {errors.password}
+                      {errors.confirmPassword}
                     </div>
                   )}
                 </div>
@@ -166,10 +150,10 @@ const Page = () => {
                   type="submit"
                   className="w-full cursor-pointer p-3 font-bold bg-[#FCC827] hover:bg-[#ecdb76] duration-200"
                 >
-                  Login
+                  Reset Password
                 </button>
-                <div className="text-center mt-4">
-                  <Link href="/forgot">Forgot Password?</Link>
+                <div className="text-center ">
+                  <Link href="/">Login</Link>
                 </div>
               </div>
             </form>
@@ -191,4 +175,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ResetPassword;
