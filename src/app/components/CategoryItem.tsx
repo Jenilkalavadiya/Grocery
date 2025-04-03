@@ -23,7 +23,7 @@ const CategoryItem = ({ category }:any) => {
               Actions
             </th>
           </tr>
-        </thead>
+        </thead>  
         <tbody>
           {category?.map((item: any) => (
             <tr key={item.id}

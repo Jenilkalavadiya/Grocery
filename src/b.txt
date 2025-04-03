@@ -1,284 +1,104 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { IoEye } from "react-icons/io5";
-import { IoMdEyeOff } from "react-icons/io";
-import { useFormik } from "formik";
-import { LoginSchema } from "@/_components/Validation";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import { TextField } from "@mui/material";
-import { textFieldStyles } from "@/_components/textFieldStyles";
-import styles from "@/styles/login.module.css";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import jwtDecode from "jwt-decode"; // for decoding JWT
 
-const Page = () => {
-  const [eye, setEye] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";
 
-  // SEE PASSWORD TOGGLE
-  const handleClick = () => {
-    setEye(!eye);
-  };
+// Create axios instance with base configuration
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    language: "en",
+    "Content-Type": "application/x-www-form-urlencoded",
+  },
+});
 
-  // FORM STATE
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
+// Dynamic API call function
+const apiCall = async ({
+  method, // No default method
+  endpoint,
+  data = null,
+  params = null,
+  customHeaders = {},
+}) => {
+  // Check if method is provided
+  if (!method) {
+    throw new Error("HTTP method is required");
+  }
 
-  // FORM SUBMISSION HANDLER
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: {
-      email: input.email,
-      password: input.password,
-    },
-    validationSchema: LoginSchema,
-    onSubmit: async (values) => {
-      try {
-        const res = await axios.post("http://localhost:3000/admin/login", values, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        });
+  // Get JWT tokens from localStorage at the time of the request
+  const jwt = localStorage.getItem("loginjwt");
+  const refresh = localStorage.getItem("refreshjwt");
 
-        // Save tokens to localStorage
-        toast.success(res?.data?.data?.msg);
-        const data = res?.data?.data;
+  try {
+    // Configure the request
+    const config = {
+      method: method.toLowerCase(),
+      url: endpoint,
+      headers: {
+        ...apiClient.defaults.headers,
+        Authorizations: jwt ? `${jwt}` : undefined,
+        refresh_token: refresh || undefined,
+        ...customHeaders,
+      },
+      ...(data && { data }), // Add data if provided (for POST/PUT)
+      ...(params && { params }), // Add query params if provided (for GET)
+    };
 
-        localStorage.setItem("loginjwt", data?.token); // Access token
-        localStorage.setItem("refreshToken", data?.refreshToken); // Refresh token
-        localStorage.setItem("loginuser", JSON.stringify(data?.email));
-        localStorage.setItem("userName", JSON.stringify(data?.name));
+    // Make the API call
+    const response = await apiClient(config);
 
-        router.push("/dashboard");
-      } catch (error) {
-        console.log("error", error);
-        toast.error(error?.message || "Login failed");
-      }
-    },
-  });
+    // Return the response data
+    return {
+      success: true,
+      data: response.data,
+      status: response.status,
+    };
+  } catch (error) {
+    // Handle errors
+    console.error(`API ${method} request failed:`, error);
 
-  // REFRESH TOKEN FUNCTION
-  const refreshAccessToken = async () => {
-    try {
-      const refreshToken = localStorage.getItem("refreshToken");
-
-      // Send the refresh token to get a new access token
-      const res = await axios.post(
-        "http://localhost:3000/admin/refresh_token",
-        {},
-        {
-          headers: {
-            refresh_token: refreshToken, // Send the refresh token in the header
-          },
-        }
-      );
-
-      if (res?.data?.data?.accessToken) {
-        // Store the new access token in localStorage
-        localStorage.setItem("loginjwt", res?.data?.data?.accessToken);
-        return res?.data?.data?.accessToken;
-      } else {
-        throw new Error("Failed to refresh token");
-      }
-    } catch (error) {
-      console.log("Error refreshing token", error);
-      localStorage.removeItem("loginjwt");
-      localStorage.removeItem("refreshToken");
-      router.push("/login");
-    }
-  };
-
-  // Axios Request Interceptor for Token Handling
-  axios.interceptors.request.use(
-    async (config) => {
-      let accessToken = localStorage.getItem("loginjwt");
-
-      if (accessToken) {
-        // Check if the access token is expired
-        const isTokenExpired = checkIfTokenExpired(accessToken);
-
-        if (isTokenExpired) {
-          // If expired, refresh the token
-          accessToken = await refreshAccessToken();
-        }
-
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
-      }
-
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  // Function to check if the access token is expired
-  const checkIfTokenExpired = (token) => {
-    const decodedToken = jwtDecode(token); // Decode the JWT token
-    const currentTime = Date.now() / 1000; // Get current time in seconds
-    return decodedToken.exp < currentTime;
-  };
-
-  // LOGOUT FUNCTION
-  const handleLogout = () => {
-    localStorage.removeItem("loginjwt");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("loginuser");
-    localStorage.removeItem("userName");
-    router.push("/login");
-  };
-
-  return (
-    <div className="flex min-h-screen bg-[url(/background.png)] bg-cover flex-col justify-between gap-4 px-4 py-6">
-      {/* FIRST IMAGE */}
-      <div className="firstimage ">
-        <Image
-          src="/l2.png"
-          width={491}
-          className={` ${styles.loginImage} absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
-          height={314}
-          alt="l2"
-        />
-      </div>
-
-      {/* MAIN CONTENT */}
-      <div className="flex flex-col items-center w-full">
-        <div
-          className={`flex bg-white shadow-2xl py-10 flex-col items-center text-black w-full sm:w-[80%] md:w-[60%] lg:w-[40%] xl:w-[33%] 2xl:w-[30%] ${styles.content}`}
-        >
-          <Image
-            src="/logo.png"
-            className={` ${styles.logo} lg:w-[40%] md:w-[30%]`}
-            width={250}
-            height={60}
-            alt="logo"
-          />
-
-          <div className="logo flex mt-8 items-center justify-center">
-            <Image
-              src="/l1.png"
-              className={` ${styles.login}   md:w-[40%] lg:w-[40%]`}
-              width={215}
-              height={115}
-              alt="login"
-            />
-          </div>
-
-          <div className="div mt-12 w-full max-w-md px-4">
-            <form action="" onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-8">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <div className="mt-3">
-                      <Image
-                        src="/email.png"
-                        alt="Email Icon"
-                        width={16}
-                        height={20}
-                        className="shrink-0"
-                      />
-                    </div>
-                    <TextField
-                      id="email"
-                      type="email"
-                      onChange={handleChange}
-                      name="email"
-                      onBlur={handleBlur}
-                      value={values.email}
-                      label="Email"
-                      className="w-full"
-                      variant="standard"
-                      sx={textFieldStyles}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="mt-2">
-                    {errors.email && touched.email && (
-                      <div className="text-red-600 text-sm">{errors.email}</div>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2">
-                    <div className="mt-3">
-                      <span>
-                        <Image
-                          src="/pass.png"
-                          alt="password icon"
-                          width={20}
-                          height={20}
-                        />
-                      </span>
-                    </div>
-                    <TextField
-                      id="password"
-                      type={eye ? "password" : "text"}
-                      onChange={handleChange}
-                      name="password"
-                      onBlur={handleBlur}
-                      value={values.password}
-                      label="Password"
-                      className="w-full"
-                      variant="standard"
-                      sx={textFieldStyles}
-                      fullWidth
-                      slotProps={{
-                        input: {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton onClick={handleClick} edge="end">
-                                {eye ? <IoMdEyeOff /> : <IoEye />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        },
-                      }}
-                    />
-                  </div>
-                  <div className="mt-2">
-                    {errors.password && touched.password && (
-                      <div className="text-red-600 text-sm">{errors.password}</div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="button mt-3">
-                  <button className="cursor-pointer w-full p-3 duration-200 hover:bg-[#ecdb76] font-bold bg-[#FCC827]">
-                    Login
-                  </button>
-                </div>
-                <div className="forget text-center mt-4">
-                  <Link href="/forgot" className="text-center">
-                    Forgot Password?
-                  </Link>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      {/* SECOND IMAGE */}
-      <div className="secondimage ">
-        <Image
-          src="/newl3.png"
-          width={520}
-          className={`${styles.logoImage} absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]`}
-          height={350}
-          alt="l3"
-        />
-      </div>
-    </div>
-  );
+    // Return error details
+    return {
+      success: false,
+      error: error.response?.data || error.message,
+      status: error.response?.status || 500,
+    };
+  }
 };
 
-export default Page;
+// Export the function
+export default apiCall;
+
+// Optional: Export specific method helpers
+export const get = (endpoint, params, customHeaders) =>
+  apiCall({ method: "get", endpoint, params, customHeaders });
+export const post = (endpoint, data, customHeaders) =>
+  apiCall({ method: "post", endpoint, data, customHeaders });
+export const put = (endpoint, data, customHeaders) =>
+  apiCall({ method: "put", endpoint, data, customHeaders });
+export const del = (endpoint, customHeaders) =>
+  apiCall({ method: "delete", endpoint, customHeaders });
+
+
+
+
+// This will work
+const fetchCategories = async () => {
+  const response = await apiCall({
+    method: "get", // Required
+    endpoint: "/getcategories",
+    params: { page: 1, limit: 10 },
+  });
+};
+
+// This will throw an error
+const invalidCall = async () => {
+  const response = await apiCall({
+    endpoint: "/getcategories", // Missing method
+  });
+};
+
+// Using shorthand methods (still work the same way)
+const fetchCategoriesShort = async () => {
+  const response = await get("/getcategories", { page: 1, limit: 10 });
+};
