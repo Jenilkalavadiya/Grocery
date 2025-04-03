@@ -1,33 +1,112 @@
-/* styles/login.module.css */
+/* Base styles */
 .content {
-  padding: 2.5rem; /* Matches py-10 */
+  padding: 2.5rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 480px; /* Reasonable max-width for larger screens */
 }
 
-/* For screens up to 1477px */
-@media (max-width: 1477px) {
+/* Images base styles */
+.firstImage {
+  position: absolute;
+  bottom: 0;
+  left: 0; /* Ensure it stays on the left */
+  width: 33%;
+}
+
+.secondImage {
+  position: absolute;
+  bottom: 0;
+  right: 0; /* Ensure it stays on the right */
+  width: 33%;
+}
+
+.loginImage {
+  width: 100%;
+  height: auto;
+  bottom: 0;
+  left: 0;
+}
+
+.logoImage {
+  width: 100%;
+  height: auto;
+  bottom: 0;
+  right: 0;
+}
+
+.logo {
+  width: 50%;
+  max-width: 250px;
+}
+
+.login {
+  width: 50%;
+  max-width: 215px;
+}
+
+/* Large screens (above 1440px) */
+@media (min-width: 1440px) {
   .content {
-    width: 40%;
-    padding: 2rem;
+    width: 33%;
+  }
+  .firstImage {
+    width: 33%;
+  }
+  .secondImage {
+    width: 35%;
+    display: block; /* Ensure the second image is visible */
   }
 }
 
-/* For screens up to 1100px (hides images and adjusts content) */
-@media (max-width: 1100px) {
+/* Laptop screens (1000px - 1440px) */
+@media (max-width: 1440px) and (min-width: 1000px) {
   .content {
     width: 40%;
+  }
+  .firstImage {
+    width: 30%;
+    bottom: 0; /* Keep at bottom */
+    left: 0; /* Ensure it stays on the left */
+  }
+  .secondImage {
+    width: 30%;
+    bottom: 0; /* Keep at bottom */
+    right: 0; /* Ensure it stays on the right */
+    display: block; /* Ensure the second image is visible */
   }
   .loginImage {
-    display: none;
+    bottom: 0;
+    left: 0;
   }
   .logoImage {
-    display: none;
+    bottom: 0;
+    right: 0;
   }
 }
 
-/* For smaller screens (mobile) */
-@media (max-width: 640px) {
+/* Tablet and below (below 1000px) - Hide images */
+@media (max-width: 1000px) {
+  .firstImage,
+  .secondImage {
+    display: none; /* Hide both images */
+  }
   .content {
-    width: 90%;
+    width: 50%;
+    padding: 2rem;
+  }
+  .logo {
+    width: 45%;
+  }
+  .login {
+    width: 45%;
+  }
+}
+
+/* Mobile screens (below 768px) */
+@media (max-width: 768px) {
+  .content {
+    width: 80%;
     padding: 1.5rem;
   }
   .logo {
@@ -37,25 +116,17 @@
     width: 40%;
   }
 }
-@media (max-width: 768) {
-  .login {
-    width: 40%;
-  }
-}
-/* 768-640 */
 
-@media (max-width: 1550px) {
-  .loginImage {
-    width: 30%;
-    position: absolute;
-    top: 350px;
-    left: 0;
+/* Small mobile screens (below 480px) */
+@media (max-width: 480px) {
+  .content {
+    width: 90%;
+    padding: 1rem;
   }
-  .logoImage {
-    width: 30%;
-    position: absolute;
-    top: 700;
-    /* bottom: 0; */
-    right: 3;
+  .logo {
+    width: 35%;
+  }
+  .login {
+    width: 35%;
   }
 }

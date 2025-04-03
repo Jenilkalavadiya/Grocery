@@ -9,20 +9,17 @@ import { textFieldStyles } from "@/_components/textFieldStyles";
 import { TextField } from "@mui/material";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from "axios";
-import styles from "@/styles/login.module.css";
+import styles from "@/styles/forgot.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-const page = () => {
-  //FOR INPUT TEXT*****************
+const Page = () => {
   const [input, setInput] = useState({
     email: "",
   });
   const [otp, setOtp] = useState("");
-
   const router = useRouter();
 
-  // Formik hook*************
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       initialValues: {
@@ -56,61 +53,58 @@ const page = () => {
     });
 
   return (
-    <div className="flex h-screen bg-[url(/background.png)] bg-cover flex-col justify-between gap-2">
-      <div className="firstimage">
+    <div className="relative flex min-h-screen bg-[url(/background.png)] bg-cover flex-col justify-between gap-2 px-4 py-6">
+      {/* FIRST IMAGE */}
+      <div className={`${styles.firstImage}`}>
         <Image
           src="/l2.png"
           width={491}
-          className={` ${styles.loginImage} absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
           height={314}
+          className={`${styles.loginImage}`}
           alt="l2"
         />
       </div>
 
-      {/* MAIN CONTENT ****************** */}
-
-      <div className="content flex mt-5 flex-col items-center w-full">
+      {/* MAIN CONTENT */}
+      <div className="flex flex-col items-center w-full z-10">
         <div
-          className={`flex ${styles.content} bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]`}
+          className={`${styles.content} bg-white shadow-2xl flex flex-col items-center text-black`}
         >
-          <div className=" flex items-start justify-start w-[90%] ">
-            <div className="flex items-center ">
-              <span className="">
-                <Link href="/" className="cursor-pointer ">
-                  <FaArrowLeftLong />
-                </Link>
-              </span>
-              <h2 className="font-bold text-xl ml-22">Forgot Password?</h2>
-            </div>
+          <div className="flex items-center  ">
+            <span className="text-left relative right-[112px]">
+              <Link href="/" className="cursor-pointer">
+                <FaArrowLeftLong />
+              </Link>
+            </span>
+            <h2 className="font-bold text-xl text-center w-[100%]">
+              Forgot Password?
+            </h2>
           </div>
-          <p className="text-sm text-center  text-gray-500 mt-4">
-            Don't worry! It happens.Please Enter address <br />
+          <p className="text-sm text-center text-gray-500 mt-4">
+            Don't worry! It happens. Please enter the address <br />
             associated with your account.
           </p>
-          <div className="logo lg:flex mt-8 lg:items-center md:flex  md:items-center">
+          <div className="flex mt-8 items-center justify-center">
             <Image
               src="/forgot.png"
-              className="lg:w-[100%] md:w-[80%] "
+              className={`${styles.forgotImage}`}
               width={115}
               height={115}
-              alt="login"
+              alt="forgot"
             />
           </div>
 
-          <div className="div mt-12">
-            <form action="" onSubmit={handleSubmit}>
-              <div className="lg:flex lg:flex-col md:flex md:flex-col gap-8">
+          <div className="w-full max-w-md px-4 mt-12">
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-8">
                 <div>
                   <div className="flex items-center gap-2">
-                    <div className="mt-3">
-                      <Image
-                        src="/email.png"
-                        alt="Email Icon"
-                        width={16}
-                        height={20}
-                        className={` ${styles.login}  shrink-0`}
-                      />
-                    </div>
+                    <Image
+                      src="/email.png"
+                      alt="Email Icon"
+                      width={16}
+                      height={20}
+                    />
                     <TextField
                       id="email"
                       type="email"
@@ -119,30 +113,26 @@ const page = () => {
                       onBlur={handleBlur}
                       value={values.email}
                       label="Email"
-                      className="w-full"
                       variant="standard"
                       sx={textFieldStyles}
                       fullWidth
                     />
                   </div>
-                  <div className="mt-2">
-                    {errors.email && touched.email && (
-                      <div className="error  text-red-950 text-sm">
-                        {errors.email}
-                      </div>
-                    )}
-                  </div>
+                  {errors.email && touched.email && (
+                    <div className="text-red-600 text-sm mt-2">
+                      {errors.email}
+                    </div>
+                  )}
                 </div>
 
-                <div className="button ">
-                  <button className="cursor-pointer w-full sm:w-[335px] p-3 hover:bg-[#ecdb76] font-bold bg-[#FCC827]">
-                    Submit
-                  </button>
-                </div>
-                <div className="forget text-center ">
-                  <Link href="/" className="text-center">
-                    Login Now
-                  </Link>
+                <button
+                  type="submit"
+                  className="w-full p-3 font-bold bg-[#FCC827] hover:bg-[#ecdb76] duration-200"
+                >
+                  Submit
+                </button>
+                <div className="text-center">
+                  <Link href="/">Login Now</Link>
                 </div>
               </div>
             </form>
@@ -150,13 +140,13 @@ const page = () => {
         </div>
       </div>
 
-      {/* SECOND IMAGE ************** */}
-      <div className="secondimage">
+      {/* SECOND IMAGE */}
+      <div className={`${styles.secondImage}`}>
         <Image
           src="/newl3.png"
           width={520}
-          className={`${styles.logoImage} absolute w-[35%] bottom-0 right-0 sm:w-[40%] md:w-[45%] lg:w-[35%]`}
           height={350}
+          className={`${styles.logoImage}`}
           alt="l3"
         />
       </div>
@@ -164,4 +154,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

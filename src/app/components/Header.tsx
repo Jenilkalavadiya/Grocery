@@ -2,7 +2,7 @@
 import React from "react";
 
 function Header() {
-  const userName = JSON.parse(localStorage.getItem("userName") || "");
+  // const userName = JSON.parse(localStorage.getItem("userName") || "");
 
   return (
     <div className="flex justify-end">
@@ -22,7 +22,7 @@ function Header() {
                 />
               </div>
             </div>
-            <span className="text-lg text-black p-2">{userName}</span>
+            <span className="text-lg text-black p-2">Admin</span>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
