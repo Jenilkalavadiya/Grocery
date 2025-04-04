@@ -1,35 +1,27 @@
 import Image from "next/image";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const CategoryItem = ({ category }:any) => {
+const CategoryItem = ({ category }: any) => {
   return (
     <div className="overflow-x-auto shadow-2xl ">
-      <table className="min-w-full bg-white  rounded-2xl ">
-        <thead className="bg-[#FAFAFA]] ">
-          <tr>
-            <th className="px-4 py-3  text-left text-sm font-bold text-gray-600  border-gray-300">
-              NO
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-bold text-gray-600  border-gray-300">
-              Image
-            </th>
-            <th className="px-4 py-3 text-left text-sm font-bold text-gray-600  border-gray-300">
-              Category
-            </th>
-            <th className="px-4 py-3 text-left text-sm font-bold text-gray-600  border-gray-300">
-              Status
-            </th>
-            <th className="px-4 py-3 text-left text-sm font-bold text-gray-600  border-gray-300">
-              Actions
-            </th>
+      <table className="min-w-full bg-white rounded-2xl ">
+        <thead className="bg-[#FAFAFA] text-[#202020]">
+          <tr className="text-md  font-bold border-gray-300">
+            <th className="px-4 py-3 w-[150px]">No.</th>
+            <th className="px-6 py-3 text-left w-[205px]">Image</th>
+            <th className="px-4 py-3 text-left min-w-[500px]">Category</th>
+
+            <th className="px-4 py-3 text-left">Status</th>
+            <th className="px-4 py-3 text-left">Actions</th>
           </tr>
-        </thead>  
+        </thead>
         <tbody>
           {category?.map((item: any) => (
-            <tr key={item.id}
-              className="hover:bg-gray-50 transition-all duration-200"
+            <tr
+              key={item.No}
+              className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
             >
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+              <td className="px-4 py-3 text-sm border-b border-gray-200">
                 {item?.No}
               </td>
               <td className="px-4 py-3 border-b border-gray-200">
@@ -41,15 +33,19 @@ const CategoryItem = ({ category }:any) => {
                   className="rounded-full object-contain"
                 />
               </td>
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
                 {item?.Category_Name}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
                 <span
-                  className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${item?.Status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                  className={`inline-block rounded-full text-xs font-semibold ${item?.Status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
                 >
                   {/* {item?.Status} */}
-                  <input type="checkbox" defaultChecked className="toggle bg-gray-500   checked:bg-green-500 checked:text-white-800 checked:border-green-500 " />
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
+                  />
                 </span>
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
