@@ -6,7 +6,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 
 import { useDemoRouter } from "@toolpad/core/internal";
-import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 
 export default function users() {

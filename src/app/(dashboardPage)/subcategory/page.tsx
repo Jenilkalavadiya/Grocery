@@ -1,15 +1,13 @@
 "use client";
 import React from "react";
-
 import { getFunction } from "@/api/ApiCall";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Subcategoryitem from "@/app/components/Subcategoryitem";
-import Branditem from "@/app/components/Branditem";
-const page = () => {
+function subcategory() {
   const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState(null);
+  const [subcategory, setSubCategory] = useState(null);
 
   const getAllSubCategory = async () => {
     try {
@@ -17,11 +15,12 @@ const page = () => {
         "/get_subcategories?pageNumber=1&pageLimit=10"
       );
       const data = await res?.data?.data;
-      setBrand(data);
+      setSubCategory(data);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getAllSubCategory();
   }, []);
@@ -30,7 +29,9 @@ const page = () => {
       {/* SERCH INPUT  */}
       <div className="flex justify-between p-4 items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Brands</h2>
+          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">
+            Sub Categories
+          </h2>
         </div>
 
         {/* SEARCH USERS INPUT ***************** */}
@@ -38,7 +39,7 @@ const page = () => {
         <div className="searchfiled mr-9 flex gap-2">
           <input
             type="text"
-            placeholder="Search Brands.. "
+            placeholder="Search Sub Categories.. "
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="px-2 border-[#DADDE1] bg-white focus:outline-none border h-[45px]"
@@ -57,39 +58,29 @@ const page = () => {
               }}
             >
               {" "}
-              Add Brand
+              Add Sub Category
             </button>
             <dialog id="my_modal_1" className="modal">
               <div className="modal-box bg-white w-[450px] !px-[50px]">
-                <h1 className="font-bold text-3xl text-center">Add Brand</h1>
-
-                <h2 className="mt-10">Brand Name :</h2>
+                <h1 className="font-bold text-3xl text-center">
+                  Add Sub Category
+                </h1>
+                <h2 className="mt-10">Sub Category :</h2>
                 <br />
-                <input
-                  type="text"
-                  className="w-[350px] bg-white text-black h-[50px] border-2 p-1.5"
-                  placeholder="Brand Name"
-                />
-                <div className="flex flex-col gap-3">
-                  <h2 className="mt-4">Category :</h2>
-                  <select className="w-[335px] h-[45px] ">
-                    <option value="" className="w-[335px] h-[75px] ">
-                      Select
-                    </option>
-                  </select>
-                  <h2 className="mt-4">Sub Category :</h2>
-                  <select className="w-[335px] h-[45px] ">
-                    <option value="" className="w-[335px] h-[75px]">
-                      Select
-                    </option>
-                  </select>
+
+                <div className="flex flex-col gap-9 ">
+                  <input
+                    type="text"
+                    className="w-[350px] bg-white text-black h-[50px] p-2"
+                    placeholder="Category"
+                  />
 
                   <input
                     type="file"
                     className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[100px]"
                     placeholder="Upload image"
                   />
-                  <div className="flex justify-between mt-3.5">
+                  <div className="flex justify-between">
                     <p>Status</p>
                     <input
                       type="checkbox"
@@ -97,7 +88,7 @@ const page = () => {
                       className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
                     />
                   </div>
-                  <div className="flex mt-3.5">
+                  <div className="flex">
                     <button className="w-[350px] bg-amber-300 p-3">Save</button>
                   </div>
                 </div>
@@ -116,7 +107,7 @@ const page = () => {
       {/* USERS TABLE************  */}
 
       <div className="max-w-[1400px] m-auto mt-3">
-        <Branditem brand={brand} />
+        <Subcategoryitem subcategory={subcategory} />
       </div>
 
       {/* // PAGINATION ******* */}
@@ -127,6 +118,6 @@ const page = () => {
       </div>
     </div>
   );
-};
+}
 
-export default page;
+export default subcategory;

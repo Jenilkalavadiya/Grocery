@@ -1,54 +1,10 @@
-import axios from "axios";
-import { headers } from "next/headers";
 import Image from "next/image";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const CategoryItem = ({ category }: any) => {
-  const [categories, setCategories] = useState([]);
-  const jwt =
-    typeof window !== "undefined" &&
-    window.localStorage &&
-    localStorage.getItem("loginjwt");
-  const refresh =
-    typeof window !== "undefined" &&
-    window.localStorage &&
-    localStorage.getItem("refreshjwt");
-  console.log("SS", category);
+const Subcategoryitem = ({ subcategory }: any) => {
+  console.log("subcategory", subcategory);
 
-  const handleStatusChange = async (
-    categoryId: number,
-    currentStatus: boolean
-  ) => {
-    try {
-      // Call an API to update the status on the backend (POST or PUT request)
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BASEAPI}/getcategory?id=${categoryId}`,
-        {
-          categoryId: categoryId,
-          status: currentStatus ? 1 : 0,
-        },
-        {
-          headers: {
-            Authorizations: `${jwt}`,
-            refresh_token: refresh,
-          },
-        }
-      );
-
-      // Update the UI optimistically
-      setCategories((prevCategories: any) =>
-        prevCategories.map((item: any) =>
-          item.No === categoryId
-            ? { ...item, Status: currentStatus ? 1 : 0 }
-            : item
-        )
-      );
-      console.log("Category status updated successfully.");
-    } catch (error) {
-      console.error("Error updating category status:", error);
-    }
-  };
   return (
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -63,7 +19,7 @@ const CategoryItem = ({ category }: any) => {
           </tr>
         </thead>
         <tbody>
-          {category?.map((item: any) => (
+          {subcategory?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
@@ -91,10 +47,10 @@ const CategoryItem = ({ category }: any) => {
                   <input
                     type="checkbox"
                     // defaultChecked
-                    checked={item?.Status}
-                    onChange={(e) =>
-                      handleStatusChange(item?.No, e.target.checked)
-                    }
+                    // checked={item?.Status}
+                    // onChange={(e) =>
+                    //   handleStatusChange(item?.No, e.target.checked)
+                    // }
                     className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
                   />
                 </span>
@@ -117,29 +73,4 @@ const CategoryItem = ({ category }: any) => {
   );
 };
 
-export default CategoryItem;
-
-// try {
-//   // Send the updated status to the server
-//   const response = await fetch('http://localhost:3000/admin/updateCategoryStatus', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': 'YOUR_JWT_TOKEN', // Replace with the actual token
-//       'refresh_token': 'YOUR_REFRESH_TOKEN', // Replace with the actual refresh token
-//     },
-//     body: JSON.stringify({
-//       categoryId: categoryId,
-//       status: newStatus ? 'Active' : 'Inactive',
-//     }),
-//   });
-
-//   const data = await response.json();
-//   if (response.ok) {
-//     console.log('Status updated successfully:', data);
-//   } else {
-//     console.error('Failed to update status:', data);
-//   }
-// } catch (error) {
-//   console.error('Error updating status:', error);
-// }
+export default Subcategoryitem;

@@ -1,48 +1,24 @@
 "use client";
-
-import axios from "axios";
-
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import CategoryItem from "@/app/components/CategoryItem";
-
+import { getFunction } from "@/api/ApiCall";
 const Category = () => {
   const [search, setSearch] = useState("");
-  const jwt = localStorage.getItem("loginjwt");
-  const refresh = localStorage.getItem("refreshjwt");
-
   const [category, setCategory] = useState(null);
-  // console.log("category", category);
 
-  const handleChange = (e: any) => {
-    setSearch(e.target.value);
-  };
   const getAllCategory = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASEAPI}/getcategories`,
-        {
-          headers: {
-            Authorizations: `${jwt}`,
-            language: "en",
-
-            refresh_token: refresh,
-          },
-        }
-      );
-      console.log("resCategory", res);
+      const res = await getFunction("/getcategories");
       const data = await res?.data?.data;
       setCategory(data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
     getAllCategory();
   }, []);
-
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
@@ -53,21 +29,26 @@ const Category = () => {
           </h2>
         </div>
 
-        {/* SEARCH USERS INPUT ***************** */}
-
         <div className="searchfiled mr-8  flex gap-2">
           <input
             type="text"
             placeholder="Search Categories.. "
             value={search}
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => setSearch(e.target.value)}
             className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
           />
 
           <div className="w-[130px]">
             <button
               className="bg-[#FCC827] text-black font-semibold h-[45px] p-2.5"
-              onClick={() => document.getElementById("my_modal_1").showModal()}
+              onClick={() => {
+                const modal = document.getElementById(
+                  "my_modal_1"
+                ) as HTMLDialogElement;
+                if (modal) {
+                  modal.showModal();
+                }
+              }}
             >
               {" "}
               Add Category
@@ -75,9 +56,7 @@ const Category = () => {
             <dialog id="my_modal_1" className="modal">
               <div className="modal-box bg-white w-[450px] !px-[50px]">
                 <h1 className="font-bold text-3xl text-center">Add products</h1>
-                <h2 className="mt-10">
-                  Category :
-                </h2>
+                <h2 className="mt-10">Category :</h2>
                 <br />
 
                 <div className="flex flex-col gap-9 ">

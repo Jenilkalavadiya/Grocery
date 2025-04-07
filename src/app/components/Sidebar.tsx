@@ -29,7 +29,7 @@ export default function Sidebar() {
   const [activeCategory, setActiveCategory] = useState(null);
   const pathname = usePathname();
 
-  const handleCategoryToggle = (categoryName) => {
+  const handleCategoryToggle = (categoryName: any) => {
     setActiveCategory(activeCategory === categoryName ? null : categoryName);
   };
 
@@ -92,7 +92,6 @@ export default function Sidebar() {
                       </span>
                     </div>
 
-                    
                     {activeCategory === item.name && (
                       <div className="ml-8 mt-2">
                         <Link
@@ -102,10 +101,10 @@ export default function Sidebar() {
                           Category
                         </Link>
                         <Link
-                          href="/subcategory2"
+                          href="/subcategory"
                           className="block px-4 py-2 text-white hover:bg-gray-600"
                         >
-                          Sub Category 2
+                          Sub Category
                         </Link>
                       </div>
                     )}

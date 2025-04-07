@@ -1,53 +1,13 @@
-import axios from "axios";
-import { headers } from "next/headers";
+import { _delete } from "@/api/ApiCall";
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const CategoryItem = ({ category }: any) => {
-  const [categories, setCategories] = useState([]);
-  const jwt =
-    typeof window !== "undefined" &&
-    window.localStorage &&
-    localStorage.getItem("loginjwt");
-  const refresh =
-    typeof window !== "undefined" &&
-    window.localStorage &&
-    localStorage.getItem("refreshjwt");
-  console.log("SS", category);
-
-  const handleStatusChange = async (
-    categoryId: number,
-    currentStatus: boolean
-  ) => {
-    try {
-      // Call an API to update the status on the backend (POST or PUT request)
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BASEAPI}/getcategory?id=${categoryId}`,
-        {
-          categoryId: categoryId,
-          status: currentStatus ? 1 : 0,
-        },
-        {
-          headers: {
-            Authorizations: `${jwt}`,
-            refresh_token: refresh,
-          },
-        }
-      );
-
-      // Update the UI optimistically
-      setCategories((prevCategories: any) =>
-        prevCategories.map((item: any) =>
-          item.No === categoryId
-            ? { ...item, Status: currentStatus ? 1 : 0 }
-            : item
-        )
-      );
-      console.log("Category status updated successfully.");
-    } catch (error) {
-      console.error("Error updating category status:", error);
-    }
+const Branditem = ({ brand }: any) => {
+  console.log("brands", brand);
+  const handleDelete = async (id: number) => {
+    const res = await _delete(`/delete_subcategory?id=${id}`);
+    console.log("res", res);
   };
   return (
     <div className="overflow-x-auto shadow-2xl ">
@@ -57,13 +17,14 @@ const CategoryItem = ({ category }: any) => {
             <th className="px-4 py-3 w-[150px]">No.</th>
             <th className="px-6 py-3 text-left w-[205px]">Image</th>
             <th className="px-4 py-3 text-left min-w-[500px]">Category</th>
+            <th className="px-4 py-3 text-left min-w-[500px]">Sub Category</th>
 
             <th className="px-4 py-3 text-left">Status</th>
             <th className="px-4 py-3 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {category?.map((item: any) => (
+          {brand?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
@@ -84,6 +45,9 @@ const CategoryItem = ({ category }: any) => {
                 {item?.Category_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                {item?.SubCategory_Name}
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
                 <span
                   className={`inline-block rounded-full text-xs font-semibold ${item?.Status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
                 >
@@ -91,10 +55,10 @@ const CategoryItem = ({ category }: any) => {
                   <input
                     type="checkbox"
                     // defaultChecked
-                    checked={item?.Status}
-                    onChange={(e) =>
-                      handleStatusChange(item?.No, e.target.checked)
-                    }
+                    // checked={item?.Status}
+                    // onChange={(e) =>
+                    //   handleStatusChange(item?.No, e.target.checked)
+                    // }
                     className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
                   />
                 </span>
@@ -104,7 +68,10 @@ const CategoryItem = ({ category }: any) => {
                   <span className="text-2xl cursor-pointer">
                     <CiEdit />
                   </span>
-                  <span className="text-2xl cursor-pointer">
+                  <span
+                    className="text-2xl cursor-pointer"
+                    onClick={() => handleDelete(item.id)}
+                  >
                     <RiDeleteBin6Line />
                   </span>
                 </div>
@@ -117,29 +84,4 @@ const CategoryItem = ({ category }: any) => {
   );
 };
 
-export default CategoryItem;
-
-// try {
-//   // Send the updated status to the server
-//   const response = await fetch('http://localhost:3000/admin/updateCategoryStatus', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': 'YOUR_JWT_TOKEN', // Replace with the actual token
-//       'refresh_token': 'YOUR_REFRESH_TOKEN', // Replace with the actual refresh token
-//     },
-//     body: JSON.stringify({
-//       categoryId: categoryId,
-//       status: newStatus ? 'Active' : 'Inactive',
-//     }),
-//   });
-
-//   const data = await response.json();
-//   if (response.ok) {
-//     console.log('Status updated successfully:', data);
-//   } else {
-//     console.error('Failed to update status:', data);
-//   }
-// } catch (error) {
-//   console.error('Error updating status:', error);
-// }
+export default Branditem;

@@ -2,7 +2,6 @@
 import React from "react";
 
 function Header() {
-  // const userName = JSON.parse(localStorage.getItem("userName") || "");
 
   return (
     <div className="flex justify-end">

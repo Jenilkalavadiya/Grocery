@@ -33,7 +33,14 @@ const page = () => {
           <div className="w-[130px]">
             <button
               className="bg-[#FCC827] text-black font-semibold h-[45px] p-2.5"
-              onClick={() => document.getElementById("my_modal_1").showModal()}
+              onClick={() => {
+                const modal = document.getElementById(
+                  "my_modal_1"
+                ) as HTMLDialogElement;
+                if (modal) {
+                  modal.showModal();
+                }
+              }}
             >
               {" "}
               Add Product

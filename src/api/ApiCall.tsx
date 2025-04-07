@@ -3,8 +3,14 @@ import axios from "axios";
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";
 
-const jwt = localStorage.getItem("loginjwt");
-const refresh = localStorage.getItem("refreshjwt");
+const jwt =
+  typeof window !== "undefined" &&
+  window.localStorage &&
+  localStorage.getItem("loginjwt");
+const refresh =
+  typeof window !== "undefined" &&
+  window.localStorage &&
+  localStorage.getItem("refreshjwt");
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -21,6 +27,15 @@ export const _post = (url: any, data = {}) => {
   return apiClient.post(url, data);
 };
 
-// const callApi=({method,url,data})=>{
-    
-// }
+export const getFunction = (url: any) => {
+  return apiClient.get(url);
+};
+
+export const _put = (url: any, data = {}) => {
+  console.log("apicall PUT", url, data);
+  return apiClient.put(url, data);
+};
+export const _delete = (url: any, data = {}) => {
+  console.log("apicall DELETE", url, data);
+  return apiClient.delete(url, { data });
+};
