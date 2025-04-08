@@ -1,3 +1,4 @@
+import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -12,6 +13,7 @@ const Subcategoryitem = ({ subcategory }: any) => {
           <tr className="text-md  font-bold border-gray-300">
             <th className="px-4 py-3 w-[150px]">No.</th>
             <th className="px-6 py-3 text-left w-[205px]">Image</th>
+            <th className="px-6 py-3 text-left w-[205px]">Name</th>
             <th className="px-4 py-3 text-left min-w-[500px]">Category</th>
 
             <th className="px-4 py-3 text-left">Status</th>
@@ -37,23 +39,13 @@ const Subcategoryitem = ({ subcategory }: any) => {
                 />
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                {item?.SubCategory_Name}
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
                 {item?.Category_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <span
-                  className={`inline-block rounded-full text-xs font-semibold ${item?.Status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-                >
-                  {/* {item?.Status} */}
-                  <input
-                    type="checkbox"
-                    // defaultChecked
-                    // checked={item?.Status}
-                    // onChange={(e) =>
-                    //   handleStatusChange(item?.No, e.target.checked)
-                    // }
-                    className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
-                  />
-                </span>
+                <Greenswitch item={item} />
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">

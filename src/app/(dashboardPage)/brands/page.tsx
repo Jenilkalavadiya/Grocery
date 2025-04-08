@@ -1,30 +1,57 @@
 "use client";
 import React from "react";
 
-import { getFunction } from "@/api/ApiCall";
+import { _post, getFunction } from "@/api/ApiCall";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Subcategoryitem from "@/app/components/Subcategoryitem";
 import Branditem from "@/app/components/Branditem";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import GreenSwitch from "@/utils/Greenswitch";
 const page = () => {
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState(null);
+  const [page, setPage] = useState(1);
 
-  const getAllSubCategory = async () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const getbrands = async () => {
     try {
       const res = await getFunction(
-        "/get_subcategories?pageNumber=1&pageLimit=10"
+        `/get_brands?pageNumber=${page}&pageLimit=4`
       );
+      console.log("res", res);
       const data = await res?.data?.data;
       setBrand(data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleAddBrand = async () => {
+    try {
+      const res = await _post("/add_brand");
+      console.log("res", res);
+    } catch (error) {}
+  };
+
+  console.log("page", page);
   useEffect(() => {
-    getAllSubCategory();
-  }, []);
+    getbrands();
+  }, [page]);
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
@@ -33,55 +60,58 @@ const page = () => {
           <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Brands</h2>
         </div>
 
-        {/* SEARCH USERS INPUT ***************** */}
-
-        <div className="searchfiled mr-9 flex gap-2">
+        <div className="searchfiled mr-8 flex gap-2">
           <input
             type="text"
             placeholder="Search Brands.. "
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-2 border-[#DADDE1] bg-white focus:outline-none border h-[45px]"
+            className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
           />
 
-          <div className="w-[166px]">
-            <button
-              className="bg-[#FCC827] text-black font-semibold h-[45px] p-2.5"
-              onClick={() => {
-                const modal = document.getElementById(
-                  "my_modal_1"
-                ) as HTMLDialogElement;
-                if (modal) {
-                  modal.showModal();
-                }
-              }}
+          <div className="w-[130px]">
+            <Button
+              className="!bg-[#FCC827] !text-black font-semibold h-[45px] p-1"
+              onClick={handleClickOpen}
+              // variant="outlined"
             >
               {" "}
               Add Brand
-            </button>
-            <dialog id="my_modal_1" className="modal">
-              <div className="modal-box bg-white w-[450px] !px-[50px]">
-                <h1 className="font-bold text-3xl text-center">Add Brand</h1>
+            </Button>
 
-                <h2 className="mt-10">Brand Name :</h2>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Add Brand"}</DialogTitle>
+              <DialogContent suppressHydrationWarning>
+                <span className="mt-10">Brand Name:</span>
                 <br />
-                <input
-                  type="text"
-                  className="w-[350px] bg-white text-black h-[50px] border-2 p-1.5"
-                  placeholder="Brand Name"
-                />
-                <div className="flex flex-col gap-3">
-                  <h2 className="mt-4">Category :</h2>
-                  <select className="w-[335px] h-[45px] ">
-                    <option value="" className="w-[335px] h-[75px] ">
-                      Select
-                    </option>
+
+                <div className="flex flex-col gap-6 ">
+                  <input
+                    type="text"
+                    className="w-[350px] bg-white text-black h-[50px] p-2"
+                    placeholder="Brand name"
+                  />
+
+                  <span>Category</span>
+                  <select name="" id="">
+                    <option value="">Vegetables</option>
+                    <option value="">Fruits</option>
+                    <option value="">Personal Care</option>
+                    <option value="">Beverages</option>
+                    <option value="">Bread</option>
                   </select>
-                  <h2 className="mt-4">Sub Category :</h2>
-                  <select className="w-[335px] h-[45px] ">
-                    <option value="" className="w-[335px] h-[75px]">
-                      Select
-                    </option>
+                  <span>Sub Category</span>
+                  <select name="" id="">
+                    <option value="">Soap</option>
+                    <option value="">Facewash</option>
+                    <option value="">Masala</option>
+                    <option value="">Shampoo</option>
+                    <option value="">Fresh Vegetables</option>
                   </select>
 
                   <input
@@ -89,26 +119,30 @@ const page = () => {
                     className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[100px]"
                     placeholder="Upload image"
                   />
-                  <div className="flex justify-between mt-3.5">
-                    <p>Status</p>
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
-                    />
+                  <div className="flex justify-between">
+                    <span>Status</span>
+                    <GreenSwitch />
                   </div>
-                  <div className="flex mt-3.5">
-                    <button className="w-[350px] bg-amber-300 p-3">Save</button>
+                  <div className="flex">
+                    <button
+                      className="w-[350px] bg-amber-300 p-3"
+                      onClick={handleAddBrand}
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
-                <div className="modal-action">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn absolute right-0 top-0">X</button>
-                  </form>
-                </div>
-              </div>
-            </dialog>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleClose}
+                  autoFocus
+                  className="btn !absolute right-0 top-0"
+                >
+                  X
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </div>
       </div>
@@ -122,7 +156,13 @@ const page = () => {
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
+          <Pagination
+            count={10}
+            variant="outlined"
+            shape="rounded"
+            page={page}
+            onChange={(e, page) => setPage(page)}
+          />
         </Stack>
       </div>
     </div>

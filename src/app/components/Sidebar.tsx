@@ -71,7 +71,7 @@ export default function Sidebar() {
           </div>
 
           {/* Sidebar items */}
-          <ul className="space-y-6 overflow-y-auto text-xl leading-12 h-[calc(100vh-150px)]">
+          <ul className="space-y-6 overflow-y-auto text-xl leading-10 h-[calc(100vh-150px)]">
             {sidebarItems.map((item, index) => (
               <li key={index}>
                 {item.isCategory ? (

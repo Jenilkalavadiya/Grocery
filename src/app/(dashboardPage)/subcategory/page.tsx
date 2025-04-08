@@ -5,10 +5,24 @@ import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Subcategoryitem from "@/app/components/Subcategoryitem";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 function subcategory() {
   const [search, setSearch] = useState("");
   const [subcategory, setSubCategory] = useState(null);
 
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const getAllSubCategory = async () => {
     try {
       const res = await getFunction(
@@ -46,60 +60,62 @@ function subcategory() {
           />
 
           <div className="w-[166px]">
-            <button
-              className="bg-[#FCC827] text-black font-semibold h-[45px] p-2.5"
-              onClick={() => {
-                const modal = document.getElementById(
-                  "my_modal_1"
-                ) as HTMLDialogElement;
-                if (modal) {
-                  modal.showModal();
-                }
-              }}
+            <Button
+              className="!bg-[#FCC827] !text-black font-semibold h-[45px] p-1"
+              onClick={handleClickOpen}
+              // variant="outlined"
             >
               {" "}
               Add Sub Category
-            </button>
-            <dialog id="my_modal_1" className="modal">
-              <div className="modal-box bg-white w-[450px] !px-[50px]">
-                <h1 className="font-bold text-3xl text-center">
-                  Add Sub Category
-                </h1>
-                <h2 className="mt-10">Sub Category :</h2>
+            </Button>
+
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Add Category"}
+              </DialogTitle>
+              <DialogContent suppressHydrationWarning>
+                <span className="mt-10">Sub Category :</span>
                 <br />
 
                 <div className="flex flex-col gap-9 ">
                   <input
                     type="text"
                     className="w-[350px] bg-white text-black h-[50px] p-2"
-                    placeholder="Category"
+                    placeholder="Sub Category."
                   />
 
                   <input
                     type="file"
                     className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[100px]"
-                    placeholder="Upload image"
+                    placeholder="Upload image(250X250)"
                   />
                   <div className="flex justify-between">
-                    <p>Status</p>
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
-                    />
+                    <span>Status</span>
+                    <label className="inline-flex items-center mb-5 cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" />
+                      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+                    </label>
                   </div>
                   <div className="flex">
                     <button className="w-[350px] bg-amber-300 p-3">Save</button>
                   </div>
                 </div>
-                <div className="modal-action">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn absolute right-0 top-0">X</button>
-                  </form>
-                </div>
-              </div>
-            </dialog>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleClose}
+                  autoFocus
+                  className="btn !absolute right-0 top-0"
+                >
+                  X
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </div>
       </div>
@@ -113,7 +129,7 @@ function subcategory() {
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
+          <Pagination count={1} variant="outlined" shape="rounded" />
         </Stack>
       </div>
     </div>

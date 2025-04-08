@@ -10,7 +10,6 @@ import { LoginSchema } from "@/_components/Validation";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { _post } from "@/api/ApiCall";
@@ -27,7 +26,6 @@ const Page = () => {
       validationSchema: LoginSchema,
       onSubmit: async (values) => {
         try {
-          // API CALL *************
 
           const res = await _post("/login", values);
 

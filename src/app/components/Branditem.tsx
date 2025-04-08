@@ -1,4 +1,5 @@
 import { _delete } from "@/api/ApiCall";
+import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -6,7 +7,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 const Branditem = ({ brand }: any) => {
   console.log("brands", brand);
   const handleDelete = async (id: number) => {
-    const res = await _delete(`/delete_subcategory?id=${id}`);
+    console.log("ID", id);
+    const res = await _delete(`/delete_brand?id=${id}`);
     console.log("res", res);
   };
   return (
@@ -16,11 +18,12 @@ const Branditem = ({ brand }: any) => {
           <tr className="text-md  font-bold border-gray-300">
             <th className="px-4 py-3 w-[150px]">No.</th>
             <th className="px-6 py-3 text-left w-[205px]">Image</th>
-            <th className="px-4 py-3 text-left min-w-[500px]">Category</th>
-            <th className="px-4 py-3 text-left min-w-[500px]">Sub Category</th>
+            <th className="px-6 py-3 text-left w-[405px]">Name</th>
+            <th className="px-4 py-3 text-left min-w-[300px]">Category</th>
+            <th className="px-4 py-3 text-left min-w-[300px]">Sub Category</th>
 
-            <th className="px-4 py-3 text-left">Status</th>
-            <th className="px-4 py-3 text-left">Actions</th>
+            <th className="px-6 py-3 text-left">Status</th>
+            <th className="px-6 py-3 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -32,7 +35,7 @@ const Branditem = ({ brand }: any) => {
               <td className="px-4 py-3 text-sm border-b border-gray-200">
                 {item?.No}
               </td>
-              <td className="px-4 py-3 border-b border-gray-200">
+              <td className="px-4 py-3 border-b border-gray-200 ">
                 <Image
                   src={item?.Image}
                   width={80}
@@ -42,26 +45,16 @@ const Branditem = ({ brand }: any) => {
                 />
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                {item?.Brand_Name}
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
                 {item?.Category_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
                 {item?.SubCategory_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <span
-                  className={`inline-block rounded-full text-xs font-semibold ${item?.Status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-                >
-                  {/* {item?.Status} */}
-                  <input
-                    type="checkbox"
-                    // defaultChecked
-                    // checked={item?.Status}
-                    // onChange={(e) =>
-                    //   handleStatusChange(item?.No, e.target.checked)
-                    // }
-                    className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
-                  />
-                </span>
+                <Greenswitch item={item} />
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">
@@ -70,7 +63,7 @@ const Branditem = ({ brand }: any) => {
                   </span>
                   <span
                     className="text-2xl cursor-pointer"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(item.No)}
                   >
                     <RiDeleteBin6Line />
                   </span>
