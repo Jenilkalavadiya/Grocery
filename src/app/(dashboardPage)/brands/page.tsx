@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-
 import { _post, getFunction } from "@/api/ApiCall";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
@@ -10,14 +9,12 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import GreenSwitch from "@/utils/Greenswitch";
 const page = () => {
   const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState(null);
+  const [brand, setBrand] = useState([]);
   const [page, setPage] = useState(1);
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -52,6 +49,11 @@ const page = () => {
   useEffect(() => {
     getbrands();
   }, [page]);
+
+  const filteredbrand = brand.filter((item: any) =>
+    item.Brand_Name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
@@ -150,7 +152,7 @@ const page = () => {
       {/* USERS TABLE************  */}
 
       <div className="max-w-[1400px] m-auto mt-3">
-        <Branditem brand={brand} />
+        <Branditem filteredbrand={filteredbrand} />
       </div>
 
       {/* // PAGINATION ******* */}

@@ -4,8 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const Branditem = ({ brand }: any) => {
-  console.log("brands", brand);
+const Branditem = ({ filteredbrand }: any) => {
   const handleDelete = async (id: number) => {
     console.log("ID", id);
     const res = await _delete(`/delete_brand?id=${id}`);
@@ -27,7 +26,7 @@ const Branditem = ({ brand }: any) => {
           </tr>
         </thead>
         <tbody>
-          {brand?.map((item: any) => (
+          {filteredbrand?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"

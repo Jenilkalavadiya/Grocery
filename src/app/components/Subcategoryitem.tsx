@@ -3,9 +3,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const Subcategoryitem = ({ subcategory }: any) => {
-  console.log("subcategory", subcategory);
-
+const Subcategoryitem = ({ filteredSubCategories }: any) => {
   return (
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -21,7 +19,7 @@ const Subcategoryitem = ({ subcategory }: any) => {
           </tr>
         </thead>
         <tbody>
-          {subcategory?.map((item: any) => (
+          {filteredSubCategories?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"

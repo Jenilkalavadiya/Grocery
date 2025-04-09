@@ -17,3 +17,8 @@ export const ResetPasswordSchema = Yup.object().shape({
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Password is Required"),
 });
+
+export const AddCategorySchema = Yup.object().shape({
+  name: Yup.string().required("Category is Required"),
+  image: Yup.mixed().required("Image is required"),
+});

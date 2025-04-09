@@ -5,7 +5,8 @@ import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Greenswitch from "@/utils/Greenswitch";
-const CategoryItem = ({ category }: any) => {
+const CategoryItem = ({ filteredCategories }: any) => {
+  
   return (
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -20,7 +21,7 @@ const CategoryItem = ({ category }: any) => {
           </tr>
         </thead>
         <tbody>
-          {category?.map((item: any) => (
+          {filteredCategories?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"

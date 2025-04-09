@@ -12,7 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 function subcategory() {
   const [search, setSearch] = useState("");
-  const [subcategory, setSubCategory] = useState(null);
+  const [subcategory, setSubCategory] = useState([]);
 
   const [open, setOpen] = useState(false);
 
@@ -38,6 +38,10 @@ function subcategory() {
   useEffect(() => {
     getAllSubCategory();
   }, []);
+
+  const filteredSubCategories = subcategory.filter((item: any) =>
+    item.Category_Name.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
@@ -123,13 +127,13 @@ function subcategory() {
       {/* USERS TABLE************  */}
 
       <div className="max-w-[1400px] m-auto mt-3">
-        <Subcategoryitem subcategory={subcategory} />
+        <Subcategoryitem filteredSubCategories={filteredSubCategories} />
       </div>
 
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
-          <Pagination count={1} variant="outlined" shape="rounded" />
+          <Pagination count={10} variant="outlined" shape="rounded" />
         </Stack>
       </div>
     </div>
