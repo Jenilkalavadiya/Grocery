@@ -4,10 +4,13 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const Branditem = ({ filteredbrand }: any) => {
+import { toast } from "react-toastify";
+const Branditem = ({ filteredbrand, getbrands }: any) => {
   const handleDelete = async (id: number) => {
     console.log("ID", id);
     const res = await _delete(`/delete_brand?id=${id}`);
+      toast.success('Brand deleted successfully')
+    getbrands();
     console.log("res", res);
   };
   return (
@@ -27,48 +30,51 @@ const Branditem = ({ filteredbrand }: any) => {
         </thead>
         <tbody>
           {filteredbrand?.map((item: any) => (
+            
             <tr
-              key={item.No}
-              className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-            >
-              <td className="px-4 py-3 text-sm border-b border-gray-200">
-                {item?.No}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200 ">
-                <Image
-                  src={item?.Image}
-                  width={80}
-                  height={40}
-                  alt="category_image"
-                  className="rounded-full object-contain"
-                />
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.Brand_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.Category_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.SubCategory_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <Greenswitch item={item} />
-              </td>
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
-                <div className="flex gap-4 items-center">
-                  <span className="text-2xl cursor-pointer">
-                    <CiEdit />
-                  </span>
-                  <span
-                    className="text-2xl cursor-pointer"
-                    onClick={() => handleDelete(item.No)}
-                  >
-                    <RiDeleteBin6Line />
-                  </span>
-                </div>
-              </td>
-            </tr>
+            key={item.No}
+            className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+          >
+            <td className="px-4 py-3 text-sm border-b border-gray-200">
+              {item?.No}
+            </td>
+            <td className="px-4 py-3 border-b border-gray-200 ">
+              <Image
+                src={item?.Image}
+                width={80}
+                height={40}
+                alt="category_image"
+                className="rounded-full object-contain"
+              />
+            </td>
+            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+              {item?.Brand_Name}
+            </td>
+            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+              {item?.Category_Name}
+            </td>
+            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+              {item?.SubCategory_Name}
+            </td>
+            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+              <Greenswitch item={item} />
+            </td>
+            <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+              <div className="flex gap-4 items-center">
+                <span className="text-2xl cursor-pointer">
+                  <CiEdit />
+                </span>
+                <span
+                  className="text-2xl cursor-pointer"
+                  onClick={() => handleDelete(item.No)}
+                >
+                  <RiDeleteBin6Line />
+                </span>
+              </div>
+            </td>
+          </tr>
+          
+         
           ))}
         </tbody>
       </table>

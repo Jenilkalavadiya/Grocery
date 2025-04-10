@@ -1,9 +1,22 @@
-{/* <div>
-        <AppProvider navigation={NAVIGATION} router={router} theme={theme}>
-          <Paper sx={{ width: "100%" }}>
-            {/* preview-start */}
-            {/* <PageContainer>Page content</PageContainer> */}
-            {/* preview-end */}
-          {/* </Paper> */}
-        {/* </AppProvider> */}
-      // </div> */}
+  {/* <input
+              type="file"
+              name="image"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setFieldValue("image", file);
+                }
+              }}
+              onBlur={handleBlur}
+              className="w-[350px] mt-3 bg-[#FAFAFA]  text-black h-[125px] hidden"
+              id="upload"
+              placeholder="Upload Image"
+            />
+            <label htmlFor="upload">
+              <div className="w-[350px] mt-5 bg-[#FAFAFA] text-black flex flex-col justify-evenly  items-center h-[74px]">
+                <Image src={upload} alt="upload" width={40} height={40} />
+                <p className="text-gray-400 text-center text-xl">
+                  Upload Image
+                </p>
+              </div>
+            </label> */}

@@ -5,12 +5,15 @@
 import { useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { useRouter } from "next/navigation";
 const page = () => {
   const [search, setSearch] = useState("");
 
   const handleChange = (e: any) => {
     setSearch(e.target.value);
   };
+
+  const router = useRouter();
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
@@ -32,57 +35,12 @@ const page = () => {
 
           <div className="w-[130px]">
             <button
-              className="bg-[#FCC827] text-black font-semibold h-[45px] p-2.5"
-              onClick={() => {
-                const modal = document.getElementById(
-                  "my_modal_1"
-                ) as HTMLDialogElement;
-                if (modal) {
-                  modal.showModal();
-                }
-              }}
+              className="bg-[#FCC827] cursor-pointer text-black font-semibold h-[45px] p-2.5"
+              onClick={() => router.push("/products/addProduct")}
             >
               {" "}
               Add Product
             </button>
-            <dialog id="my_modal_1" className="modal">
-              <div className="modal-box bg-white w-[450px] !px-[50px]">
-                <h1 className="font-bold text-3xl text-center">Add products</h1>
-                <h2 className="mt-10">Category :</h2>
-                <br />
-
-                <div className="flex flex-col gap-9 ">
-                  <input
-                    type="text"
-                    className="w-[350px] bg-white text-black h-[50px] p-2"
-                    placeholder="Category."
-                  />
-
-                  <input
-                    type="file"
-                    className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[100px]"
-                    placeholder="Upload image"
-                  />
-                  <div className="flex justify-between">
-                    <p>Status</p>
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
-                    />
-                  </div>
-                  <div className="flex">
-                    <button className="w-[350px] bg-amber-300 p-3">Save</button>
-                  </div>
-                </div>
-                <div className="modal-action">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn absolute right-0 top-0">X</button>
-                  </form>
-                </div>
-              </div>
-            </dialog>
           </div>
         </div>
       </div>

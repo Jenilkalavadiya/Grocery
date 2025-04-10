@@ -10,25 +10,33 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import ModalSubCategory from "@/utils/ModalSubCategory";
 function subcategory() {
   const [search, setSearch] = useState("");
   const [subcategory, setSubCategory] = useState([]);
-
   const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [category, setCategory] = useState(null);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  //getCategory
+  const getAllCategory = async () => {
+    try {
+      const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
+      const data = await res?.data?.data;
+      console.log("data", await data);
+      setCategory(data);
+    } catch (error) {}
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  //getSubCategory
   const getAllSubCategory = async () => {
     try {
       const res = await getFunction(
         "/get_subcategories?pageNumber=1&pageLimit=10"
       );
       const data = await res?.data?.data;
+      console.log("subcate", data);
       setSubCategory(data);
     } catch (error) {
       console.log(error);
@@ -36,6 +44,7 @@ function subcategory() {
   };
 
   useEffect(() => {
+    getAllCategory();
     getAllSubCategory();
   }, []);
 
@@ -65,61 +74,23 @@ function subcategory() {
 
           <div className="w-[166px]">
             <Button
-              className="!bg-[#FCC827] !text-black font-semibold h-[45px] p-1"
-              onClick={handleClickOpen}
+              className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
+              onClick={handleOpen}
               // variant="outlined"
             >
               {" "}
-              Add Sub Category
+              Add SubCategory
             </Button>
 
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {"Add Category"}
-              </DialogTitle>
-              <DialogContent suppressHydrationWarning>
-                <span className="mt-10">Sub Category :</span>
-                <br />
-
-                <div className="flex flex-col gap-9 ">
-                  <input
-                    type="text"
-                    className="w-[350px] bg-white text-black h-[50px] p-2"
-                    placeholder="Sub Category."
-                  />
-
-                  <input
-                    type="file"
-                    className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[100px]"
-                    placeholder="Upload image(250X250)"
-                  />
-                  <div className="flex justify-between">
-                    <span>Status</span>
-                    <label className="inline-flex items-center mb-5 cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
-                    </label>
-                  </div>
-                  <div className="flex">
-                    <button className="w-[350px] bg-amber-300 p-3">Save</button>
-                  </div>
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={handleClose}
-                  autoFocus
-                  className="btn !absolute right-0 top-0"
-                >
-                  X
-                </Button>
-              </DialogActions>
-            </Dialog>
+            {open && (
+              <ModalSubCategory
+                open={open}
+                handleClose={handleClose}
+                category={category}
+                subcategory={subcategory}
+                getAllSubCategory ={getAllSubCategory}
+              />
+            )}
           </div>
         </div>
       </div>

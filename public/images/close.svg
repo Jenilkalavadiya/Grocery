@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <g id="Group_351" data-name="Group 351" transform="translate(-1115.965 -196)">
+    <g id="close_cross_icon_128690" transform="translate(1116.749 196.749)">
+      <path id="Line_1" data-name="Line 1" d="M.176,15.468A1.176,1.176,0,0,1-.655,13.46L13.46-.655a1.176,1.176,0,0,1,1.663,1.663L1.008,15.123A1.173,1.173,0,0,1,.176,15.468Z" transform="translate(1 1)" fill="#878f92"/>
+      <path id="Line_2" data-name="Line 2" d="M14.291,15.468a1.173,1.173,0,0,1-.832-.345L-.655,1.008A1.176,1.176,0,0,1,1.008-.655L15.123,13.46a1.176,1.176,0,0,1-.832,2.008Z" transform="translate(1 1)" fill="#878f92"/>
+    </g>
+    <rect id="Rectangle_594" data-name="Rectangle 594" width="18" height="18" transform="translate(1115.965 196)" fill="none"/>
+  </g>
+</svg>

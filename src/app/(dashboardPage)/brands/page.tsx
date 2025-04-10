@@ -6,29 +6,23 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Branditem from "@/app/components/Branditem";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import GreenSwitch from "@/utils/Greenswitch";
+
+import ModalBrand from "@/utils/ ModalBrand";
 const page = () => {
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState([]);
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [category, setCategory] = useState(null);
+  const [subCategory, setSubCategory] = useState(null);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  //getbrands
   const getbrands = async () => {
     try {
       const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=4`
+        `/get_brands?pageNumber=${page}&pageLimit=10`
       );
       console.log("res", res);
       const data = await res?.data?.data;
@@ -36,13 +30,6 @@ const page = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleAddBrand = async () => {
-    try {
-      const res = await _post("/add_brand");
-      console.log("res", res);
-    } catch (error) {}
   };
 
   console.log("page", page);
@@ -53,6 +40,35 @@ const page = () => {
   const filteredbrand = brand.filter((item: any) =>
     item.Brand_Name.toLowerCase().includes(search.toLowerCase())
   );
+
+  //getCategory
+  const getAllCategory = async () => {
+    try {
+      const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
+      const data = await res?.data?.data;
+      console.log("data", await data);
+      setCategory(data);
+    } catch (error) {}
+  };
+
+  //getSubCategory
+  const getAllSubCategory = async () => {
+    try {
+      const res = await getFunction(
+        "/get_subcategories?pageNumber=1&pageLimit=10"
+      );
+      const data = await res?.data?.data;
+      console.log("subcate", data);
+      setSubCategory(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllCategory();
+    getAllSubCategory();
+  }, []);
 
   return (
     <div className="text-black">
@@ -73,78 +89,23 @@ const page = () => {
 
           <div className="w-[130px]">
             <Button
-              className="!bg-[#FCC827] !text-black font-semibold h-[45px] p-1"
-              onClick={handleClickOpen}
+              className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
+              onClick={handleOpen}
               // variant="outlined"
             >
               {" "}
               Add Brand
             </Button>
 
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">{"Add Brand"}</DialogTitle>
-              <DialogContent suppressHydrationWarning>
-                <span className="mt-10">Brand Name:</span>
-                <br />
-
-                <div className="flex flex-col gap-6 ">
-                  <input
-                    type="text"
-                    className="w-[350px] bg-white text-black h-[50px] p-2"
-                    placeholder="Brand name"
-                  />
-
-                  <span>Category</span>
-                  <select name="" id="">
-                    <option value="">Vegetables</option>
-                    <option value="">Fruits</option>
-                    <option value="">Personal Care</option>
-                    <option value="">Beverages</option>
-                    <option value="">Bread</option>
-                  </select>
-                  <span>Sub Category</span>
-                  <select name="" id="">
-                    <option value="">Soap</option>
-                    <option value="">Facewash</option>
-                    <option value="">Masala</option>
-                    <option value="">Shampoo</option>
-                    <option value="">Fresh Vegetables</option>
-                  </select>
-
-                  <input
-                    type="file"
-                    className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[100px]"
-                    placeholder="Upload image"
-                  />
-                  <div className="flex justify-between">
-                    <span>Status</span>
-                    <GreenSwitch />
-                  </div>
-                  <div className="flex">
-                    <button
-                      className="w-[350px] bg-amber-300 p-3"
-                      onClick={handleAddBrand}
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={handleClose}
-                  autoFocus
-                  className="btn !absolute right-0 top-0"
-                >
-                  X
-                </Button>
-              </DialogActions>
-            </Dialog>
+            {open && (
+              <ModalBrand
+                open={open}
+                handleClose={handleClose}
+                category={category}
+                subCategory={subCategory}
+                getbrands={getbrands}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -152,7 +113,7 @@ const page = () => {
       {/* USERS TABLE************  */}
 
       <div className="max-w-[1400px] m-auto mt-3">
-        <Branditem filteredbrand={filteredbrand} />
+        <Branditem filteredbrand={filteredbrand} getbrands={getbrands} />
       </div>
 
       {/* // PAGINATION ******* */}
