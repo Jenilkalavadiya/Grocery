@@ -5,8 +5,13 @@ import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Greenswitch from "@/utils/Greenswitch";
-const CategoryItem = ({ filteredCategories }: any) => {
-  
+import { _delete } from "@/api/ApiCall";
+import DeleteDialog from "@/utils/DeleteDialog";
+const CategoryItem = ({ filteredCategories, getAllCategory }: any) => {
+  const handleDelete = async (id: number) => {
+    const res = await _delete(`/deletecategory?id=${id}`);
+    getAllCategory();
+  };
   return (
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -32,7 +37,7 @@ const CategoryItem = ({ filteredCategories }: any) => {
               <td className="px-4 py-3 border-b border-gray-200">
                 <Image
                   src={item.Image}
-                  width={80}
+                  width={60}
                   height={40}
                   alt="category_image"
                   className="rounded-full"
@@ -49,9 +54,13 @@ const CategoryItem = ({ filteredCategories }: any) => {
                   <span className="text-2xl cursor-pointer">
                     <CiEdit />
                   </span>
-                  <span className="text-2xl cursor-pointer">
+                  <span
+                    className="text-2xl cursor-pointer"
+                    onClick={() => handleDelete(item.No)}
+                  >
                     <RiDeleteBin6Line />
                   </span>
+                  
                 </div>
               </td>
             </tr>

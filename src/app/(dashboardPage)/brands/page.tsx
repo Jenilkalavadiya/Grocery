@@ -28,7 +28,7 @@ const page = () => {
   const getbrands = async () => {
     try {
       const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=4`
+        `/get_brands?pageNumber=${page}&pageLimit=1`
       );
       console.log("res", res);
       const data = await res?.data?.data;

@@ -64,7 +64,13 @@ const page = () => {
               {" "}
               Add Category
             </Button>
-            {open && <ModalCategory open={open} handleClose={handleClose} />}
+            {open && (
+              <ModalCategory
+                open={open}
+                handleClose={handleClose}
+                getAllCategory={getAllCategory}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -72,7 +78,10 @@ const page = () => {
       {/* USERS TABLE************  */}
 
       <div className="max-w-[1400px] m-auto mt-3">
-        <CategoryItem filteredCategories={filteredCategories} />
+        <CategoryItem
+          filteredCategories={filteredCategories}
+          getAllCategory={getAllCategory}
+        />
       </div>
 
       {/* // PAGINATION ******* */}

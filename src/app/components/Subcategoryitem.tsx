@@ -1,9 +1,24 @@
+import { _delete } from "@/api/ApiCall";
+import DeleteDialog from "@/utils/DeleteDialog";
 import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const Subcategoryitem = ({ filteredSubCategories }: any) => {
+const Subcategoryitem = ({ filteredSubCategories, getAllSubCategory }: any) => {
+  const [open, setOpen] = useState(false);
+  const [itemID, setItemID] = useState();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleDelete = async () => {
+    const res = await _delete(`/delete_subcategory?id=${itemID}`);
+    getAllSubCategory();
+    console.log(res);
+  };
   return (
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -29,8 +44,8 @@ const Subcategoryitem = ({ filteredSubCategories }: any) => {
               </td>
               <td className="px-4 py-3 border-b border-gray-200">
                 <Image
-                  src={item?.Image}
-                  width={80}
+                  src={item.Image}
+                  width={60}
                   height={40}
                   alt="category_image"
                   className="rounded-full object-contain"
@@ -50,9 +65,21 @@ const Subcategoryitem = ({ filteredSubCategories }: any) => {
                   <span className="text-2xl cursor-pointer">
                     <CiEdit />
                   </span>
-                  <span className="text-2xl cursor-pointer">
+                  <span
+                    className="text-2xl cursor-pointer"
+                    onClick={() => {
+                      handleClickOpen(), setItemID(item.No);
+                    }}
+                  >
                     <RiDeleteBin6Line />
                   </span>
+                  {open && (
+                    <DeleteDialog
+                      open={open}
+                      handleClose={handleClose}
+                      handleDelete={handleDelete}
+                    />
+                  )}
                 </div>
               </td>
             </tr>

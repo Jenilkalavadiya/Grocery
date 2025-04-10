@@ -13,15 +13,13 @@ export default function users() {
       {/* SERCH INPUT  */}
       <div className="flex justify-between p-4 items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">
-            Categories
-          </h2>
+          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Users</h2>
         </div>
 
         <div className="searchfiled mr-8 flex gap-2">
           <input
             type="text"
-            placeholder="Search Categories.. "
+            placeholder="Search Users.. "
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="p-3 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
@@ -30,9 +28,7 @@ export default function users() {
       </div>
 
       {/* USERS TABLE************  */}
-      <div className="max-w-[1400px] m-auto mt-3">
-        {/* <CategoryItem /> */}
-      </div>
+      <div className="max-w-[1400px] m-auto mt-3">{/* <CategoryItem /> */}</div>
 
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
