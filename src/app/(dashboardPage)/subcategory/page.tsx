@@ -10,16 +10,29 @@ import ModalSubCategory from "@/utils/ModalSubCategory";
 function subcategory() {
   const [search, setSearch] = useState("");
   const [subcategory, setSubCategory] = useState([]);
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [category, setCategory] = useState(null);
+
+  //getCategory
+  const getAllCategory = async () => {
+    try {
+      const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
+      const data = await res?.data?.data;
+      console.log("data", await data);
+      setCategory(data);
+    } catch (error) {}
+  };
+
+  //getSubCategory
   const getAllSubCategory = async () => {
     try {
       const res = await getFunction(
         "/get_subcategories?pageNumber=1&pageLimit=5"
       );
       const data = await res?.data?.data;
+      console.log("subcate", data);
       setSubCategory(data);
     } catch (error) {
       console.log(error);
@@ -27,6 +40,7 @@ function subcategory() {
   };
 
   useEffect(() => {
+    getAllCategory();
     getAllSubCategory();
   }, []);
 
@@ -56,15 +70,23 @@ function subcategory() {
 
           <div className="w-[166px]">
             <Button
-              className="!bg-[#FCC827] !text-black font-semibold h-[45px] p-1"
+              className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
               onClick={handleOpen}
               // variant="outlined"
             >
               {" "}
-              Add Sub Category
+              Add SubCategory
             </Button>
 
-            {open && <ModalSubCategory open={open} handleClose={handleClose} />}
+            {open && (
+              <ModalSubCategory
+                open={open}
+                handleClose={handleClose}
+                category={category}
+                subcategory={subcategory}
+                getAllSubCategory ={getAllSubCategory}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -22,3 +22,16 @@ export const AddCategorySchema = Yup.object().shape({
   name: Yup.string().required("Category is Required"),
   image: Yup.mixed().required("Image is required"),
 });
+
+export const AddBrandSchema = Yup.object().shape({
+  name: Yup.string().required("BrandName is Required"),
+  image: Yup.mixed().required("Image is required"),
+  category:Yup.string().required('Category is Required'),
+  subCategory:Yup.string().required('SubCategory is Required')
+});
+
+export const AddSubCategorySchema = Yup.object().shape({
+  name: Yup.string().required("Category is Required"),
+  category: Yup.mixed().required("Please Select one option"),
+  image: Yup.mixed().required("Image is required"),
+});
