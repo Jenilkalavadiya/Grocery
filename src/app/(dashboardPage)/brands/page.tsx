@@ -25,7 +25,7 @@ const page = () => {
         `/get_brands?pageNumber=${page}&pageLimit=10&search=${search}`
       );
       console.log("res", res);
-      const data = await res?.data?.data?.result;
+      const data = await res?.data?.data;
       setBrand(data);
     } catch (error) {
       console.log(error);
