@@ -13,6 +13,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import l2 from "../../../../public/l2.png";
+
 
 const ResetPassword = () => {
   const [eye, setEye] = useState(true);
@@ -52,7 +54,7 @@ const ResetPassword = () => {
       {/* FIRST IMAGE */}
       <div className={`${styles.firstImage}`}>
         <Image
-          src="/l2.png"
+          src={l2}
           width={491}
           height={314}
           className={`${styles.loginImage}`}

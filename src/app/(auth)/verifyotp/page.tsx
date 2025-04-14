@@ -9,8 +9,10 @@ import axios from "axios";
 // import styles from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import l2 from "../../../../public/l2.png";
 
 import OtpInput from "react-otp-input";
+
 const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
   const router = useRouter();
@@ -51,7 +53,7 @@ const VerifyOtpPage = () => {
     <div className="flex h-screen bg-[url(/background.png)] bg-cover flex-col justify-between gap-2">
       <div className="firstimage">
         <Image
-          src="/l2.png"
+          src={l2}
           width={491}
           className={`  absolute w-[32%] bottom-0 left-0 sm:w-[40%] md:w-[45%] lg:w-[33%]`}
           height={314}

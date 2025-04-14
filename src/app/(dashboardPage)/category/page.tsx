@@ -23,8 +23,9 @@ const page = () => {
       const res = await getFunction(
         `/getcategories?pageNumber=${page}&pageLimit=5`
       );
-
-      const data = await res?.data?.data;
+      console.log("REs", res);
+      // console.log("page", page);
+      const data = await res?.data?.data?.result;
       setCategory(data);
     } catch (error) {}
   };
@@ -50,13 +51,12 @@ const page = () => {
             className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
           />
 
-          <div className="w-[150px]">
+          <div className="">
             <Button
-              className="!bg-[#FCC827] !text-black font-semibold h-[45px] p-1"
+              className="!bg-[#FCC827] !text-black font-bold h-[45px] p-1"
               onClick={handleOpen}
               // variant="outlined"
             >
-              {" "}
               Add Category
             </Button>
             {open && (
@@ -72,7 +72,7 @@ const page = () => {
 
       {/* USERS TABLE************  */}
 
-      <div className="p- m-auto mt-3">
+      <div className="p-7 m-auto ">
         <CategoryItem
           filteredCategories={category}
           getAllCategory={getAllCategory}

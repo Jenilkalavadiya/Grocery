@@ -2,16 +2,39 @@
 
 // import axios from "axios";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/navigation";
+import CustomSeparator from "@/app/components/Bradcrumbs";
+import Dashboard from "../dashboard/page";
+import GetProduct from "@/app/components/GetProduct";
+import { getFunction } from "@/api/ApiCall";
 const page = () => {
   const [search, setSearch] = useState("");
+  const [product, setProduct] = useState(null);
+  const [page, setPage] = useState(1);
 
   const handleChange = (e: any) => {
-    setSearch(e.target.value);
+    const trimmedSearch = e.target.value.trim();
+    setSearch(trimmedSearch);
   };
+
+  //GET PRODUCT
+  const getProduct = async () => {
+    const res = await getFunction(
+      `/get_products?pageNumber=1&pageLimit=10&search=${search}`
+    );
+    console.log("getProduct", res?.data);
+    const data = await res?.data?.data?.result;
+    const total = res?.data?.data?.Total_Count;
+    setProduct(data);
+    setPage(total);
+  };
+
+  useEffect(() => {
+    getProduct();
+  }, [search, page]);
 
   const router = useRouter();
   return (
@@ -19,7 +42,10 @@ const page = () => {
       {/* SERCH INPUT  */}
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl font-bold !text-[#202020]">Products</h2>
+          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Products</h2>
+          <div className="ml-8 mt-2">
+            <CustomSeparator className="flex" />
+          </div>
         </div>
 
         {/* SEARCH USERS INPUT ***************** */}
@@ -47,14 +73,20 @@ const page = () => {
 
       {/* USERS TABLE************  */}
 
-      <div className="max-w-[1400px] m-auto mt-3">
-        {/* <CategoryItem category={category} /> */}
+      <div className="p-7 m-auto ">
+        <GetProduct product={product} getProduct={getProduct} />
       </div>
 
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
+          <Pagination
+            count={Math.ceil(Number(page / 12))}
+            page={page}
+            onChange={(e, value) => setPage(value)}
+            variant="outlined"
+            shape="rounded"
+          />
         </Stack>
       </div>
     </div>

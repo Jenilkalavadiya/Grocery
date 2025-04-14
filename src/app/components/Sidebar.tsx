@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
+import Grocery from '../../../public/Path 410.png'
+import Image from "next/image";
 const sidebarItems = [
   { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
   { name: "Users", image: "./images/2.svg", link: "/users" },
@@ -66,7 +67,7 @@ export default function Sidebar() {
           {/* Logo section */}
           <div className="mb-10 sticky top-0 z-50 bg-gray-50 dark:bg-[#202020]">
             <Link href="#" className="flex items-center justify-center">
-              <img src="./Path 410.png" alt="Logo" />
+              <Image src={Grocery} width={150} height={100} alt="Logo" />
             </Link>
           </div>
 

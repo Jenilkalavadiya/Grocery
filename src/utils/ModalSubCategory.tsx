@@ -64,11 +64,15 @@ export default function ModalSubCategory({
   });
   return (
     <div className="">
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={style}
+        className="!flex !justify-center !border-none !items-center !px-10 !w-[465px]"
       >
         <Box
           sx={style}
@@ -79,7 +83,13 @@ export default function ModalSubCategory({
             className="flex flex-col gap-4 "
             id="modal"
           >
-            <h1 className="text-center font-bold text-2xl">Add SubCategory</h1>
+            <option value="">Select</option>
+            {category?.map((data: any) => (
+              <option key={data?.No} value={data.No}>
+                {data.Category_Name}
+              </option>
+            ))}
+          </select>
 
             {/* SUBCATEGORYNAME************* */}
             <div className="absolute top-0 right-0 p-2">

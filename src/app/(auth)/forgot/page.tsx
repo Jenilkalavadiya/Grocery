@@ -12,6 +12,7 @@ import axios from "axios";
 import styles from "@/styles/forgot.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import l2 from "../../../../public/l2.png";
 
 const Page = () => {
   const [input, setInput] = useState({
@@ -57,7 +58,7 @@ const Page = () => {
       {/* FIRST IMAGE */}
       <div className={`${styles.firstImage}`}>
         <Image
-          src="/l2.png"
+          src={l2}
           width={491}
           height={314}
           className={`${styles.loginImage}`}

@@ -39,3 +39,6 @@ export const _delete = (url: any, data = {}) => {
   console.log("apicall DELETE", url, data);
   return apiClient.delete(url, { data });
 };
+
+
+
