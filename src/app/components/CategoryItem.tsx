@@ -1,5 +1,3 @@
-import axios from "axios";
-import { headers } from "next/headers";
 import Image from "next/image";
 import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -7,13 +5,28 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import Greenswitch from "@/utils/Greenswitch";
 import { _delete } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
-const CategoryItem = ({ filteredCategories, getAllCategory }: any) => {
-  const handleDelete = async (id: number) => {
-    const res = await _delete(`/deletecategory?id=${id}`);
+
+const CategoryItem = ({
+  filteredCategories,
+  getAllCategory,
+  handleOpen,
+}: any) => {
+  const [open, setOpen] = useState(false);
+  const [itemID, setItemID] = useState();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleDelete = async () => {
+    const res = await _delete(`/deletecategory?id=${itemID}`);
     getAllCategory();
+    handleClose();
+    console.log(res);
   };
   return (
-    <div className="overflow-x-auto shadow-2xl ">
+    <div className="overflow-x-auto shadow-2xl mt-10">
       <table className="min-w-full bg-white rounded-2xl ">
         <thead className="bg-[#FAFAFA] text-[#202020]">
           <tr className="text-md  font-bold border-gray-300">
@@ -26,7 +39,7 @@ const CategoryItem = ({ filteredCategories, getAllCategory }: any) => {
           </tr>
         </thead>
         <tbody>
-          {filteredCategories?.map((item: any) => (
+          {filteredCategories?.result?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
@@ -51,16 +64,29 @@ const CategoryItem = ({ filteredCategories, getAllCategory }: any) => {
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">
-                  <span className="text-2xl cursor-pointer">
+                  <span
+                    className="text-2xl cursor-pointer"
+                    onClick={() => {
+                      handleOpen(), setItemID(item.No);
+                    }}
+                  >
                     <CiEdit />
                   </span>
                   <span
                     className="text-2xl cursor-pointer"
-                    onClick={() => handleDelete(item.No)}
+                    onClick={() => {
+                      handleClickOpen(), setItemID(item.No);
+                    }}
                   >
                     <RiDeleteBin6Line />
                   </span>
-                  
+                  {open && (
+                    <DeleteDialog
+                      open={open}
+                      handleClose={handleClose}
+                      handleDelete={handleDelete}
+                    />
+                  )}
                 </div>
               </td>
             </tr>
@@ -72,52 +98,3 @@ const CategoryItem = ({ filteredCategories, getAllCategory }: any) => {
 };
 
 export default CategoryItem;
-
-//  <span
-//                   className={`inline-block rounded-full text-xs font-semibold ${item?.Status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-//                 >
-//                   {/* {item?.Status} */}
-//                   <input
-//                     type="checkbox"
-//                     // defaultChecked
-//                     checked={item?.Status}
-//                     onChange={(e) =>
-//                       handleStatusChange(item?.No, e.target.checked)
-//                     }
-//                     className="toggle bg-gray-500 checked:bg-green-500 checked:text-white-800 checked:border-green-500 "
-//                   />
-//                 </span>
-
-// const handleStatusChange = async (
-//   categoryId: number,
-//   currentStatus: boolean
-// ) => {
-//   try {
-//     // Call an API to update the status on the backend (POST or PUT request)
-//     await axios.post(
-//       `${process.env.NEXT_PUBLIC_BASEAPI}/getcategory?id=${categoryId}`,
-//       {
-//         categoryId: categoryId,
-//         status: currentStatus ? 1 : 0,
-//       },
-//       {
-//         headers: {
-//           Authorizations: `${jwt}`,
-//           refresh_token: refresh,
-//         },
-//       }
-//     );
-
-//     // Update the UI optimistically
-//     setCategories((prevCategories: any) =>
-//       prevCategories.map((item: any) =>
-//         item.No === categoryId
-//           ? { ...item, Status: currentStatus ? 1 : 0 }
-//           : item
-//       )
-//     );
-//     console.log("Category status updated successfully.");
-//   } catch (error) {
-//     console.error("Error updating category status:", error);
-//   }
-// };

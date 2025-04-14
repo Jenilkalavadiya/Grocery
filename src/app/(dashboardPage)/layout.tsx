@@ -9,7 +9,9 @@ const layout = ({ children }: any) => {
 
       <div className="flex !bg-white ">
         <Sidebar />
-        <div className="mt-[80px] w-full bg-[#F0F0F0] ">{children}</div>
+        <div className="mt-[80px] px-[56px] w-full bg-[#F0F0F0] ">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -29,7 +29,7 @@ function subcategory() {
   const getAllSubCategory = async () => {
     try {
       const res = await getFunction(
-        "/get_subcategories?pageNumber=1&pageLimit=5"
+        "/get_subcategories?pageNumber=1&pageLimit=10"
       );
       const data = await res?.data?.data;
       console.log("subcate", data);
@@ -44,17 +44,12 @@ function subcategory() {
     getAllSubCategory();
   }, []);
 
-  const filteredSubCategories = subcategory.filter((item: any) =>
-    item.Category_Name.toLowerCase().includes(search.toLowerCase())
-  );
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between p-4 items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">
-            Sub Categories
-          </h2>
+          <h2 className="text-3xl font-bold !text-[#202020]">Sub Categories</h2>
         </div>
 
         {/* SEARCH USERS INPUT ***************** */}
@@ -84,7 +79,7 @@ function subcategory() {
                 handleClose={handleClose}
                 category={category}
                 subcategory={subcategory}
-                getAllSubCategory ={getAllSubCategory}
+                getAllSubCategory={getAllSubCategory}
               />
             )}
           </div>
@@ -95,7 +90,7 @@ function subcategory() {
 
       <div className="max-w-[1400px] m-auto mt-3">
         <Subcategoryitem
-          filteredSubCategories={filteredSubCategories}
+          filteredSubCategories={subcategory}
           getAllSubCategory={getAllSubCategory}
         />
       </div>

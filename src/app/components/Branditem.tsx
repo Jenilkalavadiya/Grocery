@@ -5,13 +5,21 @@ import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
+import DeleteDialog from "@/utils/DeleteDialog";
 const Branditem = ({ filteredbrand, getbrands }: any) => {
-  const handleDelete = async (id: number) => {
-    console.log("ID", id);
-    const res = await _delete(`/delete_brand?id=${id}`);
-      toast.success('Brand deleted successfully')
+  const [open, setOpen] = useState(false);
+  const [itemID, setItemID] = useState();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleDelete = async () => {
+    const res = await _delete(`/delete_brand?id=${itemID}`);
     getbrands();
-    console.log("res", res);
+    handleClose();
+    console.log(res);
   };
   return (
     <div className="overflow-x-auto shadow-2xl ">
@@ -23,58 +31,63 @@ const Branditem = ({ filteredbrand, getbrands }: any) => {
             <th className="px-6 py-3 text-left w-[405px]">Name</th>
             <th className="px-4 py-3 text-left min-w-[300px]">Category</th>
             <th className="px-4 py-3 text-left min-w-[300px]">Sub Category</th>
-
             <th className="px-6 py-3 text-left">Status</th>
             <th className="px-6 py-3 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredbrand?.map((item: any) => (
-            
+          {filteredbrand?.result?.map((item: any) => (
             <tr
-            key={item.No}
-            className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-          >
-            <td className="px-4 py-3 text-sm border-b border-gray-200">
-              {item?.No}
-            </td>
-            <td className="px-4 py-3 border-b border-gray-200 ">
-              <Image
-                src={item?.Image}
-                width={80}
-                height={40}
-                alt="category_image"
-                className="rounded-full object-contain"
-              />
-            </td>
-            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-              {item?.Brand_Name}
-            </td>
-            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-              {item?.Category_Name}
-            </td>
-            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-              {item?.SubCategory_Name}
-            </td>
-            <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-              <Greenswitch item={item} />
-            </td>
-            <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
-              <div className="flex gap-4 items-center">
-                <span className="text-2xl cursor-pointer">
-                  <CiEdit />
-                </span>
-                <span
-                  className="text-2xl cursor-pointer"
-                  onClick={() => handleDelete(item.No)}
-                >
-                  <RiDeleteBin6Line />
-                </span>
-              </div>
-            </td>
-          </tr>
-          
-         
+              key={item.No}
+              className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+            >
+              <td className="px-4 py-3 text-sm border-b border-gray-200">
+                {item?.No}
+              </td>
+              <td className="px-4 py-3 border-b border-gray-200 ">
+                <Image
+                  src={item?.Image}
+                  width={80}
+                  height={40}
+                  alt="category_image"
+                  className="rounded-full object-contain"
+                />
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                {item?.Brand_Name}
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                {item?.Category_Name}
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                {item?.SubCategory_Name}
+              </td>
+              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                <Greenswitch item={item} />
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+                <div className="flex gap-4 items-center">
+                  <span className="text-2xl cursor-pointer">
+                    <CiEdit />
+                  </span>
+                  <span
+                    className="text-2xl cursor-pointer"
+                    onClick={() => {
+                      handleClickOpen(), setItemID(item.No);
+                    }}
+                  >
+                    <RiDeleteBin6Line />
+                  </span>
+                  {open && (
+                    <DeleteDialog
+                      open={open}
+                      handleClose={handleClose}
+                      handleDelete={handleDelete}
+                    />
+                  )}
+                </div>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>

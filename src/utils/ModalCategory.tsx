@@ -4,7 +4,7 @@ import { FaUpload } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddCategorySchema } from "@/_components/Validation";
-import { _post } from "@/api/ApiCall";
+import { _post, getFunction } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
 
@@ -25,7 +25,6 @@ export default function ModalCategory({
   handleClose,
   getAllCategory,
 }: any) {
-  
   const {
     values,
     errors,
@@ -50,6 +49,9 @@ export default function ModalCategory({
     },
   });
 
+  // let res = await getFunction(`/getcategory?id={}`);
+  //   console.log("response", res);
+
   return (
     <div>
       <Modal
@@ -70,15 +72,15 @@ export default function ModalCategory({
             <div className="border-b-1 border-gray-400 w-full"></div>
 
             <div className="px-10 py-5 flex flex-col gap-4">
-              <span className="text-gray-500">Category Name :</span>
+              <span className="text-gray-500">Category :</span>
               <input
                 type="text"
                 name="name"
                 value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-[350px] bg-white text-black h-[50px] p-2"
-                placeholder="Category Name"
+                className="w-[350px] text-gray-500 h-[50px] p-2"
+                placeholder="Category"
               />
               {errors.name && touched.name && (
                 <div className="text-red-500">{errors.name}</div>

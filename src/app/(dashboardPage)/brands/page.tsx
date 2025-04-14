@@ -73,9 +73,9 @@ const page = () => {
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between p-4 items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Brands</h2>
+          <h2 className="text-3xl font-bold !text-[#202020]">Brands</h2>
         </div>
 
         <div className="searchfiled mr-8 flex gap-2">

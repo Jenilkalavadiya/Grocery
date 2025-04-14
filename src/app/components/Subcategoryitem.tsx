@@ -17,6 +17,7 @@ const Subcategoryitem = ({ filteredSubCategories, getAllSubCategory }: any) => {
   const handleDelete = async () => {
     const res = await _delete(`/delete_subcategory?id=${itemID}`);
     getAllSubCategory();
+    handleClose();
     console.log(res);
   };
   return (
@@ -34,7 +35,7 @@ const Subcategoryitem = ({ filteredSubCategories, getAllSubCategory }: any) => {
           </tr>
         </thead>
         <tbody>
-          {filteredSubCategories?.map((item: any) => (
+          {filteredSubCategories?.result?.map((item: any) => (
             <tr
               key={item.No}
               className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
