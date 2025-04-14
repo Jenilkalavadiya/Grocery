@@ -127,9 +127,9 @@ export default function ModalBrand({
               className="w-[350px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
             >
               <option value="">Select</option>
-              {category.map((data: any) => (
-                <option key={data?.No} value={data.No}>
-                  {data.Category_Name}
+              {category?.map((data: any) => (
+                <option key={data?.No} value={data?.No}>
+                  {data?.Category_Name}
                 </option>
               ))}
             </select>

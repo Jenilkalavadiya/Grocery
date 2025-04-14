@@ -22,10 +22,10 @@ const page = () => {
   const getbrands = async () => {
     try {
       const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=10`
+        `/get_brands?pageNumber=${page}&pageLimit=10&search=${search}`
       );
       console.log("res", res);
-      const data = await res?.data?.data;
+      const data = await res?.data?.data?.result;
       setBrand(data);
     } catch (error) {
       console.log(error);
@@ -35,17 +35,13 @@ const page = () => {
   console.log("page", page);
   useEffect(() => {
     getbrands();
-  }, [page]);
-
-  const filteredbrand = brand.filter((item: any) =>
-    item.Brand_Name.toLowerCase().includes(search.toLowerCase())
-  );
+  }, [search, page]);
 
   //getCategory
   const getAllCategory = async () => {
     try {
       const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
-      const data = await res?.data?.data;
+      const data = await res?.data?.data?.result;
       console.log("data", await data);
       setCategory(data);
     } catch (error) {}
@@ -57,7 +53,7 @@ const page = () => {
       const res = await getFunction(
         "/get_subcategories?pageNumber=1&pageLimit=10"
       );
-      const data = await res?.data?.data;
+      const data = await res?.data?.data?.result;
       console.log("subcate", data);
       setSubCategory(data);
     } catch (error) {
@@ -69,6 +65,11 @@ const page = () => {
     getAllCategory();
     getAllSubCategory();
   }, []);
+
+  const handleChange = (e: any) => {
+    const trimmedSearch = e.target.value.trim();
+    setSearch(trimmedSearch);
+  };
 
   return (
     <div className="text-black">
@@ -83,7 +84,7 @@ const page = () => {
             type="text"
             placeholder="Search Brands.. "
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleChange(e)}
             className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
           />
 
@@ -113,7 +114,7 @@ const page = () => {
       {/* USERS TABLE************  */}
 
       <div className="max-w-[1400px] m-auto mt-3">
-        <Branditem filteredbrand={filteredbrand} getbrands={getbrands} />
+        <Branditem filteredbrand={brand} getbrands={getbrands} />
       </div>
 
       {/* // PAGINATION ******* */}

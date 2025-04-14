@@ -19,7 +19,7 @@ function subcategory() {
   const getAllCategory = async () => {
     try {
       const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
-      const data = await res?.data?.data;
+      const data = await res?.data?.data?.result;
       console.log("data", await data);
       setCategory(data);
     } catch (error) {}
@@ -31,7 +31,7 @@ function subcategory() {
       const res = await getFunction(
         "/get_subcategories?pageNumber=1&pageLimit=5"
       );
-      const data = await res?.data?.data;
+      const data = await res?.data?.data?.result;
       console.log("subcate", data);
       setSubCategory(data);
     } catch (error) {
@@ -84,7 +84,7 @@ function subcategory() {
                 handleClose={handleClose}
                 category={category}
                 subcategory={subcategory}
-                getAllSubCategory ={getAllSubCategory}
+                getAllSubCategory={getAllSubCategory}
               />
             )}
           </div>
@@ -93,7 +93,7 @@ function subcategory() {
 
       {/* USERS TABLE************  */}
 
-      <div className="max-w-[1400px] m-auto mt-3">
+      <div className="p-10 m-auto ">
         <Subcategoryitem
           filteredSubCategories={filteredSubCategories}
           getAllSubCategory={getAllSubCategory}

@@ -72,7 +72,7 @@ export default function ModalSubCategory({
     >
       <Box
         sx={style}
-        className="!flex !justify-center !items-center !px-10 !w-[465px]"
+        className="!flex !justify-center !border-none !items-center !px-10 !w-[465px]"
       >
         <form
           onSubmit={handleSubmit}
@@ -112,7 +112,7 @@ export default function ModalSubCategory({
             className="w-[350px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
           >
             <option value="">Select</option>
-            {category.map((data: any) => (
+            {category?.map((data: any) => (
               <option key={data?.No} value={data.No}>
                 {data.Category_Name}
               </option>

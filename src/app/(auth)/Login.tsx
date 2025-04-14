@@ -13,6 +13,7 @@ import styles from "@/styles/login.module.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { _post } from "@/api/ApiCall";
+import l2 from "../../../public/l2.png";
 
 const Page = () => {
   const [eye, setEye] = useState(true);
@@ -26,7 +27,6 @@ const Page = () => {
       validationSchema: LoginSchema,
       onSubmit: async (values) => {
         try {
-
           const res = await _post("/login", values);
 
           console.log("res", res);
@@ -53,7 +53,7 @@ const Page = () => {
       {/* FIRST IMAGE */}
       <div className={`${styles.firstImage}`}>
         <Image
-          src="/l2.png"
+          src={l2}
           width={491}
           height={314}
           className={`${styles.loginImage}`}
