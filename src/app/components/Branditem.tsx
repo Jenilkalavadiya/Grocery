@@ -1,4 +1,4 @@
-import { _delete } from "@/api/ApiCall";
+import { _delete, _post } from "@/api/ApiCall";
 import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -6,9 +6,11 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import DeleteDialog from "@/utils/DeleteDialog";
-const Branditem = ({ filteredbrand, getbrands }: any) => {
+import GreenSwitch from "@/utils/Greenswitch";
+const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -21,6 +23,30 @@ const Branditem = ({ filteredbrand, getbrands }: any) => {
     handleClose();
     console.log(res);
   };
+
+  // CHANGE STATUS
+  const changeStatus = async (id: number, currentStatus: number) => {
+    const newStatus = currentStatus === 1 ? 0 : 1;
+
+    try {
+      const res = await _post(`/status_change3`, {
+        id,
+        status: newStatus,
+      });
+
+      console.log("status", res);
+      if (res?.status === 200) {
+        toast.success(res?.data?.data?.MESSAGE);
+      } else {
+        toast.error("Status update failed");
+      }
+      getbrands();
+    } catch (err) {
+      console.error("Status update error:", err);
+      toast.error("Error updating status");
+    }
+  };
+
   return (
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -36,59 +62,79 @@ const Branditem = ({ filteredbrand, getbrands }: any) => {
           </tr>
         </thead>
         <tbody>
-          {filteredbrand?.result?.map((item: any) => (
-            <tr
-              key={item.No}
-              className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-            >
-              <td className="px-4 py-3 text-sm border-b border-gray-200">
-                {item?.No}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200 ">
-                <Image
-                  src={item?.Image}
-                  width={80}
-                  height={40}
-                  alt="category_image"
-                  className="rounded-full object-contain"
-                />
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.Brand_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.Category_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.SubCategory_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <Greenswitch item={item} />
-              </td>
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
-                <div className="flex gap-4 items-center">
-                  <span className="text-2xl cursor-pointer">
-                    <CiEdit />
-                  </span>
-                  <span
-                    className="text-2xl cursor-pointer"
-                    onClick={() => {
-                      handleClickOpen(), setItemID(item.No);
-                    }}
-                  >
-                    <RiDeleteBin6Line />
-                  </span>
-                  {open && (
-                    <DeleteDialog
-                      open={open}
-                      handleClose={handleClose}
-                      handleDelete={handleDelete}
+          {filteredbrand ? (
+            <>
+              {filteredbrand?.result?.map((item: any) => (
+                <tr
+                  key={item.No}
+                  className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+                >
+                  <td className="px-4 py-3 text-sm border-b border-gray-200">
+                    {item?.No}
+                  </td>
+                  <td className="px-4 py-3 border-b border-gray-200 ">
+                    <Image
+                      src={item?.Image}
+                      width={80}
+                      height={40}
+                      alt="category_image"
+                      className="rounded-full object-contain"
                     />
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                    {item?.Brand_Name}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                    {item?.Category_Name}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                    {item?.SubCategory_Name}
+                  </td>
+                  <td className="px-4 py-6 border-b border-gray-200 text-left">
+                    <div
+                      onClick={() => changeStatus(item?.No, item?.Status)}
+                      className="inline-block cursor-pointer"
+                    >
+                      <GreenSwitch Status={item?.Status} />
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+                    <div className="flex gap-4 items-center">
+                      <span
+                        className="text-2xl cursor-pointer"
+                        onClick={() => {
+                          handleOpen(), setId(item?.No);
+                        }}
+                      >
+                        <CiEdit />
+                      </span>
+                      <span
+                        className="text-2xl cursor-pointer"
+                        onClick={() => {
+                          handleClickOpen(), setItemID(item?.No);
+                        }}
+                      >
+                        <RiDeleteBin6Line />
+                      </span>
+                      {open && (
+                        <DeleteDialog
+                          open={open}
+                          handleClose={handleClose}
+                          handleDelete={handleDelete}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </>
+          ) : (
+            <>
+              <tr className="">
+                <td className="ml-3 mt-2  text-center ">No Data</td>
+              </tr>
+            </>
+          )}
         </tbody>
       </table>
     </div>

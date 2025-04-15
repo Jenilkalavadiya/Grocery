@@ -18,6 +18,7 @@ const page = () => {
   const handleChange = (e: any) => {
     const trimmedSearch = e.target.value.trim();
     setSearch(trimmedSearch);
+    setPage(1)
   };
 
   //GET PRODUCT
@@ -44,7 +45,7 @@ const page = () => {
         <div>
           <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Products</h2>
           <div className="ml-8 mt-2">
-            <CustomSeparator className="flex" />
+            <CustomSeparator value1={"Dashboard"} value2={"products"}  className="flex" />
           </div>
         </div>
 
@@ -81,7 +82,7 @@ const page = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(page / 12))}
+            count={Math.ceil(Number(page / 20))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

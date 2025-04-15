@@ -6,11 +6,33 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const AddProduct = () => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("id");
+  console.log("id", search);
+  useEffect(() => {
+    if (search) {
+      setProductId(search);
+    }
+  }, [search]);
+
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [brand, setBrand] = useState([]);
-  const [productId, setProductId] = useState<string | null>(null); // New state to store the product id
+  const [productId, setProductId] = useState<string | null>(null);
+  const [getProductDetail, setGetProductDetail] = useState(null);
+
+  useEffect(() => {
+    getAllCategory();
+    getAllSubCategory();
+    getbrands();
+  }, [page]);
+
+  useEffect(() => {
+    if (productId) {
+      getProductById();
+    }
+  }, [productId]);
 
   // GET CATEGORY ****************
   const getAllCategory = async () => {
@@ -24,12 +46,6 @@ const AddProduct = () => {
       console.error("Error fetching categories:", error);
     }
   };
-
-  useEffect(() => {
-    getAllCategory();
-    getAllSubCategory();
-    getbrands();
-  }, [page]);
 
   const getAllSubCategory = async () => {
     try {
@@ -59,18 +75,22 @@ const AddProduct = () => {
   // GET PRODUCT ****************
   const getProduct = async () => {
     const res = await getFunction(`/get_products?pageNumber=1&pageLimit=10`);
-    console.log("getProduct", res);
+    // console.log("getProduct", res);
     const data = await res?.data?.data?.result;
   };
 
-  const searchParams = useSearchParams();
-  const search = searchParams.get("id"); 
-  console.log("id", search); 
-  useEffect(() => {
-    if (search) {
-      setProductId(search); 
+  // GET PRODUCT BY ID
+  const getProductById = async () => {
+    try {
+      const res = await getFunction(`/get_product_by_id?id=${productId}`);
+      console.log("getProductById", res?.data);
+      if (res?.data?.code == 1) {
+        setGetProductDetail(res?.data?.data?.DATA);
+      }
+    } catch (error) {
+      console.error("Error fetching product by id:", error);
     }
-  }, [search]); 
+  };
 
   return (
     <div className="max-w-[1400px] mt-2 m-auto p-2">
@@ -79,7 +99,8 @@ const AddProduct = () => {
         category={category}
         subCategory={subCategory}
         getProduct={getProduct}
-        productId={productId} 
+        productId={productId}
+        getProductDetail={getProductDetail}
       />
     </div>
   );

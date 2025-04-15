@@ -6,43 +6,46 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Branditem from "@/app/components/Branditem";
 import Button from "@mui/material/Button";
-
+import icon from "../../../../public/images/search.svg";
 import ModalBrand from "@/utils/ ModalBrand";
+import Image from "next/image";
+import CustomSeparator from "@/app/components/Bradcrumbs";
+
 const page = () => {
   const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState([]);
+  const [brand, setBrand] = useState(null);
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setId("");
+  };
   const [category, setCategory] = useState(null);
   const [subCategory, setSubCategory] = useState(null);
+  const [id, setId] = useState("");
 
-  //getbrands
-  const getbrands = async () => {
-    try {
-      const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=10&search=${search}`
-      );
-      console.log("res", res);
-      const data = await res?.data?.data;
-      setBrand(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log("page", page);
   useEffect(() => {
     getbrands();
   }, [search, page]);
+
+  useEffect(() => {
+    getAllCategory();
+    getAllSubCategory();
+  }, []);
+
+  const handleChange = (e: any) => {
+    const trimmedSearch = e.target.value.trim();
+    setSearch(trimmedSearch);
+    setPage(1);
+  };
 
   //getCategory
   const getAllCategory = async () => {
     try {
       const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
       const data = await res?.data?.data?.result;
-      console.log("data", await data);
+      // console.log("data", await data);
       setCategory(data);
     } catch (error) {}
   };
@@ -54,21 +57,25 @@ const page = () => {
         "/get_subcategories?pageNumber=1&pageLimit=10"
       );
       const data = await res?.data?.data?.result;
-      console.log("subcate", data);
+      // console.log("subcate", data);
       setSubCategory(data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    getAllCategory();
-    getAllSubCategory();
-  }, []);
-
-  const handleChange = (e: any) => {
-    const trimmedSearch = e.target.value.trim();
-    setSearch(trimmedSearch);
+  //getbrands
+  const getbrands = async () => {
+    try {
+      const res = await getFunction(
+        `/get_brands?pageNumber=${page}&pageLimit=5&search=${search}`
+      );
+      console.log("res", res?.data?.data);
+      const data = await res?.data?.data;
+      setBrand(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -77,16 +84,30 @@ const page = () => {
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Brands</h2>
+          <div className=" mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"brands"}
+              className="flex"
+            />
+          </div>
         </div>
 
-        <div className="searchfiled mr-8 flex gap-2">
-          <input
-            type="text"
-            placeholder="Search Brands.. "
-            value={search}
-            onChange={(e) => handleChange(e)}
-            className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
-          />
+        <div className="searchfiled   mr-8 flex gap-2">
+          <div className=" border-[#DADDE1] border bg-white flex">
+            <div className="flex items-center justify-center ml-3">
+              <Image src={icon} alt="serach" width={18} height={15} />
+            </div>
+            <div className="flex items-center justify-center p-2">
+              <input
+                type="text"
+                placeholder="Search Brands.. "
+                value={search}
+                onChange={(e) => handleChange(e)}
+                className="px-2 focus:outline-none "
+              />
+            </div>
+          </div>
 
           <div className="w-[130px]">
             <Button
@@ -105,6 +126,7 @@ const page = () => {
                 category={category}
                 subCategory={subCategory}
                 getbrands={getbrands}
+                id={id}
               />
             )}
           </div>
@@ -113,19 +135,24 @@ const page = () => {
 
       {/* USERS TABLE************  */}
 
-      <div className="max-w-[1400px] m-auto mt-3">
-        <Branditem filteredbrand={brand} getbrands={getbrands} />
+      <div className="max-w-[1400px] m-auto mt-6">
+        <Branditem
+          filteredbrand={brand}
+          getbrands={getbrands}
+          handleOpen={handleOpen}
+          setId={setId}
+        />
       </div>
 
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={10}
+            count={Math.ceil(Number(brand?.Total_Count / 5))}
+            page={page}
+            onChange={(e, value) => setPage(value)}
             variant="outlined"
             shape="rounded"
-            page={page}
-            onChange={(e, page) => setPage(page)}
           />
         </Stack>
       </div>

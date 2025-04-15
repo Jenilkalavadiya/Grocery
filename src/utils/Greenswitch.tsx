@@ -3,7 +3,7 @@ import { green } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
 
-function GreenSwitch({ item }: any) {
+function GreenSwitch({ Status }: any) {
   const ToggleSwitch = styled(Switch)(({ theme }: any) => ({
     "& .MuiSwitch-switchBase.Mui-checked": {
       color: green[600],
@@ -17,7 +17,7 @@ function GreenSwitch({ item }: any) {
   }));
 
   const label = { inputProps: { "aria-label": "Color switch demo" } };
-  return <ToggleSwitch {...label} checked={item?.Status} />;
+  return <ToggleSwitch {...label} checked={Status} />;
 }
 
 export default GreenSwitch;

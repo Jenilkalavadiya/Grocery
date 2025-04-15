@@ -1,13 +1,22 @@
 import { AddProductSchema } from "@/_components/Validation";
 import { useFormik } from "formik";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import uploadImage from "../../../public/images/upload.png";
 import { _post } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
+const AddProducts = ({
+  brand,
+  category,
+  subCategory,
+  getProduct,
+  getProductDetail,
+  productId,
+}: any) => {
+  const router = useRouter();
+
   const {
     values,
     errors,
@@ -49,13 +58,19 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
         if (values.image) {
           formData.append("image", values.image);
         }
-        console.log("values", values);
+        if (productId) {
+          formData.append("id", productId);
+        }
+        // console.log("values", values);
 
         //POST API
         const res = await _post("/add_product", formData);
         if (res?.status == 200) {
-          toast.success("Product Added Successfully");
-          getProduct()
+          toast.success(res?.data?.data?.MESSAGE);
+          router.push("/products");
+          getProduct();
+        } else {
+          toast.error(res?.data?.message);
         }
 
         console.log("Response: ", res);
@@ -65,13 +80,41 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
     },
   });
 
-   
+  // Prefill form if editing
+  useEffect(() => {
+    if (getProductDetail && productId) {
+      setFieldValue("name", getProductDetail?.Product_Name || "");
+      setFieldValue(
+        "category",
+        getProductDetail?.Category_id?.toString() || ""
+      );
+      setFieldValue("subCategory", getProductDetail?.Subcategory_id || ""); // use ID
+      setFieldValue("brand", getProductDetail?.Brand_id || ""); // use ID
+      setFieldValue("variation", getProductDetail?.Variation || "");
+      setFieldValue("productPrice", getProductDetail?.Product_Price || "");
+      setFieldValue("discount", getProductDetail?.Discount || "");
+      setFieldValue("discountPrice", getProductDetail?.Discount_Price || "");
+      setFieldValue("title", getProductDetail?.Title || "");
+      setFieldValue("description", getProductDetail?.Description || "");
+      setFieldValue("status", getProductDetail?.Stock_Status || 0);
+
+      if (
+        getProductDetail?.Image &&
+        typeof getProductDetail.Image === "string"
+      ) {
+        setFieldValue("image", getProductDetail.Image);
+      }
+    }
+  }, [getProductDetail, productId, setFieldValue]);
+
   return (
     <div className="bg-white shadow-xl p-4 mt-4 flex items-center justify-center">
       <div className="">
         <form action="" className="flex flex-col gap-3" onSubmit={handleSubmit}>
           {/* ADD PRODUCT ************ */}
-          <h1 className="font-bold text-xl">Add Product</h1>
+          <h1 className="font-bold text-xl">
+            {productId ? "Edit Product" : "Add Product"}
+          </h1>
           <div className="flex gap-8">
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Item Name </span>
@@ -101,7 +144,7 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
               >
                 <option value="">Select</option>
                 {category.map((data: any) => (
-                  <option key={data?.No} value={data.No}>
+                  <option key={data?.No} value={data?.No.toString()}>
                     {data.Category_Name}
                   </option>
                 ))}
@@ -245,7 +288,6 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
                 className=" border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
                 placeholder="Title"
               />
-            
             </div>
 
             {/* Description **************** */}
@@ -261,13 +303,12 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
                 className=" border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
                 placeholder="Description"
               />
-              
             </div>
           </div>
 
           {/* IMAGE************ */}
 
-          <div>
+          {/* <div>
             <input
               type="file"
               name="image"
@@ -307,7 +348,47 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
             {errors.image && touched.image && (
               <div className="text-red-500">{errors.image}</div>
             )}
-          </div>
+          </div> */}
+
+          <label htmlFor="upload" className="w-[40%]">
+            <input
+              type="file"
+              name="image"
+              id="upload"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setFieldValue("image", file);
+                }
+              }}
+              className="hidden"
+            />
+
+            {values.image ? (
+              <div className=" flex items-start justify-start">
+                <img
+                  src={
+                    typeof values.image === "string"
+                      ? values.image
+                      : URL.createObjectURL(values.image)
+                  }
+                  className="w-[20%]"
+                  alt="Product"
+                />
+              </div>
+            ) : (
+              <div className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[125px] flex flex-col justify-center items-center">
+                <Image
+                  src={uploadImage}
+                  alt="uploadimg"
+                  className="w-[40px] h-[40px]"
+                  width={40}
+                  height={40}
+                />
+                <span className="text-gray-500 text-xl">upload image</span>
+              </div>
+            )}
+          </label>
 
           <div className="flex justify-between">
             <span className="text-gray-400 font-bold">Status</span>
@@ -333,11 +414,14 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
                 type="submit"
                 className="bg-[#fcc827] cursor-pointer font-bold text-xl p-2 w-[150px] "
               >
-                Save
+                {productId ? "Update" : "Save"}
               </button>
             </div>
             <div>
-              <button onClick={()=>router.push('/products')} className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border">
+              <button
+                onClick={() => router.push("/products")}
+                className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border"
+              >
                 Cancel
               </button>
             </div>

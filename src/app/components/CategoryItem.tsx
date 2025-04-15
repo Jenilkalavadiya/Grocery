@@ -60,7 +60,7 @@ const CategoryItem = ({
                 {item?.Category_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <Greenswitch item={item} />
+                <Greenswitch Status={item.Status} />
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">

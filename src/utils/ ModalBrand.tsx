@@ -1,6 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { FaUpload } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddBrandSchema } from "@/_components/Validation";
@@ -9,7 +8,7 @@ import { toast } from "react-toastify";
 import close from "../../public/images/close.svg";
 import uploadImage from "../../public/images/upload.png";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -28,7 +27,10 @@ export default function ModalBrand({
   category,
   subCategory,
   getbrands,
+  id,
 }: any) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const {
     values,
     errors,
@@ -59,18 +61,21 @@ export default function ModalBrand({
           formData.append("image", values.image);
         }
 
+        if (id) {
+          formData.append("id", id);
+        }
+
         //POST API
         const res = await _post("/add_brand", formData);
-        toast.success("Brand Added Successfully");
+        toast.success(res?.data?.data?.MESSAGE);
         console.log("Response: ", res);
-
+        handleClose();
         getbrands();
       } catch (error) {
         console.log("Error: ", error);
       }
     },
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const handleImageChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -80,6 +85,27 @@ export default function ModalBrand({
     }
   };
 
+  // GETBRANDBYID
+  const getBrandById = async () => {
+    const res = await getFunction(`/get_brand?id=${id}`);
+    console.log("res12", res?.data);
+    const result = res?.data?.data?.DATA;
+    setFieldValue("name", result.Brand_Name || "");
+    setFieldValue("category", result.Category_id || "");
+    setFieldValue("subCategory", result.SubCategory_id || "");
+    setFieldValue("status", result?.Status || 0);
+
+    if (result?.Image && typeof result.Image === "string") {
+      setFieldValue("image", result.Image);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getBrandById();
+    }
+  }, [id, setFieldValue]);
+
   return (
     <div className="">
       <Modal
@@ -87,17 +113,20 @@ export default function ModalBrand({
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableAutoFocus
       >
         <Box
           sx={style}
-          className="!flex !justify-center !items-center !px-10 !w-[465px]"
+          className="!flex !justify-center !border-none !items-center !px-10 !w-[465px]"
         >
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-4 "
             id="modal"
           >
-            <h1 className="text-center font-bold text-2xl">Add Brand</h1>
+            <h1 className="text-center font-bold text-2xl">
+              {id ? "Update Brand" : "Add Brand"}
+            </h1>
 
             <div className="absolute top-0 right-0 p-2">
               <button className="cursor-pointer" onClick={handleClose}>
@@ -160,27 +189,30 @@ export default function ModalBrand({
 
             {/* IMAGE ******* */}
 
-            <input
-              type="file"
-              name="image"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  setFieldValue("image", file);
-                }
-              }}
-              onBlur={handleBlur}
-              className="hidden"
-              id="upload"
-              placeholder="Upload image"
-            />
-            <label htmlFor="upload">
+            <label htmlFor="upload" className="w-full">
+              <input
+                type="file"
+                name="image"
+                id="upload"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setFieldValue("image", file);
+                  }
+                }}
+                className="hidden"
+              />
+
               {values.image ? (
-                <div className="w-full flex items-center justify-center">
+                <div className=" flex items-start justify-center">
                   <img
-                    src={URL.createObjectURL(values.image)}
-                    className="w-[50%] "
-                    alt="alt"
+                    src={
+                      typeof values.image === "string"
+                        ? values.image
+                        : URL.createObjectURL(values.image)
+                    }
+                    className="w-[40%]"
+                    alt="Product"
                   />
                 </div>
               ) : (
@@ -189,8 +221,9 @@ export default function ModalBrand({
                     src={uploadImage}
                     alt="uploadimg"
                     className="w-[40px] h-[40px]"
+                    width={50}
+                    height={40}
                   />
-
                   <span className="text-gray-500 text-xl">upload image</span>
                 </div>
               )}
@@ -220,7 +253,7 @@ export default function ModalBrand({
 
             <div className="flex mb-3">
               <button type="submit" className="w-[350px] bg-amber-300 p-3">
-                Save
+                {id ? "Update" : "Save"}
               </button>
             </div>
           </form>

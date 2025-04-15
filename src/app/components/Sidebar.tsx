@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import Grocery from '../../../public/Path 410.png'
+import Grocery from "../../../public/Path 410.png";
 import Image from "next/image";
 const sidebarItems = [
   { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
@@ -19,7 +19,7 @@ const sidebarItems = [
   {
     name: "Coupen Management",
     image: "./images/7.svg",
-    link: "/coupenmanagement",
+    link: "/couponmanagment",
   },
   { name: "Home Management", image: "./images/8.svg", link: "/homemanagement" },
   { name: "Pages", image: "./images/9.svg", link: "/pages" },
