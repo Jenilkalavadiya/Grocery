@@ -83,7 +83,8 @@ const GetProduct = ({  product,getProduct }: any) => {
                   <td className="px-4 py-6 text-sm text-gray-700 border-b border-gray-200 text-center">
                     <div className="flex gap-6 justify-center items-center">
                       <span className="text-xl cursor-pointer">
-                        <CiEdit onClick={()=>router.push('products/addProduct')} />
+                      <CiEdit onClick={() => router.push(`/products/addProduct?id=${item?.Id}`)} />
+
                       </span>
                       <span
                         className="text-xl cursor-pointer "

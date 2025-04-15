@@ -65,7 +65,7 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
     },
   });
 
-  const router = useRouter();
+   
   return (
     <div className="bg-white shadow-xl p-4 mt-4 flex items-center justify-center">
       <div className="">

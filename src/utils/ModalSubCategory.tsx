@@ -79,14 +79,7 @@ export default function ModalSubCategory({
             className="flex flex-col gap-4 "
             id="modal"
           >
-            <select>
-              <option value="">Select</option>
-              {category?.map((data: any) => (
-                <option key={data?.No} value={data.No}>
-                  {data.Category_Name}
-                </option>
-              ))}
-            </select>
+           
 
             {/* SUBCATEGORYNAME************* */}
             <div className="absolute top-0 right-0 p-2">
@@ -119,7 +112,7 @@ export default function ModalSubCategory({
               className="w-[350px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
             >
               <option value="">Select</option>
-              {category?.result?.map((data: any) => (
+              {category?.map((data: any) => (
                 <option key={data?.No} value={data.No}>
                   {data.Category_Name}
                 </option>

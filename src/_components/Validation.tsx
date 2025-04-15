@@ -26,8 +26,8 @@ export const AddCategorySchema = Yup.object().shape({
 export const AddBrandSchema = Yup.object().shape({
   name: Yup.string().required("BrandName is Required"),
   image: Yup.mixed().required("Image is required"),
-  category:Yup.string().required('Category is Required'),
-  subCategory:Yup.string().required('SubCategory is Required')
+  category: Yup.string().required("Category is Required"),
+  subCategory: Yup.string().required("SubCategory is Required"),
 });
 
 export const AddSubCategorySchema = Yup.object().shape({
@@ -36,14 +36,14 @@ export const AddSubCategorySchema = Yup.object().shape({
   image: Yup.mixed().required("Image is required"),
 });
 
-
-
 export const AddProductSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   category: Yup.string().required("Category is required"),
   subCategory: Yup.string().required("SubCategory is required"),
   brand: Yup.string().required("Brand is required"),
-  variation: Yup.string().required("Variation is required"),
+  variation: Yup.string()
+    .typeError("Must be a number")
+    .required("Variation is required"),
   productPrice: Yup.number()
     .typeError("Must be a number")
     .required("Product price is required"),

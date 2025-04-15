@@ -31,7 +31,7 @@ function subcategory() {
       const res = await getFunction(
         "/get_subcategories?pageNumber=1&pageLimit=10"
       );
-      const data = await res?.data?.data?.result;
+      const data = await res?.data?.data;
       console.log("subcate", data);
       setSubCategory(data);
     } catch (error) {

@@ -25,7 +25,7 @@ const page = () => {
       );
       console.log("REs", res);
       // console.log("page", page);
-      const data = await res?.data?.data?.result;
+      const data = await res?.data?.data;
       setCategory(data);
     } catch (error) {}
   };
