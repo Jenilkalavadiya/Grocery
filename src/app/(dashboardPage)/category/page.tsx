@@ -6,33 +6,39 @@ import CategoryItem from "@/app/components/CategoryItem";
 import { getFunction } from "@/api/ApiCall";
 import Button from "@mui/material/Button";
 import ModalCategory from "@/utils/ModalCategory";
-
+import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import icon from "../../../../public/search.png";
 const page = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState([]);
   const [page, setPage] = useState(1);
+  const [itemID, setItemId] = useState("");
 
   const [open, setOpen] = useState(false);
   const handleOpen = async () => {
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setItemId("");
+  };
 
   const getAllCategory = async () => {
     try {
       const res = await getFunction(
-        `/getcategories?pageNumber=${page}&pageLimit=5`
+        `/getcategories?pageNumber=${page}&pageLimit=5&search=${search}`
       );
-      console.log("REs", res);
-      // console.log("page", page);
-      const data = await res?.data?.data?.result;
+      // console.log("REs", res);
+
+      const data = await res?.data?.data;
       setCategory(data);
     } catch (error) {}
   };
 
   useEffect(() => {
     getAllCategory();
-  }, [page]);
+  }, [page, search]);
 
   return (
     <div className="text-black">
@@ -42,41 +48,48 @@ const page = () => {
           <h2 className="text-3xl font-bold !text-[#202020]">Categories</h2>
         </div>
 
-        <div className="searchfiled flex gap-2">
-          <input
-            type="text"
-            placeholder="Search Categories.. "
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
-          />
-
-          <div className="">
-            <Button
-              className="!bg-[#FCC827] !text-black font-bold h-[45px] p-1"
-              onClick={handleOpen}
-              // variant="outlined"
-            >
-              Add Category
-            </Button>
-            {open && (
-              <ModalCategory
-                open={open}
-                handleClose={handleClose}
-                getAllCategory={getAllCategory}
+        <div className="searchfiled flex gap-3">
+          <div className="border border-[#DADDE1] bg-white flex justify-center">
+            <div className="flex items-center justify-center ml-3">
+              <Image src={icon} alt="pp" width={20} height={20} />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Search Categories.. "
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
-            )}
+            </div>
           </div>
+
+          <Button
+            className="!bg-[#FCC827] !text-black !font-extrabold h-[45px] p-1"
+            onClick={handleOpen}
+            // variant="outlined"
+          >
+            Add Category
+          </Button>
+          {open && (
+            <ModalCategory
+              open={open}
+              handleClose={handleClose}
+              getAllCategory={getAllCategory}
+              itemID={itemID}
+            />
+          )}
         </div>
       </div>
 
       {/* USERS TABLE************  */}
 
-      <div className="p-7 m-auto ">
+      <div className=" m-auto ">
         <CategoryItem
           filteredCategories={category}
           getAllCategory={getAllCategory}
           handleOpen={handleOpen}
+          setid={setItemId}
         />
       </div>
 

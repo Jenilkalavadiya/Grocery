@@ -5,7 +5,12 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-const Subcategoryitem = ({ filteredSubCategories, getAllSubCategory }: any) => {
+const Subcategoryitem = ({
+  filteredSubCategories,
+  getAllSubCategory,
+  handleOpen,
+  setid,
+}: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
   const handleClickOpen = () => {
@@ -21,8 +26,8 @@ const Subcategoryitem = ({ filteredSubCategories, getAllSubCategory }: any) => {
     console.log(res);
   };
   return (
-    <div className="overflow-x-auto shadow-2xl ">
-      <table className="min-w-full bg-white rounded-2xl ">
+    <div className="overflow-x-auto shadow-2xl mt-10">
+      <table className="min-w-full bg-white rounded-2xl">
         <thead className="bg-[#FAFAFA] text-[#202020]">
           <tr className="text-md  font-bold border-gray-300">
             <th className="px-4 py-3 w-[150px]">No.</th>
@@ -63,7 +68,12 @@ const Subcategoryitem = ({ filteredSubCategories, getAllSubCategory }: any) => {
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">
-                  <span className="text-2xl cursor-pointer">
+                  <span
+                    className="text-2xl cursor-pointer"
+                    onClick={() => {
+                      handleOpen(), setid(item.No);
+                    }}
+                  >
                     <CiEdit />
                   </span>
                   <span

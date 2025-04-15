@@ -10,7 +10,7 @@ import close from "../../public/images/close.svg";
 
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { _post } from "@/api/ApiCall";
+import { _post, getFunction } from "@/api/ApiCall";
 const style = {
   position: "absolute",
   top: "50%",
@@ -29,6 +29,7 @@ export default function ModalSubCategory({
   category,
   subcategory,
   getAllSubCategory,
+  itemID,
 }: any) {
   const {
     values,
@@ -50,11 +51,12 @@ export default function ModalSubCategory({
         if (values.image) {
           formData.append("image", values.image);
         }
-
+        if (itemID) {
+          formData.append("id", itemID);
+        }
         //POST API
         const res = await _post("/add_subcategory", formData);
-        toast.success("SubCategory Added Successfully");
-
+        toast.success(res?.data?.data?.MESSAGE);
         getAllSubCategory();
         handleClose();
       } catch (error) {
@@ -62,6 +64,24 @@ export default function ModalSubCategory({
       }
     },
   });
+
+  const getSubCategoryByID = async () => {
+    let res = await getFunction(`/get_subcategory?id=${itemID}`);
+    const result = res.data.data.DATA;
+    console.log("result", result);
+    setFieldValue("name", result.SubCategory_Name);
+    setFieldValue("category", result.Category_id);
+
+    if (result?.Image && typeof result.Image === "string") {
+      setFieldValue("image", result.Image);
+    }
+    setFieldValue("status", result.Status);
+  };
+  React.useEffect(() => {
+    if (itemID) {
+      getSubCategoryByID();
+    }
+  }, []);
   return (
     <div className="">
       <Modal
@@ -79,15 +99,9 @@ export default function ModalSubCategory({
             className="flex flex-col gap-4 "
             id="modal"
           >
-            <select>
-              <option value="">Select</option>
-              {category?.map((data: any) => (
-                <option key={data?.No} value={data.No}>
-                  {data.Category_Name}
-                </option>
-              ))}
-            </select>
-
+            <h1 className="text-center font-bold text-2xl">
+              {itemID ? "Edit Category" : "Add Category"}
+            </h1>
             {/* SUBCATEGORYNAME************* */}
             <div className="absolute top-0 right-0 p-2">
               <button className="cursor-pointer" onClick={handleClose}>
@@ -119,7 +133,7 @@ export default function ModalSubCategory({
               className="w-[350px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
             >
               <option value="">Select</option>
-              {category?.result?.map((data: any) => (
+              {category?.map((data: any) => (
                 <option key={data?.No} value={data.No}>
                   {data.Category_Name}
                 </option>
@@ -150,7 +164,11 @@ export default function ModalSubCategory({
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
                   <img
-                    src={URL.createObjectURL(values.image)}
+                    src={
+                      typeof values.image === "string"
+                        ? values.image
+                        : URL.createObjectURL(values.image)
+                    }
                     className="w-[50%] "
                     alt="alt"
                   />

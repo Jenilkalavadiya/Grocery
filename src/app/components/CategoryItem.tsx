@@ -3,13 +3,16 @@ import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Greenswitch from "@/utils/Greenswitch";
-import { _delete } from "@/api/ApiCall";
+import { _delete, _post } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const CategoryItem = ({
   filteredCategories,
   getAllCategory,
   handleOpen,
+  setid,
 }: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
@@ -25,6 +28,28 @@ const CategoryItem = ({
     handleClose();
     console.log(res);
   };
+
+  const statusChange = async (id: number, currentStatus: number) => {
+    const newStatus = currentStatus === 1 ? 0 : 1;
+
+    try {
+      const res = await _post(`/status_change1`, {
+        id,
+        status: newStatus,
+      });
+
+      if (res?.status === 200) {
+        toast.success("Status updated");
+        getAllCategory();
+      } else {
+        toast.error("Status update failed");
+      }
+    } catch (err) {
+      console.error("Status update error:", err);
+      toast.error("Error updating status");
+    }
+  };
+
   return (
     <div className="overflow-x-auto shadow-2xl mt-10">
       <table className="min-w-full bg-white rounded-2xl ">
@@ -51,23 +76,25 @@ const CategoryItem = ({
                 <Image
                   src={item.Image}
                   width={60}
-                  height={40}
+                  height={60}
                   alt="category_image"
                   className="rounded-full"
                 />
               </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+              <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
                 {item?.Category_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <Greenswitch item={item} />
+                <div onClick={() => statusChange(item?.No, item?.Status)}>
+                  <Greenswitch status={item?.Status} />
+                </div>
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">
                   <span
                     className="text-2xl cursor-pointer"
                     onClick={() => {
-                      handleOpen(), setItemID(item.No);
+                      handleOpen(), setid(item.No);
                     }}
                   >
                     <CiEdit />

@@ -1,15 +1,13 @@
 "use client";
 
 import * as React from "react";
-
+import { useEffect } from "react";
 import Box from "@mui/material/Box";
-import { FaUpload } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddCategorySchema } from "@/_components/Validation";
 import { _post, getFunction } from "@/api/ApiCall";
 import { toast } from "react-toastify";
-import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 import uploadImage from "../../public/images/upload.png";
 import close from "../../public/images/close.svg";
@@ -30,6 +28,7 @@ export default function ModalCategory({
   open,
   handleClose,
   getAllCategory,
+  itemID,
 }: any) {
   const {
     values,
@@ -50,25 +49,42 @@ export default function ModalCategory({
       if (values.image) {
         formData.append("image", values.image);
       }
-
+      if (itemID) {
+        formData.append("id", itemID);
+      }
       const res = await _post("/addcategory", formData);
-      toast.success("New Category Added");
+      console.log("Response", res);
+      toast.success(res?.data?.data?.MESSAGE);
       handleClose();
       getAllCategory();
     },
   });
 
-  // let res = await getFunction(`/getcategory?id={}`);
-  //   console.log("response", res);
+  const getCategoryByID = async () => {
+    let res = await getFunction(`/getcategory?id=${itemID}`);
+    console.log("res", res);
+    const result = res.data.data.DATA;
+    setFieldValue("name", result.category);
 
+    if (result?.image && typeof result.image === "string") {
+      setFieldValue("image", result.image);
+    }
+    setFieldValue("status", result.status);
+  };
+  useEffect(() => {
+    if (itemID) {
+      getCategoryByID();
+    }
+  }, [itemID]);
   return (
     <div className="">
       <Modal
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         disableAutoFocus
+        disableEscapeKeyDown
       >
         <Box
           sx={style}
@@ -79,9 +95,11 @@ export default function ModalCategory({
             className="flex flex-col gap-4 "
             id="modal"
           >
-            <h1 className="text-center font-bold text-2xl">Add Category</h1>
+            <h1 className="text-center font-bold text-2xl">
+              {itemID ? "Edit Category" : "Add Category"}
+            </h1>
 
-            {/* SUBCATEGORYNAME************* */}
+            {/* CATEGORYNAME************* */}
             <div className="absolute top-0 right-0 p-2">
               <button className="cursor-pointer" onClick={handleClose}>
                 <Image src={close} alt="close" width={18} height={25} />
@@ -94,8 +112,8 @@ export default function ModalCategory({
               value={values.name}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-[350px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-              placeholder="Category Name"
+              className="w-[350px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-4"
+              placeholder="Category"
             />
             {errors.name && touched.name && (
               <div className="text-red-500">{errors.name}</div>
@@ -121,7 +139,11 @@ export default function ModalCategory({
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
                   <img
-                    src={URL.createObjectURL(values.image)}
+                    src={
+                      typeof values.image === "string"
+                        ? values.image
+                        : URL.createObjectURL(values.image)
+                    }
                     className="w-[50%] "
                     alt="alt"
                   />
@@ -146,7 +168,7 @@ export default function ModalCategory({
             )}
 
             {/* SWITCH  */}
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-3">
               <span className="text-gray-400 font-bold">Status</span>
               <label className="inline-flex items-center mb-5 cursor-pointer">
                 <input
