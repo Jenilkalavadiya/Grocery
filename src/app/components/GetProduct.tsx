@@ -107,7 +107,7 @@ const GetProduct = ({ product, getProduct }: any) => {
                       onClick={() => changeStatus(item?.Id, item?.Stock_Status)}
                       className="inline-block cursor-pointer"
                     >
-                      <GreenSwitch Status={item?.Stock_Status} />
+                      <GreenSwitch status={item?.Stock_Status} />
                     </div>
                   </td>
 

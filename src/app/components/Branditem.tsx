@@ -101,7 +101,7 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
                       onClick={() => changeStatus(item?.No, item?.Status)}
                       className="inline-block cursor-pointer"
                     >
-                      <GreenSwitch Status={item?.Status} />
+                      <GreenSwitch status={item?.Status} />
                     </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
