@@ -39,9 +39,11 @@ const GetProduct = ({ product, getProduct }: any) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
-      const res = await apiRequest({method:"post",url:`/status_change`,data:{id,
-        stock_status: newStatus,}})
-      
+      const res = await apiRequest({
+        method: "post",
+        url: `/status_change`,
+        data: { id, stock_status: newStatus },
+      });
 
       if (res?.status === 200) {
         toast.success("Stock status updated");
@@ -80,7 +82,7 @@ const GetProduct = ({ product, getProduct }: any) => {
                 >
                   <td className="px-4 py-6 border-b border-gray-200 text-left">
                     <Image
-                      src={item.Image}
+                      src={item?.Image}
                       width={60}
                       height={40}
                       alt="product_image"

@@ -1,16 +1,16 @@
 "use client";
 
 import { AddCoupon } from "@/_components/Validation";
-import { _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { Box, Modal } from "@mui/material";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import uploadImage from "../../public/images/upload.png";
+
 import close from "../../public/images/close.svg";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState } from "react";
+
 import { DatePicker } from "@mui/x-date-pickers";
 import { datePicker } from "@/_components/textFieldStyles";
 import dayjs from "dayjs";
@@ -60,7 +60,12 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
         };
 
         // POST API
-        const res = await _post("/add_coupon", params);
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_coupon",
+          data: { params },
+        });
+       
         console.log("coupon", res);
         toast.success("Coupon Added Successfully");
 

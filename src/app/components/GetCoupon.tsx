@@ -1,8 +1,7 @@
 "use client";
-import { _delete, _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import GreenSwitch from "@/utils/Greenswitch";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -24,7 +23,11 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
 
   // DELETE PRODUCT
   const handleDelete = async () => {
-    const res = await _delete(`/delete_coupon?id=${itemID}`);
+    const res = await apiRequest({
+      method: "delete",
+      url: `/delete_coupon?id=${itemID}`,
+    });
+
     getCoupon();
     console.log(res);
     setOpen(false);
@@ -35,9 +38,10 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
-      const res = await _post(`/status_change4`, {
-        id,
-        status: newStatus,
+      const res = await apiRequest({
+        method: "post",
+        url: `/status_change4`,
+        data: { id, status: newStatus },
       });
 
       if (res?.status === 200) {

@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import GetCoupon from "@/app/components/GetCoupon";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { Button } from "@mui/material";
 import ModalCoupon from "@/utils/ModalCoupon";
 
@@ -26,7 +26,11 @@ const page = () => {
   }, [page]);
 
   const getCoupon = async () => {
-    const res = await getFunction(`/get_coupons?pageNumber=1&pageLimit=5`);
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_coupons?pageNumber=1&pageLimit=5`,
+    });
+
     console.log("coupon", res);
     setCoupon(res?.data?.data);
   };
