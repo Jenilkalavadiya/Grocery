@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -23,7 +23,11 @@ function subcategory() {
   //getCategory
   const getAllCategory = async () => {
     try {
-      const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
+      const res = await apiRequest({
+        method: "get",
+        url: `/getcategories?pageNumber=1&pageLimit=10`,
+      });
+
       const data = await res?.data?.data?.result;
       console.log("data", data);
       setCategory(data);
@@ -33,9 +37,11 @@ function subcategory() {
   //getSubCategory
   const getAllSubCategory = async () => {
     try {
-      const res = await getFunction(
-        `/get_subcategories?pageNumber=${page}&pageLimit=5&search=${search}`
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_subcategories?pageNumber=${page}&pageLimit=5&search=${search}`,
+      });
+
       const data = await res?.data?.data;
       console.log("subcategory", res);
       setSubCategory(data);

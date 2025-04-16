@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddCategorySchema } from "@/_components/Validation";
-import { _post, getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import uploadImage from "../../public/images/upload.png";
@@ -52,7 +52,12 @@ export default function ModalCategory({
       if (itemID) {
         formData.append("id", itemID);
       }
-      const res = await _post("/addcategory", formData);
+      const res = await apiRequest({
+        method: "post",
+        url: "/addcategory",
+        data: formData,
+      });
+  
       console.log("Response", res);
       toast.success(res?.data?.data?.MESSAGE);
       handleClose();
@@ -61,7 +66,12 @@ export default function ModalCategory({
   });
 
   const getCategoryByID = async () => {
-    let res = await getFunction(`/getcategory?id=${itemID}`);
+    const res = await apiRequest({
+      method: "get",
+      url: `/getcategory?id=${itemID}`,
+    });
+
+   
     console.log("res", res);
     const result = res.data.data.DATA;
     setFieldValue("name", result.category);

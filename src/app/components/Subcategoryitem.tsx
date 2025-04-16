@@ -1,4 +1,4 @@
-import { _delete } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
@@ -20,7 +20,10 @@ const Subcategoryitem = ({
     setOpen(false);
   };
   const handleDelete = async () => {
-    const res = await _delete(`/delete_subcategory?id=${itemID}`);
+    const res = await apiRequest({
+      method: "delete",
+      url: `/delete_subcategory?id=${itemID}`,
+    });
     getAllSubCategory();
     handleClose();
     console.log(res);

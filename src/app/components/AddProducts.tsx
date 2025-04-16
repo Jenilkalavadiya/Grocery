@@ -3,11 +3,11 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import React from "react";
 import uploadImage from "../../../public/images/upload.png";
-import { _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
+const AddProducts = ({ brand, category, subCategory, getProduct }: any) => {
   const {
     values,
     errors,
@@ -52,10 +52,15 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
         console.log("values", values);
 
         //POST API
-        const res = await _post("/add_product", formData);
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_product",
+          data: formData,
+        });
+
         if (res?.status == 200) {
           toast.success("Product Added Successfully");
-          getProduct()
+          getProduct();
         }
 
         console.log("Response: ", res);
@@ -245,7 +250,6 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
                 className=" border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
                 placeholder="Title"
               />
-            
             </div>
 
             {/* Description **************** */}
@@ -261,7 +265,6 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
                 className=" border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
                 placeholder="Description"
               />
-              
             </div>
           </div>
 
@@ -337,7 +340,10 @@ const AddProducts = ({ brand, category, subCategory,getProduct }: any) => {
               </button>
             </div>
             <div>
-              <button onClick={()=>router.push('/products')} className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border">
+              <button
+                onClick={() => router.push("/products")}
+                className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border"
+              >
                 Cancel
               </button>
             </div>

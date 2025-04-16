@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import CategoryItem from "@/app/components/CategoryItem";
 import Usersitem from "@/app/components/Usersitem";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import axios from "axios";
 
 export default function users() {
@@ -13,9 +13,11 @@ export default function users() {
   const [user, setUser] = useState();
   const getUsers = async () => {
     try {
-      const res = await axios.get(
-        "http://192.168.2.179/groceryusers/getusers?page=1&limit=10"
-      );
+       const res = await apiRequest({
+              method: "get",
+              url: `http://192.168.2.179/groceryusers/getusers?page=1&limit=10`,
+            });
+      
 
       const data = await res?.data?.data;
       setUser(data);

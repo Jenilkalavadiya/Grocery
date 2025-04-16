@@ -4,7 +4,7 @@ import { FaUpload } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddBrandSchema } from "@/_components/Validation";
-import { _post, getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import close from "../../public/images/close.svg";
 import uploadImage from "../../public/images/upload.png";
@@ -60,7 +60,11 @@ export default function ModalBrand({
         }
 
         //POST API
-        const res = await _post("/add_brand", formData);
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_brand",
+          data: formData,
+        });
         toast.success("Brand Added Successfully");
         console.log("Response: ", res);
 

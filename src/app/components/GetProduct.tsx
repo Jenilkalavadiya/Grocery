@@ -1,6 +1,6 @@
 "use client";
 
-import { _delete } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import GreenSwitch from "@/utils/Greenswitch";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-const GetProduct = ({  product,getProduct }: any) => {
+const GetProduct = ({ product, getProduct }: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
 
@@ -21,14 +21,17 @@ const GetProduct = ({  product,getProduct }: any) => {
     setOpen(false);
   };
 
-  // DELETE PRODUCT 
-   const handleDelete = async () => {
-      const res = await _delete(`/deleteproduct?id=${itemID}`);
-      getProduct()
-      console.log(res);
-      setOpen(false);
-    };
-    const router = useRouter()
+  // DELETE PRODUCT
+  const handleDelete = async () => {
+    const res = await apiRequest({
+      method: "delete",
+      url: `/deleteproduct?id=${itemID}`,
+    });
+    getProduct();
+    console.log(res);
+    setOpen(false);
+  };
+  const router = useRouter();
 
   return (
     <div className="overflow-x-auto shadow-xl rounded-lg bg-white">
@@ -83,7 +86,9 @@ const GetProduct = ({  product,getProduct }: any) => {
                   <td className="px-4 py-6 text-sm text-gray-700 border-b border-gray-200 text-center">
                     <div className="flex gap-6 justify-center items-center">
                       <span className="text-xl cursor-pointer">
-                        <CiEdit onClick={()=>router.push('products/addProduct')} />
+                        <CiEdit
+                          onClick={() => router.push("products/addProduct")}
+                        />
                       </span>
                       <span
                         className="text-xl cursor-pointer "
@@ -94,7 +99,11 @@ const GetProduct = ({  product,getProduct }: any) => {
                         <RiDeleteBin6Line />
                       </span>
                       {open && (
-                        <DeleteDialog open={open} handleClose={handleClose} handleDelete={handleDelete} />
+                        <DeleteDialog
+                          open={open}
+                          handleClose={handleClose}
+                          handleDelete={handleDelete}
+                        />
                       )}
                     </div>
                   </td>

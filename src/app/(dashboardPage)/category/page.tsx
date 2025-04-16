@@ -3,17 +3,37 @@ import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import CategoryItem from "@/app/components/CategoryItem";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest, refreshToken } from "@/api/ApiCall";
 import Button from "@mui/material/Button";
 import ModalCategory from "@/utils/ModalCategory";
-import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import icon from "../../../../public/search.png";
+
 const page = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState([]);
   const [page, setPage] = useState(1);
   const [itemID, setItemId] = useState("");
+  // hhhhe
+  const [accessToken, setAccessToken] = useState<string | null>(
+    localStorage.getItem("accessToken")
+  );
+
+  useEffect(() => {
+    const checkAndRefresh = async () => {
+      if (accessToken) {
+        // Check if token is valid or expired
+        try {
+          const newAccessToken = await refreshToken();
+          setAccessToken(newAccessToken);
+        } catch (error) {
+          // Handle token refresh failure
+          console.error("Token refresh failed", error);
+        }
+      }
+    };
+    checkAndRefresh();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const handleOpen = async () => {
@@ -26,9 +46,11 @@ const page = () => {
 
   const getAllCategory = async () => {
     try {
-      const res = await getFunction(
-        `/getcategories?pageNumber=${page}&pageLimit=5&search=${search}`
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/getcategories?pageNumber=${page}&pageLimit=5&search=${search}`,
+      });
+
       // console.log("REs", res);
 
       const data = await res?.data?.data;

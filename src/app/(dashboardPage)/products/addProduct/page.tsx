@@ -1,7 +1,7 @@
 "use client";
 
 import { AddSubCategorySchema } from "@/_components/Validation";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import AddProducts from "@/app/components/AddProducts";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
@@ -15,9 +15,10 @@ const AddProduct = () => {
   // GET CATEGORY ****************
   const getAllCategory = async () => {
     try {
-      const res = await getFunction(
-        `/getcategories?pageNumber=${page}&pageLimit=5`
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/getcategories?pageNumber=${page}&pageLimit=5`,
+      });
 
       const data = await res?.data?.data?.result;
       setCategory(data);
@@ -32,9 +33,11 @@ const AddProduct = () => {
 
   const getAllSubCategory = async () => {
     try {
-      const res = await getFunction(
-        "/get_subcategories?pageNumber=1&pageLimit=5"
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_subcategories?pageNumber=1&pageLimit=5`,
+      });
+
       const data = await res?.data?.data?.result;
       console.log("subcate", data);
       setSubCategory(data);
@@ -46,9 +49,11 @@ const AddProduct = () => {
   //GET BRANDS
   const getbrands = async () => {
     try {
-      const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=10`
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_brands?pageNumber=${page}&pageLimit=10`,
+      });
+
       console.log("brand", res);
       const data = await res?.data?.data?.result;
       setBrand(data);
@@ -59,7 +64,10 @@ const AddProduct = () => {
 
   //GET PRODUCT
   const getProduct = async () => {
-    const res = await getFunction(`/get_products?pageNumber=1&pageLimit=10`);
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_products?pageNumber=1&pageLimit=10`,
+    });
     console.log("getProduct", res);
     const data = await res?.data?.data?.result;
   };

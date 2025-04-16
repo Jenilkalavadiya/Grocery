@@ -1,4 +1,4 @@
-import { _delete } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -16,7 +16,11 @@ const Branditem = ({ filteredbrand, getbrands }: any) => {
     setOpen(false);
   };
   const handleDelete = async () => {
-    const res = await _delete(`/delete_brand?id=${itemID}`);
+    const res = await apiRequest({
+      method: "delete",
+      url: `/delete_brand?id=${itemID}`,
+    });
+
     getbrands();
     handleClose();
     console.log(res);

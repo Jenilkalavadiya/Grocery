@@ -10,7 +10,7 @@ import close from "../../public/images/close.svg";
 
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { _post, getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 const style = {
   position: "absolute",
   top: "50%",
@@ -55,7 +55,12 @@ export default function ModalSubCategory({
           formData.append("id", itemID);
         }
         //POST API
-        const res = await _post("/add_subcategory", formData);
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_subcategory",
+          data: formData,
+        });
+
         toast.success(res?.data?.data?.MESSAGE);
         getAllSubCategory();
         handleClose();
@@ -66,7 +71,11 @@ export default function ModalSubCategory({
   });
 
   const getSubCategoryByID = async () => {
-    let res = await getFunction(`/get_subcategory?id=${itemID}`);
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_subcategory?id=${itemID}`,
+    });
+
     const result = res.data.data.DATA;
     console.log("result", result);
     setFieldValue("name", result.SubCategory_Name);

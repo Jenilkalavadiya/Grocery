@@ -3,9 +3,8 @@ import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Greenswitch from "@/utils/Greenswitch";
-import { _delete, _post } from "@/api/ApiCall";
+import {  apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const CategoryItem = ({
@@ -23,7 +22,10 @@ const CategoryItem = ({
     setOpen(false);
   };
   const handleDelete = async () => {
-    const res = await _delete(`/deletecategory?id=${itemID}`);
+    const res = await apiRequest({
+          method: "delete",
+          url: `/deletecategory?id=${itemID}`,
+        });
     getAllCategory();
     handleClose();
     console.log(res);
@@ -33,9 +35,10 @@ const CategoryItem = ({
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
-      const res = await _post(`/status_change1`, {
-        id,
-        status: newStatus,
+      const res = await apiRequest({
+        method: "post",
+        url: "/status_change1",
+        data: { id, status: newStatus },
       });
 
       if (res?.status === 200) {

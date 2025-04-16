@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { useFormik } from "formik";
@@ -12,9 +12,8 @@ import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import l2 from "../../../public/l2.png";
-
 const Page = () => {
   const [eye, setEye] = useState(true);
   const router = useRouter();
@@ -27,7 +26,11 @@ const Page = () => {
       validationSchema: LoginSchema,
       onSubmit: async (values) => {
         try {
-          const res = await _post("/login", values);
+          const res = await apiRequest({
+            method: "post",
+            url: "/login",
+            data: values,
+          });
 
           console.log("res", res);
 
@@ -36,8 +39,8 @@ const Page = () => {
             const data = res?.data?.data;
             localStorage.setItem("loginuser", JSON.stringify(data?.email));
             localStorage.setItem("userName", JSON.stringify(data?.name));
-            localStorage.setItem("loginjwt", data?.token);
-            localStorage.setItem("refreshjwt", data?.refresh_token);
+            localStorage.setItem("auth_token", data?.token);
+            localStorage.setItem("refresh_token", data?.refresh_token);
             router.push("/dashboard");
           } else {
             toast.error(res?.data?.message);
