@@ -57,3 +57,42 @@ export const AddProductSchema = Yup.object().shape({
   // description: Yup.string().required("Description is required"),
   image: Yup.mixed().required("Image is required"),
 });
+
+
+export const AddCoupon = Yup.object({
+  name: Yup.string().required("Coupon name is required."),
+  minimumPurchase: Yup.number()
+    .typeError("Minimum purchase must be a number")
+    .positive("Minimum purchase must be greater than zero.")
+    .required("Minimum purchase is required."),
+  discountPrice: Yup.number()
+    .typeError("Discount price must be a number")
+    .positive("Discount price must be greater than zero.")
+    .required("Discount price is required."),
+  startDate: Yup.date()
+    .nullable()
+    .required("Start date is required.")
+    .test(
+      "start-date-valid",
+      "Start date must be a valid date",
+      (value) => value !== null && value instanceof Date && !isNaN(value)
+    ),
+  endDate: Yup.date()
+    .nullable()
+    .required("End date is required.")
+    .test(
+      "end-date-valid",
+      "End date must be a valid date",
+      (value) => value !== null && value instanceof Date && !isNaN(value)
+    )
+    .test(
+      "end-after-start",
+      "End date cannot be before start date.",
+      function (value) {
+        const { startDate } = this.parent;
+        return value && startDate ? value >= startDate : true;
+      }
+    ),
+  couponCode: Yup.string().required("Coupon code is required."),
+});
+

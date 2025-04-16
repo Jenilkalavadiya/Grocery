@@ -6,17 +6,17 @@ const BASE_URL =
 const jwt =
   typeof window !== "undefined" &&
   window.localStorage &&
-  localStorage.getItem("loginjwt");
+  localStorage.getItem("auth_token");
 const refresh =
   typeof window !== "undefined" &&
   window.localStorage &&
-  localStorage.getItem("refreshjwt");
+  localStorage.getItem("refresh_token");
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
     Authorizations: `${jwt}`,
-    language: "en",
+    Language: "en",
     refresh_token: refresh,
     "Content-Type": "application/x-www-form-urlencoded",
   },
@@ -39,6 +39,3 @@ export const _delete = (url: any, data = {}) => {
   console.log("apicall DELETE", url, data);
   return apiClient.delete(url, { data });
 };
-
-
-

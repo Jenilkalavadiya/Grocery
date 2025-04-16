@@ -9,7 +9,7 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 
-const GetCoupon = ({ coupon }: any) => {
+const GetCoupon = ({ coupon, getCoupon }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
@@ -24,8 +24,8 @@ const GetCoupon = ({ coupon }: any) => {
 
   // DELETE PRODUCT
   const handleDelete = async () => {
-    const res = await _delete(`/deleteproduct?id=${itemID}`);
-    //   getProduct();
+    const res = await _delete(`/delete_coupon?id=${itemID}`);
+    getCoupon();
     console.log(res);
     setOpen(false);
   };
@@ -35,14 +35,14 @@ const GetCoupon = ({ coupon }: any) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
-      const res = await _post(`/status_change`, {
+      const res = await _post(`/status_change4`, {
         id,
-        stock_status: newStatus,
+        status: newStatus,
       });
 
       if (res?.status === 200) {
-        toast.success("Stock status updated");
-        // getProduct();
+        toast.success("Coupon status updated");
+        getCoupon();
       } else {
         toast.error("Status update failed");
       }
@@ -62,7 +62,7 @@ const GetCoupon = ({ coupon }: any) => {
             <th className="px-4 py-4 text-left">Min Purchase</th>
             <th className="px-6 py-4 text-left">Discount Price</th>
             <th className="px-6 py-4 text-left">Coupon Code</th>
-            <th className="px-6 py-4 text-right">Date</th>
+            <th className="px-6 py-4 text-left">Date</th>
             <th className="px-4 py-4 text-center">Status</th>
             <th className="px-4 py-4 text-center">Actions</th>
           </tr>
@@ -72,11 +72,11 @@ const GetCoupon = ({ coupon }: any) => {
             <>
               {coupon?.result?.map((item: any) => (
                 <tr
-                  key={item?.Id}
+                  key={item?.No}
                   className="hover:bg-gray-50 transition-all duration-300 text-center"
                 >
                   <td className="px-4 py-6 border-b border-gray-200 text-left">
-                   {item?.No}
+                    {item?.No}
                   </td>
                   <td className="px-4 py-6 text-sm border-b border-gray-200 text-left">
                     {item?.Coupon_Code}
@@ -90,12 +90,12 @@ const GetCoupon = ({ coupon }: any) => {
                   <td className="px-6 py-6 text-sm border-b border-gray-200 text-left">
                     {item?.Coupon_Code}
                   </td>
-                  <td className="px-6 py-6 text-sm border-b border-gray-200 text-right">
-                    ${item?.Date}
+                  <td className="px-6 py-6 text-sm border-b border-gray-200 text-left">
+                    {item?.Date}
                   </td>
                   <td className="px-4 py-6 border-b border-gray-200 text-center">
                     <div
-                      onClick={() => changeStatus(item?.Id, item?.Status)}
+                      onClick={() => changeStatus(item?.No, item?.Status)}
                       className="inline-block cursor-pointer"
                     >
                       <GreenSwitch Status={item?.Status} />
@@ -114,7 +114,7 @@ const GetCoupon = ({ coupon }: any) => {
                       <span
                         className="text-xl cursor-pointer "
                         onClick={() => {
-                          handleClickOpen(), setItemID(item.Id);
+                          handleClickOpen(), setItemID(item.No);
                         }}
                       >
                         <RiDeleteBin6Line />

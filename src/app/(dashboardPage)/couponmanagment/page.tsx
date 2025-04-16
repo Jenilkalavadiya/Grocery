@@ -7,20 +7,28 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import GetCoupon from "@/app/components/GetCoupon";
 import { getFunction } from "@/api/ApiCall";
+import { Button } from "@mui/material";
+import ModalCoupon from "@/utils/ModalCoupon";
 
 const page = () => {
   const [page, setPage] = useState(1);
-  const [coupon,setCoupon] = useState(null)
-  const router = useRouter();
+  const [coupon, setCoupon] = useState(null);
+  const [id, setId] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setId("");
+  };
 
   useEffect(() => {
     getCoupon();
-  }, []);
+  }, [page]);
 
   const getCoupon = async () => {
     const res = await getFunction(`/get_coupons?pageNumber=1&pageLimit=5`);
     console.log("coupon", res);
-    setCoupon(res?.data?.data)
+    setCoupon(res?.data?.data);
   };
 
   return (
@@ -42,30 +50,35 @@ const page = () => {
 
         {/* SEARCH USERS INPUT ***************** */}
 
-        <div className="searchfiled mr-8  flex gap-2">
-          <div className="w-[130px]">
-            <button
-              className="bg-[#FCC827] cursor-pointer text-black font-semibold h-[45px] p-2.5"
-              onClick={() => router.push("/products/addProduct")}
-            >
-              {" "}
-              Add Coupon
-            </button>
-          </div>
+        <div className="">
+          <Button
+            className="!bg-[#FCC827] !text-black font-extrabold h-[45px] p-1"
+            onClick={handleOpen}
+            // variant="outlined"
+          >
+            Add Coupon
+          </Button>
+          {open && (
+            <ModalCoupon
+              open={open}
+              handleClose={handleClose}
+              getCoupon={getCoupon}
+            />
+          )}
         </div>
       </div>
 
       {/* USERS TABLE************  */}
 
       <div className="p-7 m-automl-2  ">
-        <GetCoupon coupon={coupon}/>
+        <GetCoupon coupon={coupon} getCoupon={getCoupon} />
       </div>
 
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(page / 12))}
+            count={Math.ceil(Number(coupon?.Total_Count / 6))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

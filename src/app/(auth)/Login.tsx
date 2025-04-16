@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { _post } from "@/api/ApiCall";
 import l2 from "../../../public/l2.png";
+import axios from "axios";
 
 const Page = () => {
   const [eye, setEye] = useState(true);
@@ -27,7 +28,17 @@ const Page = () => {
       validationSchema: LoginSchema,
       onSubmit: async (values) => {
         try {
-          const res = await _post("/login", values);
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_BASEAPI}/login`,
+            values,
+            {
+              headers: {
+                Authorizations: `@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY`,
+                Language: "en",
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            }
+          );
 
           console.log("res", res);
 
@@ -36,8 +47,8 @@ const Page = () => {
             const data = res?.data?.data;
             localStorage.setItem("loginuser", JSON.stringify(data?.email));
             localStorage.setItem("userName", JSON.stringify(data?.name));
-            localStorage.setItem("loginjwt", data?.token);
-            localStorage.setItem("refreshjwt", data?.refresh_token);
+            localStorage.setItem("auth_token", data?.token);
+            localStorage.setItem("refresh_token", data?.refresh_token);
             router.push("/dashboard");
           } else {
             toast.error(res?.data?.message);
