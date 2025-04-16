@@ -1,6 +1,6 @@
 "use client";
 
-import { _delete, _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import GreenSwitch from "@/utils/Greenswitch";
 import Image from "next/image";
@@ -24,7 +24,10 @@ const GetProduct = ({ product, getProduct }: any) => {
 
   // DELETE PRODUCT
   const handleDelete = async () => {
-    const res = await _delete(`/deleteproduct?id=${itemID}`);
+    const res = await apiRequest({
+      method: "delete",
+      url: `/deleteproduct?id=${itemID}`,
+    });
     getProduct();
     console.log(res);
     setOpen(false);
@@ -36,10 +39,9 @@ const GetProduct = ({ product, getProduct }: any) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
-      const res = await _post(`/status_change`, {
-        id,
-        stock_status: newStatus,
-      });
+      const res = await apiRequest({method:"post",url:`/status_change`,data:{id,
+        stock_status: newStatus,}})
+      
 
       if (res?.status === 200) {
         toast.success("Stock status updated");

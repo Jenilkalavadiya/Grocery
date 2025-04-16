@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import Dashboard from "../dashboard/page";
 import GetProduct from "@/app/components/GetProduct";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 const page = () => {
   const [search, setSearch] = useState("");
   const [product, setProduct] = useState(null);
@@ -23,9 +23,11 @@ const page = () => {
 
   //GET PRODUCT
   const getProduct = async () => {
-    const res = await getFunction(
-      `/get_products?pageNumber=1&pageLimit=10&search=${search}`
-    );
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_products?pageNumber=1&pageLimit=10&search=${search}`,
+    });
+
     console.log("getProduct", res?.data);
     const data = await res?.data?.data?.result;
     const total = res?.data?.data?.Total_Count;

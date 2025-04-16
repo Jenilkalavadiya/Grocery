@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -11,16 +11,25 @@ function subcategory() {
   const [search, setSearch] = useState("");
   const [subcategory, setSubCategory] = useState([]);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const [category, setCategory] = useState(null);
+  const [page, setPage] = useState(1);
+  const [itemID, setItemId] = useState("");
 
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setItemId("");
+  };
   //getCategory
   const getAllCategory = async () => {
     try {
-      const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
+      const res = await apiRequest({
+        method: "get",
+        url: `/getcategories?pageNumber=1&pageLimit=10`,
+      });
+
       const data = await res?.data?.data?.result;
-      console.log("data", await data);
+      console.log("data", data);
       setCategory(data);
     } catch (error) {}
   };
@@ -28,11 +37,13 @@ function subcategory() {
   //getSubCategory
   const getAllSubCategory = async () => {
     try {
-      const res = await getFunction(
-        "/get_subcategories?pageNumber=1&pageLimit=10"
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_subcategories?pageNumber=${page}&pageLimit=5&search=${search}`,
+      });
+
       const data = await res?.data?.data;
-      console.log("subcate", data);
+      console.log("subcategory", res);
       setSubCategory(data);
     } catch (error) {
       console.log(error);
@@ -42,7 +53,7 @@ function subcategory() {
   useEffect(() => {
     getAllCategory();
     getAllSubCategory();
-  }, []);
+  }, [page, search]);
 
   return (
     <div className="text-black">
@@ -54,7 +65,7 @@ function subcategory() {
 
         {/* SEARCH USERS INPUT ***************** */}
 
-        <div className="searchfiled mr-9 flex gap-2">
+        <div className="searchfiled flex gap-2">
           <input
             type="text"
             placeholder="Search Sub Categories.. "
@@ -80,6 +91,7 @@ function subcategory() {
                 category={category}
                 subcategory={subcategory}
                 getAllSubCategory={getAllSubCategory}
+                itemID={itemID}
               />
             )}
           </div>
@@ -88,17 +100,25 @@ function subcategory() {
 
       {/* USERS TABLE************  */}
 
-      <div className="p-10 m-auto ">
+      <div className="m-auto ">
         <Subcategoryitem
           filteredSubCategories={subcategory}
           getAllSubCategory={getAllSubCategory}
+          setid={setItemId}
+          handleOpen={handleOpen}
         />
       </div>
 
       {/* // PAGINATION ******* */}
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
+          <Pagination
+            count={Math.ceil(Number(subcategory?.Total_Count) / 10)}
+            variant="outlined"
+            shape="rounded"
+            page={page}
+            onChange={(e, page) => setPage(page)}
+          />
         </Stack>
       </div>
     </div>

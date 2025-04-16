@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const loading = () => {
   return (
@@ -11,4 +11,4 @@ const loading = () => {
   )
 }
 
-export default loading
+export default loading;

@@ -97,13 +97,21 @@ export default function Sidebar() {
                       <div className="ml-8 mt-2">
                         <Link
                           href="/category"
-                          className="block px-4 py-2 text-white hover:bg-gray-600"
+                          className={`block px-4 py-2 hover:bg-gray-600 ${
+                            pathname === "/category"
+                              ? "text-yellow-200"
+                              : "text-white"
+                          }`}
                         >
                           Category
                         </Link>
                         <Link
                           href="/subcategory"
-                          className="block px-4 py-2 text-white hover:bg-gray-600"
+                          className={`block px-4 py-2 hover:bg-gray-600 ${
+                            pathname === "/subcategory"
+                              ? "text-yellow-200"
+                              : "text-white"
+                          }`}
                         >
                           Sub Category
                         </Link>

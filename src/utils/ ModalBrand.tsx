@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddBrandSchema } from "@/_components/Validation";
-import { _post, getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import close from "../../public/images/close.svg";
 import uploadImage from "../../public/images/upload.png";
@@ -66,8 +66,12 @@ export default function ModalBrand({
         }
 
         //POST API
-        const res = await _post("/add_brand", formData);
-        toast.success(res?.data?.data?.MESSAGE);
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_brand",
+          data: formData,
+        });
+        toast.success("Brand Added Successfully");
         console.log("Response: ", res);
         handleClose();
         getbrands();
@@ -87,7 +91,8 @@ export default function ModalBrand({
 
   // GETBRANDBYID
   const getBrandById = async () => {
-    const res = await getFunction(`/get_brand?id=${id}`);
+    const res = await apiRequest({ method: "get", url: `/get_brand?id=${id}` });
+
     console.log("res12", res?.data);
     const result = res?.data?.data?.DATA;
     setFieldValue("name", result.Brand_Name || "");

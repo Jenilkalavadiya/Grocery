@@ -3,41 +3,38 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import ModalHome from "@/utils/ModalHome";
 
-const bannerImages = [
-  "https://source.unsplash.com/600x200/?grocery",
-  "https://source.unsplash.com/600x200/?drink",
-];
+const bannerImages = ["./hm1.png", "./hm2.png"];
 
 const categories = [
   {
     name: "Vegetables & Fruits",
     discount: "Min 23% OFF",
-    image: "https://source.unsplash.com/100x100/?vegetables",
+    image: "./hm10.png",
   },
   {
     name: "Foodgrains, Oil & Masala",
     discount: "Up to 30% OFF",
-    image: "https://source.unsplash.com/100x100/?oil",
+    image: "./hm11.png",
   },
   {
     name: "Eggs, Meat & Fish",
     discount: "Up to 25% OFF",
-    image: "https://source.unsplash.com/100x100/?meat",
+    image: "./hm12.png",
   },
   {
     name: "Kitchen, Garden & Pets",
     discount: "Up to 60% OFF",
-    image: "https://source.unsplash.com/100x100/?kitchen",
+    image: "./hm13.png",
   },
   {
     name: "Cleaning & Household",
     discount: "Up to 25% OFF",
-    image: "https://source.unsplash.com/100x100/?cleaning",
+    image: "./hm14.png",
   },
   {
     name: "Beverages",
     discount: "Up to 35% OFF",
-    image: "https://source.unsplash.com/100x100/?beverage",
+    image: "./hm15.png",
   },
 ];
 const page = () => {
@@ -68,9 +65,8 @@ const page = () => {
         </div>
       </div>
 
-      <div className="m-auto mt-3">
-        {/* <div className="w-full bg-yellow-200 h-"></div> */}
-        <section className="bg-white p-4 rounded shadow">
+      <div className="mt-10">
+        <section className="bg-white p-4 rounded shadow ">
           <h2 className="text-lg font-semibold mb-3">Banner Slider</h2>
           <div className="flex gap-4 overflow-x-auto">
             {bannerImages.map((src, index) => (
@@ -96,9 +92,9 @@ const page = () => {
         <section className="bg-white p-4 rounded shadow">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold">Shop by Category</h2>
-            {/* <Trash2 className="text-gray-500 cursor-pointer hover:text-red-500" /> */}
+          
           </div>
-          <div className="flex gap-4 overflow-x-auto pb-2">
+          <div className="flex gap-4 overflow-x-auto pb-2 w-full">
             {categories.map((cat, index) => (
               <div
                 key={index}

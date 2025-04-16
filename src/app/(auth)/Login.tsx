@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { useFormik } from "formik";
@@ -12,10 +12,8 @@ import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import l2 from "../../../public/l2.png";
-import axios from "axios";
-
 const Page = () => {
   const [eye, setEye] = useState(true);
   const router = useRouter();
@@ -28,17 +26,11 @@ const Page = () => {
       validationSchema: LoginSchema,
       onSubmit: async (values) => {
         try {
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASEAPI}/login`,
-            values,
-            {
-              headers: {
-                Authorizations: `@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY`,
-                Language: "en",
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            }
-          );
+          const res = await apiRequest({
+            method: "post",
+            url: "/login",
+            data: values,
+          });
 
           console.log("res", res);
 

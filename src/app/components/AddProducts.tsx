@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import uploadImage from "../../../public/images/upload.png";
-import { _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
@@ -64,7 +64,12 @@ const AddProducts = ({
         // console.log("values", values);
 
         //POST API
-        const res = await _post("/add_product", formData);
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_product",
+          data: formData,
+        });
+
         if (res?.status == 200) {
           toast.success(res?.data?.data?.MESSAGE);
           router.push("/products");

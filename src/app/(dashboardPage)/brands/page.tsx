@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { _post, getFunction } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -25,6 +25,21 @@ const page = () => {
   const [subCategory, setSubCategory] = useState(null);
   const [id, setId] = useState("");
 
+  //getbrands
+  const getbrands = async () => {
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_brands?pageNumber=${page}&pageLimit=10&search=${search}`,
+      });
+      const data = await res?.data?.data;
+      setBrand(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log("page", page);
   useEffect(() => {
     getbrands();
   }, [search, page]);
@@ -43,7 +58,11 @@ const page = () => {
   //getCategory
   const getAllCategory = async () => {
     try {
-      const res = await getFunction(`/getcategories?pageNumber=1&pageLimit=10`);
+      const res = await apiRequest({
+        method: "get",
+        url: `/getcategories?pageNumber=1&pageLimit=10`,
+      });
+
       const data = await res?.data?.data?.result;
       // console.log("data", await data);
       setCategory(data);
@@ -53,9 +72,10 @@ const page = () => {
   //getSubCategory
   const getAllSubCategory = async () => {
     try {
-      const res = await getFunction(
-        "/get_subcategories?pageNumber=1&pageLimit=10"
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_subcategories?pageNumber=1&pageLimit=10`,
+      });
       const data = await res?.data?.data?.result;
       // console.log("subcate", data);
       setSubCategory(data);
@@ -64,19 +84,7 @@ const page = () => {
     }
   };
 
-  //getbrands
-  const getbrands = async () => {
-    try {
-      const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=5&search=${search}`
-      );
-      console.log("res", res?.data?.data);
-      const data = await res?.data?.data;
-      setBrand(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
 
   return (
     <div className="text-black">

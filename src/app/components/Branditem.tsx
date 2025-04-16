@@ -1,4 +1,4 @@
-import { _delete, _post } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -18,7 +18,11 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
     setOpen(false);
   };
   const handleDelete = async () => {
-    const res = await _delete(`/delete_brand?id=${itemID}`);
+    const res = await apiRequest({
+      method: "delete",
+      url: `/delete_brand?id=${itemID}`,
+    });
+
     getbrands();
     handleClose();
     console.log(res);
@@ -29,10 +33,12 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
-      const res = await _post(`/status_change3`, {
-        id,
-        status: newStatus,
+      const res = await apiRequest({
+        method: "post",
+        url: `/status_change3`,
+        data: { id, status: newStatus },
       });
+      
 
       console.log("status", res);
       if (res?.status === 200) {

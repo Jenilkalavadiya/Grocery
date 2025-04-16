@@ -1,6 +1,7 @@
 "use client";
 
-import { getFunction } from "@/api/ApiCall";
+import { AddSubCategorySchema } from "@/_components/Validation";
+import { apiRequest } from "@/api/ApiCall";
 import AddProducts from "@/app/components/AddProducts";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -22,6 +23,19 @@ const AddProduct = () => {
   const [productId, setProductId] = useState<string | null>(null);
   const [getProductDetail, setGetProductDetail] = useState(null);
 
+  // GET CATEGORY ****************
+  const getAllCategory = async () => {
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: `/getcategories?pageNumber=${page}&pageLimit=5`,
+      });
+
+      const data = await res?.data?.data?.result;
+      setCategory(data);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getAllCategory();
     getAllSubCategory();
@@ -34,24 +48,13 @@ const AddProduct = () => {
     }
   }, [productId]);
 
-  // GET CATEGORY ****************
-  const getAllCategory = async () => {
-    try {
-      const res = await getFunction(
-        `/getcategories?pageNumber=${page}&pageLimit=5`
-      );
-      const data = await res?.data?.data?.result;
-      setCategory(data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
   const getAllSubCategory = async () => {
     try {
-      const res = await getFunction(
-        "/get_subcategories?pageNumber=1&pageLimit=5"
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_subcategories?pageNumber=1&pageLimit=5`,
+      });
+
       const data = await res?.data?.data?.result;
       setSubCategory(data);
     } catch (error) {
@@ -62,9 +65,12 @@ const AddProduct = () => {
   // GET BRANDS ****************
   const getbrands = async () => {
     try {
-      const res = await getFunction(
-        `/get_brands?pageNumber=${page}&pageLimit=10`
-      );
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_brands?pageNumber=${page}&pageLimit=10`,
+      });
+
+      console.log("brand", res);
       const data = await res?.data?.data?.result;
       setBrand(data);
     } catch (error) {
@@ -74,15 +80,21 @@ const AddProduct = () => {
 
   // GET PRODUCT ****************
   const getProduct = async () => {
-    const res = await getFunction(`/get_products?pageNumber=1&pageLimit=10`);
-    // console.log("getProduct", res);
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_products?pageNumber=1&pageLimit=10`,
+    });
+    console.log("getProduct", res);
     const data = await res?.data?.data?.result;
   };
 
   // GET PRODUCT BY ID
   const getProductById = async () => {
     try {
-      const res = await getFunction(`/get_product_by_id?id=${productId}`);
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_product_by_id?id=${productId}`,
+      });
       console.log("getProductById", res?.data);
       if (res?.data?.code == 1) {
         setGetProductDetail(res?.data?.data?.DATA);
