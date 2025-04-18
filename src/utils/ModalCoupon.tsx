@@ -65,7 +65,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
           url: "/add_coupon",
           data: { params },
         });
-       
+
         console.log("coupon", res);
         toast.success("Coupon Added Successfully");
 

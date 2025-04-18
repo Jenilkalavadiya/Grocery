@@ -27,7 +27,7 @@ const page = () => {
     });
     setCoupon(res?.data?.data);
   };
-  
+
   useEffect(() => {
     getCoupon();
   }, [page]);
@@ -78,7 +78,7 @@ const page = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(coupon?.Total_Count / 6))}
+            count={Math.ceil(Number(coupon?.Total_Count / 5))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

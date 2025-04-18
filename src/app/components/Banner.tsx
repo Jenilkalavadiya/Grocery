@@ -3,50 +3,32 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import off from "../../../public/off.svg";
 import plus from "../../../public/plus.png";
-interface Banners {
-  Image: string;
-  Section_Name: string;
-  Id: number;
-}
 
-const Banner = () => {
-  const [banner, setBanner] = useState<Banners[]>([]);
-  const getBanners = async () => {
-    const res = await apiRequest({
-      method: "get",
-      url: `/get_slider_with_banner`,
-    });
-    const response = res?.data?.data?.result;
-    console.log("response", response);
-    setBanner(response);
-  };
-
+const Banner = ({ banner,getBanners }: any) => {
   const handleDelete = async (itemID: number) => {
+    console.log("res", itemID);
     const res = await apiRequest({
       method: "delete",
       url: `/delete_slider_with_banner?id=${itemID}`,
     });
     getBanners();
-    console.log("res", res);
   };
 
-  useEffect(() => {
-    getBanners();
-  }, []);
+  console.log("Addsection", banner);
   return (
-    <section className="bg-white p-6 rounded shadow">
+    <section className="bg-white p-6 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Banner Slider</h2>
       <div className="flex gap-4 overflow-x-auto">
-        {banner?.map((item, index) => (
+        {banner?.map((item: any, index: any) => (
           <div key={index} className="relative min-w-[250px]">
             <img
-              src={item?.Image}
+              src={item?.image}
               alt={`Banner ${index + 1}`}
               className="rounded-md h-40 w-full object-contain"
             />
             <button
               onClick={() => {
-                handleDelete(item?.Id);
+                handleDelete(item?.id);
               }}
             >
               <Image
