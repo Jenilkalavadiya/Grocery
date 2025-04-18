@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import l2 from "../../../../public/l2.png";
 
 import OtpInput from "react-otp-input";
+import { apiRequest } from "@/api/ApiCall";
 
 const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
@@ -26,15 +27,24 @@ const VerifyOtpPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASEAPI}/otp-verify`,
-        new URLSearchParams({ otp }),
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
+
+      const response = await apiRequest({
+                  method: "post",
+                  url: "/otp-verify",
+                  data:  new URLSearchParams({ otp }),
+                });
+
+
+
+      // const response = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_BASEAPI}/otp-verify`,
+      //   new URLSearchParams({ otp }),
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/x-www-form-urlencoded",
+      //     },
+      //   }
+      // );
 
       console.log("first", await response.data);
 

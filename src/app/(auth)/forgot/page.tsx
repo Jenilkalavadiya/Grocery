@@ -13,6 +13,7 @@ import styles from "@/styles/forgot.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import l2 from "../../../../public/l2.png";
+import { apiRequest } from "@/api/ApiCall";
 
 const Page = () => {
   const [input, setInput] = useState({
@@ -29,15 +30,21 @@ const Page = () => {
       validationSchema: ForgotSchema,
       onSubmit: async (values) => {
         try {
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASEAPI}/forgot_password`,
-            values,
-            {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            }
-          );
+          const res = await apiRequest({
+            method: "post",
+            url: "/forgot_password",
+            data: values,
+          });
+
+          // const res = await axios.post(
+          //   `${process.env.NEXT_PUBLIC_BASEAPI}/forgot_password`,
+          //   values,
+          //   {
+          //     headers: {
+          //       "Content-Type": "application/x-www-form-urlencoded",
+          //     },
+          //   }
+          // );
           console.log("Signin values", await res?.data);
           const data = await res?.data?.data;
           console.log("OTP", await data?.otp);

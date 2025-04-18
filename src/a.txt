@@ -8,6 +8,19 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import plus from "../../../public/images/plus.svg";
 
+// Define type for Form Values
+type ProductFormValues = {
+  name: string;
+  category: string;
+  subCategory: string;
+  brand: string;
+  image: File | string | null;
+  title: string;
+  description: string;
+  status: number;
+  [key: string]: any; // to support dynamic fields like variation_0, productPrice_0 etc.
+};
+
 const AddProducts = ({
   brand,
   category,
@@ -18,6 +31,7 @@ const AddProducts = ({
 }: any) => {
   const router = useRouter();
   const [productDetails, setProductDetails] = useState([{}]);
+
   const {
     values,
     errors,
@@ -26,7 +40,7 @@ const AddProducts = ({
     handleChange,
     handleSubmit,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<ProductFormValues>({
     initialValues: {
       name: "",
       category: "",
@@ -46,25 +60,41 @@ const AddProducts = ({
       try {
         const formData = new FormData();
         formData.append("product_name", values.name);
-        formData.append("product_price", values.productPrice);
-        formData.append("variation", values.variation);
-        formData.append("discount", values.discount);
-        formData.append("discount_price", values.discountPrice);
         formData.append("title", values.title);
         formData.append("description", values.description);
         formData.append("fk_category_id", values.category);
         formData.append("fk_subcategory_id", values.subCategory);
         formData.append("fk_brand_id", values.brand);
         formData.append("stock_status", values.status.toString());
+
         if (values.image) {
           formData.append("image", values.image);
         }
+
+        // Append dynamic variation fields
+        productDetails.forEach((_, index) => {
+          formData.append(
+            `variation[${index}]`,
+            values[`variation_${index}`] || ""
+          );
+          formData.append(
+            `product_price[${index}]`,
+            values[`productPrice_${index}`] || ""
+          );
+          formData.append(
+            `discount[${index}]`,
+            values[`discount_${index}`] || ""
+          );
+          formData.append(
+            `discount_price[${index}]`,
+            values[`discountPrice_${index}`] || ""
+          );
+        });
+
         if (productId) {
           formData.append("id", productId);
         }
-        // console.log("values", values);
 
-        //POST API
         const res = await apiRequest({
           method: "post",
           url: "/add_product",
@@ -78,8 +108,6 @@ const AddProducts = ({
         } else {
           toast.error(res?.data?.message);
         }
-
-        console.log("Response: ", res);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -94,12 +122,8 @@ const AddProducts = ({
         "category",
         getProductDetail?.Category_id?.toString() || ""
       );
-      setFieldValue("subCategory", getProductDetail?.Subcategory_id || ""); // use ID
-      setFieldValue("brand", getProductDetail?.Brand_id || ""); // use ID
-      setFieldValue("variation", getProductDetail?.Variation || "");
-      setFieldValue("productPrice", getProductDetail?.Product_Price || "");
-      setFieldValue("discount", getProductDetail?.Discount || "");
-      setFieldValue("discountPrice", getProductDetail?.Discount_Price || "");
+      setFieldValue("subCategory", getProductDetail?.Subcategory_id || "");
+      setFieldValue("brand", getProductDetail?.Brand_id || "");
       setFieldValue("title", getProductDetail?.Title || "");
       setFieldValue("description", getProductDetail?.Description || "");
       setFieldValue("status", getProductDetail?.Stock_Status || 0);
@@ -110,22 +134,30 @@ const AddProducts = ({
       ) {
         setFieldValue("image", getProductDetail.Image);
       }
+
+      // Optional: prefill productDetails variations if you have them
     }
   }, [getProductDetail, productId, setFieldValue]);
 
   const addProductDetailSet = () => {
-    setProductDetails([...productDetails, {}]); // Add a new set of fields
+    const newIndex = productDetails.length;
+    setProductDetails([...productDetails, {}]);
+    // Initialize dynamic field values
+    setFieldValue(`variation_${newIndex}`, "");
+    setFieldValue(`productPrice_${newIndex}`, "");
+    setFieldValue(`discount_${newIndex}`, "");
+    setFieldValue(`discountPrice_${newIndex}`, "");
   };
 
   return (
     <div className="bg-white shadow-xl p-4 mt-4 flex items-center justify-center">
-      <div className="">
-        <form action="" className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          {/* ADD PRODUCT ************ */}
+      <div>
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <h1 className="font-bold text-xl">
             {productId ? "Edit Product" : "Add Product"}
           </h1>
           <div className="flex gap-8">
+            {/* {/ Item Name /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Item Name </span>
               <input
@@ -142,7 +174,7 @@ const AddProducts = ({
               )}
             </div>
 
-            {/* CATEGORY **************** */}
+            {/* {/ Category /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Category</span>
               <select
@@ -150,7 +182,7 @@ const AddProducts = ({
                 value={values.category}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-[300px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
+                className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
               >
                 <option value="">Select</option>
                 {category.map((data: any) => (
@@ -164,7 +196,7 @@ const AddProducts = ({
               )}
             </div>
 
-            {/* SUBCATEGORY********  */}
+            {/* {/ SubCategory /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Sub Category</span>
               <select
@@ -172,10 +204,9 @@ const AddProducts = ({
                 value={values.subCategory}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
+                className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
               >
                 <option value="">Select</option>
-
                 {subCategory?.map((data: any) => (
                   <option key={data?.No} value={data?.No}>
                     {data?.SubCategory_Name}
@@ -187,7 +218,7 @@ const AddProducts = ({
               )}
             </div>
 
-            {/* BRAND****** */}
+            {/* {/ Brand /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Brand</span>
               <select
@@ -195,10 +226,9 @@ const AddProducts = ({
                 value={values.brand}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
+                className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
               >
                 <option value="">Select</option>
-
                 {brand?.map((data: any) => (
                   <option key={data?.No} value={data?.No}>
                     {data?.Brand_Name}
@@ -211,90 +241,46 @@ const AddProducts = ({
             </div>
           </div>
 
-          {/* PRODUCT DETAILS ****** */}
-          <div className="!flex !justify-between mt-3 !items-center">
-            <h2 className="text-xl font-bold ">Product Details</h2>
-
-            <div className="cursor-pointer ">
-              <Image
-                src={plus}
-                alt="plus"
-                className=""
-                width={60}
-                height={60}
-              />
-            </div>
-          </div>
-          <div className="flex gap-8">
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Variation </span>
-              <input
-                type="text"
-                name="variation"
-                value={values.variation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-                placeholder="product qty (ex.500g,1kg)"
-              />
-              {errors.variation && touched.variation && (
-                <div className="text-red-500">{errors.variation}</div>
-              )}
+          {/* {/ Product Details /} */}
+          <div>
+            <div className="flex justify-between mt-3 items-center">
+              <h2 className="text-xl font-bold">Product Details</h2>
+              <div className="cursor-pointer" onClick={addProductDetailSet}>
+                <Image src={plus} alt="plus" width={60} height={60} />
+              </div>
             </div>
 
-            {/* CATEGORY **************** */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Product Price </span>
-              <input
-                type="text"
-                name="productPrice"
-                value={values.productPrice}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-                placeholder="Price"
-              />
-              {errors.productPrice && touched.productPrice && (
-                <div className="text-red-500">{errors.productPrice}</div>
-              )}
-            </div>
-
-            {/* SUBCATEGORY********  */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Discount(%) </span>
-              <input
-                type="text"
-                name="discount"
-                value={values.discount}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-                placeholder="Discount"
-              />
-              {errors.discount && touched.discount && (
-                <div className="text-red-500">{errors.discount}</div>
-              )}
-            </div>
-
-            {/* BRAND****** */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Discount Price </span>
-              <input
-                type="text"
-                name="discountPrice"
-                value={values.discountPrice}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-                placeholder="Price"
-              />
-              {errors.discountPrice && touched.discountPrice && (
-                <div className="text-red-500">{errors.discountPrice}</div>
-              )}
-            </div>
+            {productDetails.map((_, index) => (
+              <div key={index} className="flex gap-8">
+                {["variation", "productPrice", "discount", "discountPrice"].map(
+                  (field) => (
+                    <div key={field} className="flex flex-col mt-3 gap-2">
+                      <span className="text-gray-400 font-bold capitalize">
+                        {field.replace(/([A-Z])/g, " $1")}
+                      </span>
+                      <input
+                        type="text"
+                        name={`${field}_${index}`}
+                        value={values[`${field}_${index}`] || ""}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
+                        placeholder={field}
+                      />
+                      {errors[`${field}_${index}`] &&
+                        touched[`${field}_${index}`] && (
+                          <div className="text-red-500">
+                            {errors[`${field}_${index}`]}
+                          </div>
+                        )}
+                    </div>
+                  )
+                )}
+              </div>
+            ))}
           </div>
 
-          {/* OTHER INFO ********** */}
+          {/* {/ Other Info /}  */}
           <h2 className="text-xl font-bold mt-3">Other Info</h2>
           <div className="flex gap-8">
             <div className="flex flex-col mt-3 gap-2">
@@ -303,15 +289,12 @@ const AddProducts = ({
                 name="title"
                 value={values.title}
                 onChange={handleChange}
-                cols={64}
-                rows={50}
                 onBlur={handleBlur}
-                className=" border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
+                className="border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
                 placeholder="Title"
               />
             </div>
 
-            {/* Description **************** */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Description </span>
               <textarea
@@ -319,16 +302,13 @@ const AddProducts = ({
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                rows={50}
-                cols={64}
-                className=" border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
+                className="border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
                 placeholder="Description"
               />
             </div>
           </div>
 
-          {/* IMAGE************ */}
-
+          {/* {/ Image Upload /}  */}
           <label htmlFor="upload" className="w-[40%]">
             <input
               type="file"
@@ -344,7 +324,7 @@ const AddProducts = ({
             />
 
             {values.image ? (
-              <div className=" flex items-start justify-start">
+              <div className="flex items-start justify-start">
                 <img
                   src={
                     typeof values.image === "string"
@@ -360,7 +340,6 @@ const AddProducts = ({
                 <Image
                   src={uploadImage}
                   alt="uploadimg"
-                  className="w-[40px] h-[40px]"
                   width={40}
                   height={40}
                 />
@@ -369,6 +348,7 @@ const AddProducts = ({
             )}
           </label>
 
+          {/* {/ Status Toggle /}  */}
           <div className="flex justify-between">
             <span className="text-gray-400 font-bold">Status</span>
             <label className="inline-flex items-center mb-5 cursor-pointer">
@@ -380,30 +360,27 @@ const AddProducts = ({
                   setFieldValue("status", values.status === 1 ? 0 : 1)
                 }
                 onBlur={handleBlur}
-                className="sr-only peer !border-0"
+                className="sr-only peer"
               />
-              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+              <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-green-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:after:translate-x-full"></div>
             </label>
           </div>
 
-          {/* SUBMIT************ */}
+          {/* {/ Submit Buttons /} */}
           <div className="flex items-center mt-3 justify-center gap-2">
-            <div>
-              <button
-                type="submit"
-                className="bg-[#fcc827] cursor-pointer font-bold text-xl p-2 w-[150px] "
-              >
-                {productId ? "Update" : "Save"}
-              </button>
-            </div>
-            <div>
-              <button
-                onClick={() => router.push("/products")}
-                className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border"
-              >
-                Cancel
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="bg-[#fcc827] cursor-pointer font-bold text-xl p-2 w-[150px]"
+            >
+              {productId ? "Update" : "Save"}
+            </button>
+            <button
+              onClick={() => router.push("/products")}
+              className="font-bold text-xl p-2 w-[150px] cursor-pointer border border-gray-500"
+              type="button"
+            >
+              Cancel
+            </button>
           </div>
         </form>
       </div>

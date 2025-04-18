@@ -58,7 +58,6 @@ export const AddProductSchema = Yup.object().shape({
   image: Yup.mixed().required("Image is required"),
 });
 
-
 export const AddCoupon = Yup.object({
   name: Yup.string().required("Coupon name is required."),
   minimumPurchase: Yup.number()
@@ -96,3 +95,23 @@ export const AddCoupon = Yup.object({
   couponCode: Yup.string().required("Coupon code is required."),
 });
 
+export const Configuration = {
+  deliverySchema: Yup.object({
+    freeDelivery: Yup.string().required("Free delivery is required"),
+    deliveryCharge: Yup.string().required("Delivery charge is required"),
+  }),
+
+  taxSchema: Yup.object({
+    tax: Yup.string().required("Tax is required"),
+  }),
+};
+
+export const ResetPassword = Yup.object({
+  oldPassword: Yup.string().required("Old password is required"),
+  newPassword: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("New password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword")], "Passwords must match")
+    .required("Please confirm your password"),
+});

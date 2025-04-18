@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import l2 from "../../../../public/l2.png";
-
+import { apiRequest } from "@/api/ApiCall";
 
 const ResetPassword = () => {
   const [eye, setEye] = useState(true);
@@ -27,13 +27,12 @@ const ResetPassword = () => {
       validationSchema: ResetPasswordSchema,
       onSubmit: async (values) => {
         try {
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_BASEAPI}/reset-password`,
-            values,
-            {
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            }
-          );
+          const res = await apiRequest({
+            method: "post",
+            url: "/reset-password",
+            data: values,
+          });
+          
 
           if (res?.status === 200) {
             toast.success(res?.data?.data);

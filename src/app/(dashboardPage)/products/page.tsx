@@ -10,6 +10,10 @@ import CustomSeparator from "@/app/components/Bradcrumbs";
 import Dashboard from "../dashboard/page";
 import GetProduct from "@/app/components/GetProduct";
 import { apiRequest } from "@/api/ApiCall";
+import Image from "next/image";
+import icon from "../../../../public/images/search.svg";
+import { Button } from "@mui/material";
+
 const page = () => {
   const [search, setSearch] = useState("");
   const [product, setProduct] = useState(null);
@@ -18,21 +22,21 @@ const page = () => {
   const handleChange = (e: any) => {
     const trimmedSearch = e.target.value.trim();
     setSearch(trimmedSearch);
-    setPage(1)
+    setPage(1);
   };
 
   //GET PRODUCT
   const getProduct = async () => {
     const res = await apiRequest({
       method: "get",
-      url: `/get_products?pageNumber=1&pageLimit=10&search=${search}`,
+      url: `/get_products?pageNumber=${page}&pageLimit=5&search=${search}`,
     });
 
     console.log("getProduct", res?.data);
-    const data = await res?.data?.data?.result;
-    const total = res?.data?.data?.Total_Count;
+    const data = await res?.data?.data;
+    // const total = res?.data?.data?.Total_Count;
     setProduct(data);
-    setPage(total);
+    // setPage(total);
   };
 
   useEffect(() => {
@@ -45,38 +49,46 @@ const page = () => {
       {/* SERCH INPUT  */}
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">Products</h2>
-          <div className="ml-8 mt-2">
-            <CustomSeparator value1={"Dashboard"} value2={"products"}  className="flex" />
+          <h2 className="text-3xl  font-bold !text-[#202020]">Products</h2>
+          <div className=" mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"products"}
+              className="flex"
+            />
           </div>
         </div>
 
         {/* SEARCH USERS INPUT ***************** */}
 
-        <div className="searchfiled mr-8  flex gap-2">
-          <input
-            type="text"
-            placeholder="Search Products... "
-            value={search}
-            onChange={(e) => handleChange(e)}
-            className="px-2 border-[#DADDE1] bg-white focus:outline-none border w-[244px] h-[45px]"
-          />
-
-          <div className="w-[130px]">
-            <button
-              className="bg-[#FCC827] cursor-pointer text-black font-semibold h-[45px] p-2.5"
-              onClick={() => router.push("/products/addProduct")}
-            >
-              {" "}
-              Add Product
-            </button>
+        <div className="searchfiled flex gap-3">
+          <div className="border border-[#DADDE1] bg-white flex justify-center">
+            <div className="flex items-center justify-center ml-3">
+              <Image src={icon} alt="pp" width={18} height={15} />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Search Products... "
+                value={search}
+                onChange={(e) => handleChange(e)}
+                className="px-2 focus:outline-none  w-[244px] h-[45px]"
+              />
+            </div>
           </div>
+
+          <Button
+            className="!bg-[#FCC827] !text-black !font-extrabold h-[45px] p-1"
+            onClick={() => router.push("/products/addProduct")}
+          >
+            Add Product
+          </Button>
         </div>
       </div>
 
       {/* USERS TABLE************  */}
 
-      <div className="p-7 m-auto ">
+      <div className="m-auto mt-3 ">
         <GetProduct product={product} getProduct={getProduct} />
       </div>
 
@@ -84,7 +96,7 @@ const page = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(page / 20))}
+            count={Math.ceil(Number(product?.Total_Count / 5))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

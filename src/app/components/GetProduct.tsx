@@ -75,7 +75,7 @@ const GetProduct = ({ product, getProduct }: any) => {
         <tbody>
           {product ? (
             <>
-              {product?.map((item: any) => (
+              {product?.result?.map((item: any) => (
                 <tr
                   key={item?.Id}
                   className="hover:bg-gray-50 transition-all duration-300 text-center"

@@ -8,7 +8,7 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 
-const GetCoupon = ({ coupon, getCoupon }: any) => {
+const GetCoupon = ({ coupon, getCoupon,handleOpen,setId }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
@@ -102,7 +102,7 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
                       onClick={() => changeStatus(item?.No, item?.Status)}
                       className="inline-block cursor-pointer"
                     >
-                      <GreenSwitch Status={item?.Status} />
+                      <GreenSwitch status={item?.Status} />
                     </div>
                   </td>
 
@@ -110,9 +110,9 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
                     <div className="flex gap-6 justify-center items-center">
                       <span className="text-xl cursor-pointer">
                         <CiEdit
-                          onClick={() =>
-                            router.push(`/products/addProduct?id=${item?.Id}`)
-                          }
+                          onClick={() => {
+                            handleOpen(), setId(item?.No);
+                          }}
                         />
                       </span>
                       <span

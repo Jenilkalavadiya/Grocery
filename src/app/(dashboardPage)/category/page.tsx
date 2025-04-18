@@ -69,6 +69,7 @@ const page = () => {
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Categories</h2>
         </div>
+        {/* SEARCH USERS INPUT ***************** */}
 
         <div className="searchfiled flex gap-3">
           <div className="border border-[#DADDE1] bg-white flex justify-center">
@@ -80,7 +81,9 @@ const page = () => {
                 type="text"
                 placeholder="Search Categories.. "
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value), setPage(1);
+                }}
                 className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
             </div>

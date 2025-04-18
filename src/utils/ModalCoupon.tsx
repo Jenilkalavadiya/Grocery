@@ -6,14 +6,13 @@ import { Box, Modal } from "@mui/material";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { toast } from "react-toastify";
-
 import close from "../../public/images/close.svg";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 import { DatePicker } from "@mui/x-date-pickers";
 import { datePicker } from "@/_components/textFieldStyles";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -27,7 +26,7 @@ const style = {
   p: 4,
 };
 
-const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
+const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
   const {
     values,
     errors,
@@ -57,17 +56,19 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
           start_date: startDateFormatted,
           end_date: endDateFormatted,
           coupon_code: values.couponCode,
+          ...(id && { id }), 
         };
 
-        // POST API
         const res = await apiRequest({
           method: "post",
           url: "/add_coupon",
-          data: { params },
+          data: params,
         });
-       
+
         console.log("coupon", res);
-        toast.success("Coupon Added Successfully");
+        toast.success(
+          id ? "Coupon Updated Successfully" : "Coupon Added Successfully"
+        );
 
         getCoupon();
         handleClose();
@@ -77,9 +78,40 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
     },
   });
 
+  // Handle Date change
   const handleDateChange = (name: string, date: any) => {
     setFieldValue(name, date);
   };
+
+  // Fetch coupon data by ID
+  const getCouponById = async () => {
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_coupon_by_id?id=${id}`,
+    });
+
+    console.log("res12", res?.data);
+    const result = res?.data?.data?.DATA;
+
+    // Populate form fields with fetched data
+    setFieldValue("name", result.Coupon_Name || "");
+    setFieldValue("minimumPurchase", result.Min_Purchase || "");
+    setFieldValue("discountPrice", result.Discount_Price || "");
+    setFieldValue("couponCode", result.Coupon_Code || "");
+
+    // Handling date range (startDate and endDate)
+    if (result.Date) {
+      const [startDate, endDate] = result.Date.split(" to ");
+      setFieldValue("startDate", dayjs(startDate)); // Set start date
+      setFieldValue("endDate", dayjs(endDate)); // Set end date
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getCouponById();
+    }
+  }, [id, setFieldValue]);
 
   return (
     <div className="">
@@ -98,7 +130,9 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
             className="flex flex-col gap-2 "
             id="modal"
           >
-            <h1 className="text-center font-bold text-2xl">Add Coupon</h1>
+            <h1 className="text-center font-bold text-2xl">
+              {id ? "Edit Coupon" : "Add Coupon"}
+            </h1>
 
             {/* Close Button */}
             <div className="absolute top-0 right-0 p-2">
@@ -153,7 +187,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
             )}
 
             {/* DatePicker */}
-            <span className="text-gray-400  font-bold">Date</span>
+            <span className="text-gray-400 font-bold">Date</span>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 name="startDate"
@@ -180,6 +214,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
             {errors.endDate && touched.endDate && (
               <div className="text-red-500">{errors.endDate}</div>
             )}
+
             {/* Coupon Code */}
             <span className="text-gray-400 font-bold">Coupon Code </span>
             <input
@@ -189,7 +224,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
               onChange={handleChange}
               onBlur={handleBlur}
               className="w-[350px] border border-gray-400 focus:outline-none bg-white text-black h-[45px] p-2"
-              placeholder="Coupon Code "
+              placeholder="Coupon Code"
             />
             {errors.couponCode && touched.couponCode && (
               <div className="text-red-500">{errors.couponCode}</div>
@@ -201,7 +236,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon }: any) => {
                 type="submit"
                 className="w-[350px] font-bold cursor-pointer bg-amber-300 p-3"
               >
-                Submit
+                {id ? "Update" : "Submit"}
               </button>
             </div>
           </form>
