@@ -40,7 +40,7 @@ const CategoryItem = ({
         url: "/status_change1",
         data: { id, status: newStatus },
       });
-
+      console.log("resssponse", res);
       if (res?.status === 200) {
         toast.success("Status updated");
         getAllCategory();

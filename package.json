@@ -10,12 +10,15 @@
     "postinstall": "flowbite-react patch"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^9.5.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.0.1",
     "@mui/x-date-pickers-pro": "^7.28.3",
     "@toolpad/core": "^0.13.0",
     "axios": "^1.8.4",
+    "ckeditor5": "^45.0.0",
+    "ckeditor5-premium-features": "^45.0.0",
     "dayjs": "^1.11.13",
     "flowbite-react": "^0.11.5",
     "formik": "^2.4.6",

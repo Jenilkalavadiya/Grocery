@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { toast } from "react-toastify";
 const Subcategoryitem = ({
   filteredSubCategories,
   getAllSubCategory,
@@ -27,6 +28,28 @@ const Subcategoryitem = ({
     getAllSubCategory();
     handleClose();
     console.log(res);
+  };
+
+  const statusChange = async (id: number, currentStatus: number) => {
+    const newStatus = currentStatus === 1 ? 0 : 1;
+
+    try {
+      const res = await apiRequest({
+        method: "post",
+        url: "/status_change2",
+        data: { id, status: newStatus },
+      });
+      // console.log("resssponse", res);
+      if (res?.status === 200) {
+        toast.success("Status updated");
+        getAllSubCategory();
+      } else {
+        toast.error("Status update failed");
+      }
+    } catch (err) {
+      console.error("Status update error:", err);
+      toast.error("Error updating status");
+    }
   };
   return (
     <div className="overflow-x-auto shadow-2xl mt-10">
@@ -67,7 +90,9 @@ const Subcategoryitem = ({
                 {item?.Category_Name}
               </td>
               <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <Greenswitch item={item} />
+                <div onClick={() => statusChange(item?.No, item?.Status)}>
+                  <Greenswitch status={item?.Status} />
+                </div>
               </td>
               <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
                 <div className="flex gap-4 items-center">

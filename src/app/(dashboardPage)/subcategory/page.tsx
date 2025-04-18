@@ -7,25 +7,40 @@ import Stack from "@mui/material/Stack";
 import Subcategoryitem from "@/app/components/Subcategoryitem";
 import Button from "@mui/material/Button";
 import ModalSubCategory from "@/utils/ModalSubCategory";
+import CustomSeparator from "@/app/components/Bradcrumbs";
 function subcategory() {
   const [search, setSearch] = useState("");
-  const [subcategory, setSubCategory] = useState([]);
+  const [subcategory, setSubCategory] = useState<SubcategoryResponse>();
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState(null);
   const [page, setPage] = useState(1);
   const [itemID, setItemId] = useState("");
+
+  interface SubcategoryItem {
+    No: number;
+    Image: string;
+    SubCategory_Name: string;
+    Category_id: number;
+    Category_Name: string;
+  }
+
+  interface SubcategoryResponse {
+    Total_Count: number;
+    result: SubcategoryItem[];
+  }
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setItemId("");
   };
+
   //getCategory
   const getAllCategory = async () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/getcategories?pageNumber=1&pageLimit=10`,
+        url: `/getcategories?pageNumber=1&pageLimit=5`,
       });
 
       const data = await res?.data?.data?.result;
@@ -54,13 +69,19 @@ function subcategory() {
     getAllCategory();
     getAllSubCategory();
   }, [page, search]);
-
+  console.log("subcategory", subcategory);
   return (
     <div className="text-black">
-      {/* SERCH INPUT  */}
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Sub Categories</h2>
+          <div className="mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"subcategory"}
+              className="flex"
+            />
+          </div>
         </div>
 
         {/* SEARCH USERS INPUT ***************** */}
@@ -70,7 +91,9 @@ function subcategory() {
             type="text"
             placeholder="Search Sub Categories.. "
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value), setPage(1);
+            }}
             className="px-2 border-[#DADDE1] bg-white focus:outline-none border h-[45px]"
           />
 
@@ -78,9 +101,7 @@ function subcategory() {
             <Button
               className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
               onClick={handleOpen}
-              // variant="outlined"
             >
-              {" "}
               Add SubCategory
             </Button>
 
@@ -113,7 +134,7 @@ function subcategory() {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(subcategory?.Total_Count) / 10)}
+            count={Math.ceil(Number(subcategory?.Total_Count) / 5)}
             variant="outlined"
             shape="rounded"
             page={page}

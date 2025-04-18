@@ -1,7 +1,6 @@
 "use client";
 
 import CustomSeparator from "@/app/components/Bradcrumbs";
-import { useRouter } from "next/navigation";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
@@ -15,26 +14,23 @@ const page = () => {
   const [coupon, setCoupon] = useState(null);
   const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setId("");
   };
-
-  useEffect(() => {
-    getCoupon();
-  }, [page]);
-
   const getCoupon = async () => {
     const res = await apiRequest({
       method: "get",
       url: `/get_coupons?pageNumber=1&pageLimit=5`,
     });
-
-    console.log("coupon", res);
     setCoupon(res?.data?.data);
   };
-
+  
+  useEffect(() => {
+    getCoupon();
+  }, [page]);
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}

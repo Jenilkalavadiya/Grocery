@@ -8,34 +8,28 @@ import Button from "@mui/material/Button";
 import ModalCategory from "@/utils/ModalCategory";
 import Image from "next/image";
 import icon from "../../../../public/search.png";
+import CustomSeparator from "@/app/components/Bradcrumbs";
 
 const page = () => {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState<CategoryResponse>();
   const [page, setPage] = useState(1);
   const [itemID, setItemId] = useState("");
-  // hhhhe
-  const [accessToken, setAccessToken] = useState<string | null>(
-    localStorage.getItem("accessToken")
-  );
-
-  useEffect(() => {
-    const checkAndRefresh = async () => {
-      if (accessToken) {
-        // Check if token is valid or expired
-        try {
-          const newAccessToken = await refreshToken();
-          setAccessToken(newAccessToken);
-        } catch (error) {
-          // Handle token refresh failure
-          console.error("Token refresh failed", error);
-        }
-      }
-    };
-    checkAndRefresh();
-  }, []);
-
   const [open, setOpen] = useState(false);
+
+  interface CategoryItem {
+    No: number;
+    Image: string;
+    SubCategory_Name: string;
+    Category_id: number;
+    Category_Name: string;
+  }
+
+  interface CategoryResponse {
+    Total_Count: number;
+    result: CategoryItem[];
+  }
+
   const handleOpen = async () => {
     setOpen(true);
   };
@@ -68,6 +62,13 @@ const page = () => {
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Categories</h2>
+          <div className="mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"category"}
+              className="flex"
+            />
+          </div>
         </div>
 
         <div className="searchfiled flex gap-3">
@@ -80,7 +81,9 @@ const page = () => {
                 type="text"
                 placeholder="Search Categories.. "
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value), setPage(1);
+                }}
                 className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
             </div>
