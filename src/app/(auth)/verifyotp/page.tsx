@@ -27,14 +27,11 @@ const VerifyOtpPage = () => {
     }
 
     try {
-
       const response = await apiRequest({
-                  method: "post",
-                  url: "/otp-verify",
-                  data:  new URLSearchParams({ otp }),
-                });
-
-
+        method: "post",
+        url: "/otp-verify",
+        data: new URLSearchParams({ otp }),
+      });
 
       // const response = await axios.post(
       //   `${process.env.NEXT_PUBLIC_BASEAPI}/otp-verify`,
@@ -56,6 +53,7 @@ const VerifyOtpPage = () => {
       }
     } catch (error) {
       console.error(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

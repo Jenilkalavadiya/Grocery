@@ -7,6 +7,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import DeleteDialog from "@/utils/DeleteDialog";
 import GreenSwitch from "@/utils/Greenswitch";
+import TableLoading from "./TableLoading";
 const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
@@ -38,7 +39,6 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
         url: `/status_change3`,
         data: { id, status: newStatus },
       });
-      
 
       console.log("status", res);
       if (res?.status === 200) {
@@ -136,8 +136,12 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
             </>
           ) : (
             <>
-              <tr className="">
-                <td className="ml-3 mt-2  text-center ">No Data</td>
+              <tr>
+                <td colSpan={8} className="py-6">
+                  <div className="flex justify-center items-center w-full">
+                    <TableLoading />
+                  </div>
+                </td>
               </tr>
             </>
           )}

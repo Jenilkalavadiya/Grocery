@@ -386,25 +386,25 @@ const AddProducts = ({
             </label>
           </div>
 
-          {/* SUBMIT************ */}
-          <div className="flex items-center mt-3 justify-center gap-2">
-            <div>
-              <button
-                type="submit"
-                className="bg-[#fcc827] cursor-pointer font-bold text-xl p-2 w-[150px] "
-              >
-                {productId ? "Update" : "Save"}
-              </button>
+            {/* SUBMIT************ */}
+            <div className="flex items-center mt-3 justify-center gap-2">
+                <div>
+                <button
+                    type="submit"
+                    className="bg-[#fcc827] cursor-pointer font-bold text-xl p-2 w-[150px] "
+                >
+                    {productId ? "Update" : "Save"}
+                </button>
+                </div>
+                <div>
+                <button
+                    onClick={() => router.push("/products")}
+                    className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border"
+                >
+                    Cancel
+                </button>
+                </div>
             </div>
-            <div>
-              <button
-                onClick={() => router.push("/products")}
-                className="font-bold text-xl p-2 w-[150px] cursor-pointer border-gray-500 border"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </div>

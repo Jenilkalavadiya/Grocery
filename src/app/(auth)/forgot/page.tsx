@@ -36,15 +36,6 @@ const Page = () => {
             data: values,
           });
 
-          // const res = await axios.post(
-          //   `${process.env.NEXT_PUBLIC_BASEAPI}/forgot_password`,
-          //   values,
-          //   {
-          //     headers: {
-          //       "Content-Type": "application/x-www-form-urlencoded",
-          //     },
-          //   }
-          // );
           console.log("Signin values", await res?.data);
           const data = await res?.data?.data;
           console.log("OTP", await data?.otp);
@@ -55,7 +46,7 @@ const Page = () => {
           router.push("/verifyotp");
         } catch (error) {
           console.log(error);
-          // toast.error(error.response.data.status);
+          toast.error(error?.response?.data?.message);
         }
       },
     });

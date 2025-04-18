@@ -1,6 +1,6 @@
 import React from "react";
 
-const loader = () => {
+const Loader = () => {
   return (
     <div className="flex space-x-2 justify-center items-center bg-white h-screen ">
       <span className="sr-only">Loading...</span>
@@ -11,4 +11,4 @@ const loader = () => {
   );
 };
 
-export default loader;
+export default Loader;

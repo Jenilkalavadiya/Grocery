@@ -1,11 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Greenswitch from "@/utils/Greenswitch";
-import {  apiRequest } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import { toast } from "react-toastify";
+import TableLoading from "./TableLoading";
 
 const CategoryItem = ({
   filteredCategories,
@@ -23,9 +26,9 @@ const CategoryItem = ({
   };
   const handleDelete = async () => {
     const res = await apiRequest({
-          method: "delete",
-          url: `/deletecategory?id=${itemID}`,
-        });
+      method: "delete",
+      url: `/deletecategory?id=${itemID}`,
+    });
     getAllCategory();
     handleClose();
     console.log(res);
@@ -67,60 +70,74 @@ const CategoryItem = ({
           </tr>
         </thead>
         <tbody>
-          {filteredCategories?.result?.map((item: any) => (
-            <tr
-              key={item.No}
-              className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-            >
-              <td className="px-4 py-3 text-sm border-b border-gray-200">
-                {item?.No}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200">
-                <Image
-                  src={item.Image}
-                  width={60}
-                  height={60}
-                  alt="category_image"
-                  className="rounded-full"
-                />
-              </td>
-              <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
-                {item?.Category_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <div onClick={() => statusChange(item?.No, item?.Status)}>
-                  <Greenswitch status={item?.Status} />
-                </div>
-              </td>
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
-                <div className="flex gap-4 items-center">
-                  <span
-                    className="text-2xl cursor-pointer"
-                    onClick={() => {
-                      handleOpen(), setid(item.No);
-                    }}
-                  >
-                    <CiEdit />
-                  </span>
-                  <span
-                    className="text-2xl cursor-pointer"
-                    onClick={() => {
-                      handleClickOpen(), setItemID(item.No);
-                    }}
-                  >
-                    <RiDeleteBin6Line />
-                  </span>
-                  {open && (
-                    <DeleteDialog
-                      open={open}
-                      handleClose={handleClose}
-                      handleDelete={handleDelete}
+          {filteredCategories ? (
+            <>
+              {filteredCategories?.result?.map((item: any) => (
+                <tr
+                  key={item.No}
+                  className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+                >
+                  <td className="px-4 py-3 text-sm border-b border-gray-200">
+                    {item?.No}
+                  </td>
+                  <td className="px-4 py-3 border-b border-gray-200">
+                    <Image
+                      src={item.Image}
+                      width={60}
+                      height={60}
+                      alt="category_image"
+                      className="rounded-full"
                     />
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
+                  </td>
+                  <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                    {item?.Category_Name}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
+                    <div onClick={() => statusChange(item?.No, item?.Status)}>
+                      <Greenswitch status={item?.Status} />
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+                    <div className="flex gap-4 items-center">
+                      <span
+                        className="text-2xl cursor-pointer"
+                        onClick={() => {
+                          handleOpen(), setid(item.No);
+                        }}
+                      >
+                        <CiEdit />
+                      </span>
+                      <span
+                        className="text-2xl cursor-pointer"
+                        onClick={() => {
+                          handleClickOpen(), setItemID(item.No);
+                        }}
+                      >
+                        <RiDeleteBin6Line />
+                      </span>
+                      {open && (
+                        <DeleteDialog
+                          open={open}
+                          handleClose={handleClose}
+                          handleDelete={handleDelete}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </>
+          ) : (
+            <>
+              <tr>
+                <td colSpan={8} className="py-6">
+                  <div className="flex justify-center items-center w-full">
+                    <TableLoading />
+                  </div>
+                </td>
+              </tr>
+            </>
+          )}
         </tbody>
       </table>
     </div>

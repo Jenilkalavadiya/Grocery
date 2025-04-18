@@ -32,7 +32,6 @@ const ResetPassword = () => {
             url: "/reset-password",
             data: values,
           });
-          
 
           if (res?.status === 200) {
             toast.success(res?.data?.data);
@@ -44,6 +43,7 @@ const ResetPassword = () => {
           console.log("resetPassword", res);
         } catch (error) {
           console.log("error", error);
+          toast.error(error?.response?.data?.message);
         }
       },
     });

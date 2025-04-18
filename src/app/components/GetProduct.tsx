@@ -9,6 +9,8 @@ import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
+import Loader from "../loading";
+import TableLoading from "./TableLoading";
 
 const GetProduct = ({ product, getProduct }: any) => {
   const [open, setOpen] = useState(false);
@@ -144,8 +146,12 @@ const GetProduct = ({ product, getProduct }: any) => {
             </>
           ) : (
             <>
-              <tr className="w-full">
-                <td className="ml-3  mt-2 text-center">No Data</td>
+              <tr>
+                <td colSpan={8} className="py-6">
+                  <div className="flex justify-center items-center w-full">
+                    <TableLoading />
+                  </div>
+                </td>
               </tr>
             </>
           )}
