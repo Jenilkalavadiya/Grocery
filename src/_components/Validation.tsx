@@ -36,27 +36,50 @@ export const AddSubCategorySchema = Yup.object().shape({
   image: Yup.mixed().required("Image is required"),
 });
 
+// export const AddProductSchema = Yup.object().shape({
+//   name: Yup.string().required("Name is required"),
+//   category: Yup.string().required("Category is required"),
+//   subCategory: Yup.string().required("SubCategory is required"),
+//   brand: Yup.string().required("Brand is required"),
+//   variation: Yup.string()
+//     .typeError("Must be a number")
+//     .required("Variation is required"),
+//   productPrice: Yup.number()
+//     .typeError("Must be a number")
+//     .required("Product price is required"),
+//   discount: Yup.number()
+//     .typeError("Must be a number")
+//     .required("Discount is required"),
+//   discountPrice: Yup.number()
+//     .typeError("Must be a number")
+//     .required("Discounted price is required"),
+//   // title: Yup.string().required("Title is required"),
+//   // description: Yup.string().required("Description is required"),
+//   image: Yup.mixed().required("Image is required"),
+// });
+
+
+
+
+// This should match your form's structure.
 export const AddProductSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  category: Yup.string().required("Category is required"),
-  subCategory: Yup.string().required("SubCategory is required"),
-  brand: Yup.string().required("Brand is required"),
-  variation: Yup.string()
-    .typeError("Must be a number")
-    .required("Variation is required"),
-  productPrice: Yup.number()
-    .typeError("Must be a number")
-    .required("Product price is required"),
-  discount: Yup.number()
-    .typeError("Must be a number")
-    .required("Discount is required"),
-  discountPrice: Yup.number()
-    .typeError("Must be a number")
-    .required("Discounted price is required"),
-  // title: Yup.string().required("Title is required"),
-  // description: Yup.string().required("Description is required"),
-  image: Yup.mixed().required("Image is required"),
+  name: Yup.string().required('Item name is required'),
+  category: Yup.string().required('Category is required'),
+  subCategory: Yup.string().required('Subcategory is required'),
+  brand: Yup.string().required('Brand is required'),
+  title: Yup.string().required('Title is required'),
+  description: Yup.string().required('Description is required'),
+  status: Yup.number().required('Status is required'),
+  productDetails: Yup.array().of(
+    Yup.object().shape({
+      variation: Yup.string().required('Variation is required'),
+      productPrice: Yup.number().required('Price is required'),
+      discount: Yup.number().required('Discount is required'),
+      discountPrice: Yup.number().required('Discount price is required'),
+    })
+  ),
 });
+
 
 
 export const AddCoupon = Yup.object({
@@ -96,3 +119,23 @@ export const AddCoupon = Yup.object({
   couponCode: Yup.string().required("Coupon code is required."),
 });
 
+export const Configuration = {
+  deliverySchema: Yup.object({
+    freeDelivery: Yup.string().required("Free delivery is required"),
+    deliveryCharge: Yup.string().required("Delivery charge is required"),
+  }),
+
+  taxSchema: Yup.object({
+    tax: Yup.string().required("Tax is required"),
+  }),
+};
+
+export const ResetPassword = Yup.object({
+  oldPassword: Yup.string().required("Old password is required"),
+  newPassword: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("New password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword")], "Passwords must match")
+    .required("Please confirm your password"),
+});

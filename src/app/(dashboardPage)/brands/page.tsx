@@ -13,7 +13,7 @@ import CustomSeparator from "@/app/components/Bradcrumbs";
 
 const page = () => {
   const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState(null);
+  const [brand, setBrand] = useState<BrandResponse>();
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -25,12 +25,25 @@ const page = () => {
   const [subCategory, setSubCategory] = useState(null);
   const [id, setId] = useState("");
 
+  interface Brand {
+    No: number;
+    Image: string;
+    Brand_Name: string;
+    SubCategory_Name: string;
+    Category_Name: string;
+  }
+
+  interface BrandResponse {
+    Total_Count: number | undefined;
+    result: Brand[];
+  }
+
   //getbrands
   const getbrands = async () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/get_brands?pageNumber=${page}&pageLimit=10&search=${search}`,
+        url: `/get_brands?pageNumber=${page}&pageLimit=5&search=${search}`,
       });
       const data = await res?.data?.data;
       setBrand(data);
@@ -84,8 +97,6 @@ const page = () => {
     }
   };
 
- 
-
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
@@ -101,49 +112,46 @@ const page = () => {
           </div>
         </div>
 
-        <div className="searchfiled   mr-8 flex gap-2">
-          <div className=" border-[#DADDE1] border bg-white flex">
+        <div className="searchfiled flex gap-3">
+          <div className="border border-[#DADDE1] bg-white flex justify-center">
             <div className="flex items-center justify-center ml-3">
-              <Image src={icon} alt="serach" width={18} height={15} />
+              <Image src={icon} alt="pp" width={18} height={15} />
             </div>
-            <div className="flex items-center justify-center p-2">
+            <div>
               <input
                 type="text"
                 placeholder="Search Brands.. "
                 value={search}
                 onChange={(e) => handleChange(e)}
-                className="px-2 focus:outline-none "
+                className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
             </div>
           </div>
 
-          <div className="w-[130px]">
-            <Button
-              className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
-              onClick={handleOpen}
-              // variant="outlined"
-            >
-              {" "}
-              Add Brand
-            </Button>
-
-            {open && (
-              <ModalBrand
-                open={open}
-                handleClose={handleClose}
-                category={category}
-                subCategory={subCategory}
-                getbrands={getbrands}
-                id={id}
-              />
-            )}
-          </div>
+          <Button
+            className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
+            onClick={handleOpen}
+            // variant="outlined"
+          >
+            {" "}
+            Add Brand
+          </Button>
+          {open && (
+            <ModalBrand
+              open={open}
+              handleClose={handleClose}
+              category={category}
+              subCategory={subCategory}
+              getbrands={getbrands}
+              id={id}
+            />
+          )}
         </div>
       </div>
 
       {/* USERS TABLE************  */}
 
-      <div className="max-w-[1400px] m-auto mt-6">
+      <div className=" m-auto mt-3">
         <Branditem
           filteredbrand={brand}
           getbrands={getbrands}

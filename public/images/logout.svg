@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="logout-icon" transform="translate(-2548 -1878.794)">
+    <rect id="Rectangle_550" data-name="Rectangle 550" width="16" height="16" transform="translate(2548 1878.794)" fill="none"/>
+    <g id="Group_824" data-name="Group 824" transform="translate(2548 1879.594)">
+      <g id="Group_822" data-name="Group 822">
+        <path id="Path_528" data-name="Path 528" d="M-28.294,17.4h-5.6a2.4,2.4,0,0,1-2.4-2.4V5.4a2.4,2.4,0,0,1,2.4-2.4h5.6a2.4,2.4,0,0,1,2.4,2.4V7a.8.8,0,0,1-.8.8.8.8,0,0,1-.8-.8V5.4a.8.8,0,0,0-.8-.8h-5.6a.8.8,0,0,0-.8.8V15a.8.8,0,0,0,.8.8h5.6a.8.8,0,0,0,.8-.8V13.4a.8.8,0,0,1,.8-.8.8.8,0,0,1,.8.8V15A2.4,2.4,0,0,1-28.294,17.4Z" transform="translate(36.294 -3)" fill="#202020"/>
+      </g>
+      <g id="Group_823" data-name="Group 823" transform="translate(3.2 4)">
+        <path id="Path_529" data-name="Path 529" d="M-22.694,14.4a.8.8,0,0,1-.566-.234.8.8,0,0,1,0-1.131L-22.225,12h-9.269a.8.8,0,0,1-.8-.8.8.8,0,0,1,.8-.8h9.269L-23.26,9.366a.8.8,0,0,1,0-1.131.8.8,0,0,1,1.131,0l2.4,2.4,0,0h0l0,0,0,0h0a.8.8,0,0,1,.226.506h0a.812.812,0,0,1,0,.153h0a.8.8,0,0,1-.19.424l-.042.044-2.4,2.4A.8.8,0,0,1-22.694,14.4Z" transform="translate(32.294 -8)" fill="#202020"/>
+      </g>
+    </g>
+  </g>
+</svg>

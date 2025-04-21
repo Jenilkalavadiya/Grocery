@@ -23,8 +23,11 @@ const page = () => {
   const getCoupon = async () => {
     const res = await apiRequest({
       method: "get",
-      url: `/get_coupons?pageNumber=1&pageLimit=5`,
+      url: `/get_coupons?pageNumber=${page}&pageLimit=5`,
     });
+
+    console.log("coupon", res);
+
     setCoupon(res?.data?.data);
   };
 
@@ -36,10 +39,10 @@ const page = () => {
       {/* SERCH INPUT  */}
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl ml-8 font-bold !text-[#202020]">
+          <h2 className="text-3xl  font-bold !text-[#202020]">
             Coupon Management
           </h2>
-          <div className="ml-8 mt-2">
+          <div className="mt-2">
             <CustomSeparator
               value1={"dashboard"}
               value2={"couponmanagement"}
@@ -48,30 +51,34 @@ const page = () => {
           </div>
         </div>
 
-        {/* SEARCH USERS INPUT ***************** */}
+        {/*  Add Coupon ***************** */}
 
-        <div className="">
-          <Button
-            className="!bg-[#FCC827] !text-black font-extrabold h-[45px] p-1"
-            onClick={handleOpen}
-            // variant="outlined"
-          >
-            Add Coupon
-          </Button>
-          {open && (
-            <ModalCoupon
-              open={open}
-              handleClose={handleClose}
-              getCoupon={getCoupon}
-            />
-          )}
-        </div>
+        <Button
+          className="!bg-[#FCC827] !text-black !font-extrabold h-[45px] p-1"
+          onClick={handleOpen}
+          // variant="outlined"
+        >
+          Add Coupon
+        </Button>
+        {open && (
+          <ModalCoupon
+            open={open}
+            handleClose={handleClose}
+            getCoupon={getCoupon}
+            id={id}
+          />
+        )}
       </div>
 
       {/* USERS TABLE************  */}
 
-      <div className="p-7 m-automl-2  ">
-        <GetCoupon coupon={coupon} getCoupon={getCoupon} />
+      <div className="mt-3 m-auto  ">
+        <GetCoupon
+          coupon={coupon}
+          getCoupon={getCoupon}
+          handleOpen={handleOpen}
+          setId={setId}
+        />
       </div>
 
       {/* // PAGINATION ******* */}

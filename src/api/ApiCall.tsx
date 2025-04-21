@@ -57,18 +57,31 @@ export const refreshToken = async () => {
 };
 
 // Request Interceptor
+
 apiClient.interceptors.request.use(
   (config: any) => {
     if (!config.url.endsWith("/refresh_token")) {
       config.headers = config.headers || {};
       config.headers["language"] = "en";
+
       const authToken = localStorage.getItem("auth_token");
-      console.log("result", config.url);
-      if (authToken && config.url !== "/login") {
+      console.log("Request URL:", config.url);
+
+      if (
+        authToken &&
+        ![
+          "/login",
+          "/forgot_password",
+          "/otp-verify",
+          "/reset-password",
+        ].includes(config.url)
+      ) {
         config.headers["Authorizations"] = authToken;
+        console.log("Authorization header set:", config.headers);
       } else {
         config.headers["Authorizations"] =
           "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY";
+        console.log("No Authorization token set:", config.headers);
       }
     }
     return config;
@@ -77,6 +90,38 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// apiClient.interceptors.request.use(
+//   (config: any) => {
+//     if (!config.url.endsWith("/refresh_token")) {
+//       config.headers = config.headers || {};
+//       config.headers["language"] = "en";
+//       const authToken = localStorage.getItem("auth_token");
+//       console.log("result", config.url);
+
+//       if (
+//         authToken &&
+//         ![
+//           "/login",
+//           "/forgot_password",
+//           "/otp-verify",
+//           "/reset-password",
+//         ].includes(config.url)
+//       ) {
+//         config.headers["Authorization"] = authToken;
+//         console.log("if0-------------------->>>>>>", config.headers);
+//       } else {
+//         config.headers["Authorizations"] =
+//           "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY";
+//         console.log("else0-------------------->>>>>>", config.headers);
+//       }
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 apiClient.interceptors.response.use(
   (response) => response,
@@ -106,7 +151,6 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 // How to use common api function
 // apiRequest({ method: 'post', url: '/api/endpoint', data: { name: 'John' } });

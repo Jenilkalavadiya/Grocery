@@ -28,7 +28,7 @@ const AddProduct = () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/getcategories?pageNumber=${page}&pageLimit=5`,
+        url: `/getcategories?pageNumber=${page}&pageLimit=10`,
       });
 
       const data = await res?.data?.data?.result;
@@ -52,7 +52,7 @@ const AddProduct = () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/get_subcategories?pageNumber=1&pageLimit=5`,
+        url: `/get_subcategories?pageNumber=1&pageLimit=10`,
       });
 
       const data = await res?.data?.data?.result;

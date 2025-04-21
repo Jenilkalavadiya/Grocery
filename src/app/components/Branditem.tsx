@@ -1,5 +1,4 @@
 import { apiRequest } from "@/api/ApiCall";
-import Greenswitch from "@/utils/Greenswitch";
 import Image from "next/image";
 import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -7,6 +6,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import DeleteDialog from "@/utils/DeleteDialog";
 import GreenSwitch from "@/utils/Greenswitch";
+import TableLoading from "./TableLoading";
 const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
@@ -22,6 +22,7 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
       method: "delete",
       url: `/delete_brand?id=${itemID}`,
     });
+    toast.success("Deleted SuccessFull");
 
     getbrands();
     handleClose();
@@ -38,7 +39,6 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
         url: `/status_change3`,
         data: { id, status: newStatus },
       });
-      
 
       console.log("status", res);
       if (res?.status === 200) {
@@ -47,9 +47,9 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
         toast.error("Status update failed");
       }
       getbrands();
-    } catch (err) {
+    } catch (err:any) {
       console.error("Status update error:", err);
-      toast.error("Error updating status");
+      toast.error(err?.response?.data?.message);
     }
   };
 
@@ -57,14 +57,14 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
     <div className="overflow-x-auto shadow-2xl ">
       <table className="min-w-full bg-white rounded-2xl ">
         <thead className="bg-[#FAFAFA] text-[#202020]">
-          <tr className="text-md  font-bold border-gray-300">
-            <th className="px-4 py-3 w-[150px]">No.</th>
-            <th className="px-6 py-3 text-left w-[205px]">Image</th>
-            <th className="px-6 py-3 text-left w-[405px]">Name</th>
-            <th className="px-4 py-3 text-left min-w-[300px]">Category</th>
-            <th className="px-4 py-3 text-left min-w-[300px]">Sub Category</th>
-            <th className="px-6 py-3 text-left">Status</th>
-            <th className="px-6 py-3 text-left">Actions</th>
+          <tr className="text-md  font-bold border-b border-gray-300">
+            <th className="px-4 py-3 ">No.</th>
+            <th className="px-4 py-3 text-left ">Image</th>
+            <th className="px-4 py-3 text-left ">Name</th>
+            <th className="px-4 py-3 text-left ">Category</th>
+            <th className="px-4 py-3 text-left ">Sub Category</th>
+            <th className="px-4 py-3 text-left">Status</th>
+            <th className="px-4 py-3 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -136,8 +136,12 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
             </>
           ) : (
             <>
-              <tr className="">
-                <td className="ml-3 mt-2  text-center ">No Data</td>
+              <tr>
+                <td colSpan={8} className="py-6">
+                  <div className="flex justify-center items-center w-full">
+                    <TableLoading />
+                  </div>
+                </td>
               </tr>
             </>
           )}

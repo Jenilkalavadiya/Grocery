@@ -7,8 +7,9 @@ import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
+import TableLoading from "./TableLoading";
 
-const GetCoupon = ({ coupon, getCoupon }: any) => {
+const GetCoupon = ({ coupon, getCoupon, handleOpen, setId }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
@@ -27,7 +28,7 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
       method: "delete",
       url: `/delete_coupon?id=${itemID}`,
     });
-
+    toast.success("Deleted SuccessFull");
     getCoupon();
     console.log(res);
     setOpen(false);
@@ -50,9 +51,9 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
       } else {
         toast.error("Status update failed");
       }
-    } catch (err) {
+    } catch (err:any) {
       console.error("Status update error:", err);
-      toast.error("Error updating status");
+      toast.error(err?.response?.data?.message);
     }
   };
 
@@ -102,7 +103,7 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
                       onClick={() => changeStatus(item?.No, item?.Status)}
                       className="inline-block cursor-pointer"
                     >
-                      <GreenSwitch Status={item?.Status} />
+                      <GreenSwitch status={item?.Status} />
                     </div>
                   </td>
 
@@ -110,9 +111,9 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
                     <div className="flex gap-6 justify-center items-center">
                       <span className="text-xl cursor-pointer">
                         <CiEdit
-                          onClick={() =>
-                            router.push(`/products/addProduct?id=${item?.Id}`)
-                          }
+                          onClick={() => {
+                            handleOpen(), setId(item?.No);
+                          }}
                         />
                       </span>
                       <span
@@ -137,8 +138,12 @@ const GetCoupon = ({ coupon, getCoupon }: any) => {
             </>
           ) : (
             <>
-              <tr className="w-full">
-                <td className="ml-3  mt-2 text-center">No Data</td>
+              <tr>
+                <td colSpan={8} className="py-6">
+                  <div className="flex justify-center items-center w-full">
+                    <TableLoading />
+                  </div>
+                </td>
               </tr>
             </>
           )}
