@@ -5,10 +5,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { usePathname } from "next/navigation";
 
-// function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-//   event.preventDefault();
-//   console.info("You clicked a breadcrumb.");
-// }
+
 
 export default function CustomSeparator({ value1, value2 }: any) {
   const pathname = usePathname();
