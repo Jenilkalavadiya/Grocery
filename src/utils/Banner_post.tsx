@@ -34,10 +34,10 @@ export default function BannerModal({ open, handleClose, getBanners }: any) {
         url: "/add_slider_with_banner",
         data: formData,
       });
-      getBanners();
       console.log("Response", res);
       toast.success(res?.data?.data?.MESSAGE);
       handleClose();
+      getBanners();
     },
   });
   return (

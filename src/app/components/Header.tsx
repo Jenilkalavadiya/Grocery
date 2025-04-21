@@ -86,7 +86,7 @@ function Header() {
         <div className="flex items-center justify-end !mr-5 w-full h-full relative">
           {/* Ensure the button is on top */}
 
-          <Avatar alt="Remy Sharp" src={config} />
+          {/* <Avatar alt="Remy Sharp" src={config} /> */}
           <Button
             id="demo-positioned-button"
             aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -113,16 +113,14 @@ function Header() {
               vertical: "top",
               horizontal: "center",
             }}
-            className="z-10"
+            className="z-10 !p-0"
           >
             {/* When "Configuration" is clicked, open the modal */}
             <MenuItem
               onClick={handleConfigurationClick}
               className={`${
-                activeMenuItem === "configuration"
-                  ? "!bg-yellow-500 !text-black"
-                  : ""
-              } flex items-center gap-2 !text-xl`}
+                activeMenuItem === "configuration" ? " !text-black" : ""
+              } flex items-center gap-2 !text-xl hover:!bg-yellow-500 !px-5 !py-3`}
             >
               <Image src={config} alt="config" width={20} height={20} />
               Configuration
@@ -135,7 +133,7 @@ function Header() {
                 activeMenuItem === "changePassword"
                   ? "!bg-yellow-500 !text-black"
                   : " "
-              } flex items-center gap-2 !text-xl`}
+              } flex items-center gap-2 !text-xl hover:!bg-yellow-500 !px-5 !py-3`}
             >
               <Image src={changePassword} alt="config" width={20} height={20} />
               Change Password
@@ -146,7 +144,7 @@ function Header() {
               onClick={handleLogoutClick}
               className={`${
                 activeMenuItem === "logout" ? "!bg-yellow-500 !text-black" : " "
-              } flex items-center gap-2 !text-xl`}
+              } flex items-center gap-2 !text-xl hover:!bg-yellow-500 !px-5 !py-3`}
             >
               <Image
                 src={logout}

@@ -1,40 +1,20 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import off from "../../../public/off.svg";
 import plus from "../../../public/plus.png";
-const categories = [
-  {
-    name: "Vegetables & Fruits",
-    discount: "Min 23% OFF",
-    image: "./hm10.png",
-  },
-  {
-    name: "Foodgrains, Oil & Masala",
-    discount: "Up to 30% OFF",
-    image: "./hm11.png",
-  },
-  {
-    name: "Eggs, Meat & Fish",
-    discount: "Up to 25% OFF",
-    image: "./hm12.png",
-  },
-  {
-    name: "Kitchen, Garden & Pets",
-    discount: "Up to 60% OFF",
-    image: "./hm13.png",
-  },
-  {
-    name: "Cleaning & Household",
-    discount: "Up to 25% OFF",
-    image: "./hm14.png",
-  },
-  {
-    name: "Beverages",
-    discount: "Up to 35% OFF",
-    image: "./hm15.png",
-  },
-];
+import { apiRequest } from "@/api/ApiCall";
+
 const ShopByCategory = () => {
+  const [shopCategogy, setShopCategogy] = useState([]);
+  const getShopCategory = async () => {
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_slider_with_shop_by_category`,
+    });
+    const response = res?.data?.data;
+    console.log("response", response);
+    setShopCategogy(response.banner);
+  };
   return (
     <div>
       <section className="bg-white p-4 rounded shadow mt-5">
@@ -42,13 +22,13 @@ const ShopByCategory = () => {
           <h2 className="text-lg font-semibold">Shop by Category</h2>
         </div>
         <div className="flex gap-4 overflow-x-auto pb-2 w-full">
-          {categories.map((cat, index) => (
+          {shopCategogy.map((cat, index) => (
             <div
               key={index}
               className="min-w-[120px] bg-white rounded-md p-4 text-center relative shadow-sm"
             >
               <img
-                src={cat.image}
+                src={cat.Image}
                 alt={cat.name}
                 className="w-[150px] h-25 object-contain mx-auto mb-2 border-gray-500 p-3"
               />
