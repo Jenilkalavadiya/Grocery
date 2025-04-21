@@ -93,7 +93,7 @@ const AddProducts = ({
         } else {
           toast.error(res?.data?.message);
         }
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error: ", error);
         toast.error(error?.response?.data?.message);
       }
@@ -285,6 +285,7 @@ const AddProducts = ({
           ))}
 
           {/* Title & Description */}
+          <h2 className="text-xl font-bold">Other Info</h2>
           <div className="flex gap-8 flex-wrap">
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Title</span>

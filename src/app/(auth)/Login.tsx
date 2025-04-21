@@ -45,7 +45,7 @@ const Page = () => {
           } else {
             toast.error(res?.data?.message);
           }
-        } catch (error) {
+        } catch (error:any) {
           console.log("error", error);
           toast.error(error?.response?.data?.message);
         }

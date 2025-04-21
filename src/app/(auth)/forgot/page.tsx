@@ -44,7 +44,7 @@ const Page = () => {
           localStorage.setItem("otp", await data?.otp);
           toast.success(res?.data?.message);
           router.push("/verifyotp");
-        } catch (error) {
+        } catch (error:any) {
           console.log(error);
           toast.error(error?.response?.data?.message);
         }

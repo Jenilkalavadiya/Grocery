@@ -33,15 +33,7 @@ const VerifyOtpPage = () => {
         data: new URLSearchParams({ otp }),
       });
 
-      // const response = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_BASEAPI}/otp-verify`,
-      //   new URLSearchParams({ otp }),
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/x-www-form-urlencoded",
-      //     },
-      //   }
-      // );
+      
 
       console.log("first", await response.data);
 
@@ -51,7 +43,7 @@ const VerifyOtpPage = () => {
       } else {
         toast.error(response?.data?.message || "OTP verification failed.");
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error(error);
       toast.error(error?.response?.data?.message);
     }

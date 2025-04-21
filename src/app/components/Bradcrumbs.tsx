@@ -11,10 +11,22 @@ function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
 
 export default function CustomSeparator({ value1, value2 }: any) {
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href={`/${value1}`}>
+    <Link
+      underline="hover"
+      className="capitalize"
+      key="1"
+      color="inherit"
+      href={`/${value1}`}
+    >
       {value1}
     </Link>,
-    <Link underline="hover" key="2" color="inherit" href={`/${value2}`}>
+    <Link
+      underline="hover"
+      className="capitalize"
+      key="2"
+      color="inherit"
+      href={`/${value2}`}
+    >
       {value2}
     </Link>,
   ];

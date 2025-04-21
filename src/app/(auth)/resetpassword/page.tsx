@@ -41,7 +41,7 @@ const ResetPassword = () => {
           }
 
           console.log("resetPassword", res);
-        } catch (error) {
+        } catch (error:any) {
           console.log("error", error);
           toast.error(error?.response?.data?.message);
         }

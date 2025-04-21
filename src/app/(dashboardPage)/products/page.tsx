@@ -34,9 +34,7 @@ const page = () => {
 
     console.log("getProduct", res?.data);
     const data = await res?.data?.data;
-    // const total = res?.data?.data?.Total_Count;
     setProduct(data);
-    // setPage(total);
   };
 
   useEffect(() => {
@@ -96,7 +94,7 @@ const page = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(product?.Total_Count / 5))}
+            count={Math.ceil(Number(product?.Total_Count / 10))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"
