@@ -17,7 +17,7 @@ const sidebarItems = [
   },
   { name: "Brands", image: "./images/6.svg", link: "/brands" },
   {
-    name: "Coupen Management",
+    name: "Coupon Management",
     image: "./images/7.svg",
     link: "/couponmanagment",
   },

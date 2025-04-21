@@ -27,7 +27,7 @@ const ModalHome = ({
   handleClose,
   setRenderedSections,
   setAddSection,
-  getBanners
+  getBanners,
 }: any) => {
   const [selectedSection, setSelectedSection] = useState("");
 
@@ -42,8 +42,8 @@ const ModalHome = ({
     if (selectedSection) {
       setRenderedSections((prev: any) => [...prev, selectedSection]);
     }
-    setSelectedSection(""); // Clear selection
-    handleClose(); // Close modal after submit
+    setSelectedSection("");
+    handleClose();
 
     const res = await apiRequest({
       method: "post",
@@ -52,8 +52,7 @@ const ModalHome = ({
     });
 
     setAddSection(res?.data?.data);
-    // console.log("section", res?.data?.data);
-    getBanners()
+    getBanners();
   };
 
   return (
@@ -75,40 +74,44 @@ const ModalHome = ({
                 type="radio"
                 name="section"
                 value="banner"
+                id="1"
                 checked={selectedSection === "banner"}
                 onChange={handleChange}
               />
-              <label>Slider with Banner</label>
+              <label htmlFor="1">Slider with Banner</label>
             </div>
             <div className="flex flex-row space-x-5 justify-start">
               <input
                 type="radio"
                 name="section"
                 value="category"
+                id="2"
                 checked={selectedSection === "category"}
                 onChange={handleChange}
               />
-              <label>Shop By Category</label>
+              <label htmlFor="2">Shop By Category</label>
             </div>
             <div className="flex flex-row space-x-5 justify-start">
               <input
                 type="radio"
                 name="section"
                 value="advertise"
+                id="3"
                 checked={selectedSection === "advertise"}
                 onChange={handleChange}
               />
-              <label>Slider with Advertisement</label>
+              <label htmlFor="3">Slider with Advertisement</label>
             </div>
             <div className="flex flex-row space-x-5 justify-start">
               <input
                 type="radio"
                 name="section"
                 value="brand"
+                id="4"
                 checked={selectedSection === "brand"}
                 onChange={handleChange}
               />
-              <label>Slider with Brand</label>
+              <label className="4">Slider with Brand</label>
             </div>
           </div>
           <DialogActions>

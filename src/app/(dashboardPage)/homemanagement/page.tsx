@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import ModalHome from "@/utils/ModalHome";
 import Banner from "@/app/components/Banner";
@@ -20,6 +20,21 @@ const Page = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [banner, setBanner] = useState<Banners[]>([]);
+
+  useEffect(() => {
+    const storedSections = localStorage.getItem("renderedSections");
+
+    if (storedSections) {
+      setRenderedSections(JSON.parse(storedSections));
+      getBanners();
+    }
+  }, []);
+
+  // Save renderedSections to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
+  }, [renderedSections]);
+
   const getBanners = async () => {
     const res = await apiRequest({
       method: "get",

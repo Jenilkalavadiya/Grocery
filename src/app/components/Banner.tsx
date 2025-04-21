@@ -3,8 +3,14 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import off from "../../../public/off.svg";
 import plus from "../../../public/plus.png";
+import { Button } from "@mui/material";
+import BannerModal from "@/utils/Banner_post";
+import { toast } from "react-toastify";
 
-const Banner = ({ banner,getBanners }: any) => {
+const Banner = ({ banner, getBanners }: any) => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const handleDelete = async (itemID: number) => {
     console.log("res", itemID);
     const res = await apiRequest({
@@ -12,6 +18,7 @@ const Banner = ({ banner,getBanners }: any) => {
       url: `/delete_slider_with_banner?id=${itemID}`,
     });
     getBanners();
+    toast.success("Banner Deleted");
   };
 
   console.log("Addsection", banner);
@@ -43,7 +50,16 @@ const Banner = ({ banner,getBanners }: any) => {
         ))}
         {/* Add new banner */}
         <div className="flex items-center justify-center min-w-[250px] h-40 bg-[#FAFAFA] rounded-md cursor-pointer">
-          <Image src={plus} alt="plus" width={50} height={55} />
+          <Button onClick={handleOpen}>
+            <Image src={plus} alt="plus" width={50} height={55} />
+          </Button>
+          {open && (
+            <BannerModal
+              open={open}
+              handleClose={handleClose}
+              getBanners={getBanners}
+            />
+          )}
         </div>
       </div>
     </section>
