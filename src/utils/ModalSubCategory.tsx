@@ -109,7 +109,7 @@ export default function ModalSubCategory({
             id="modal"
           >
             <h1 className="text-center font-bold text-2xl">
-              {itemID ? "Edit Category" : "Add Category"}
+              {itemID ? "Edit Sub Category" : "Add Sub Category"}
             </h1>
             {/* SUBCATEGORYNAME************* */}
             <div className="absolute top-0 right-0 p-2">
@@ -218,7 +218,7 @@ export default function ModalSubCategory({
             </div>
 
             <div className="flex mb-3">
-              <button type="submit" className="w-[350px] bg-amber-300 p-3">
+              <button type="submit" className="w-[350px]  bg-amber-300 p-3">
                 Save
               </button>
             </div>

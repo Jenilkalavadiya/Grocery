@@ -75,85 +75,90 @@ const GetProduct = ({ product, getProduct }: any) => {
           </tr>
         </thead>
         <tbody>
-          {product ? (
-            <>
-              {product?.result?.map((item: any) => (
-                <tr
-                  key={item?.Id}
-                  className="hover:bg-gray-50 transition-all duration-300 text-center"
-                >
-                  <td className="px-4 py-6 border-b border-gray-200 text-left">
-                    <Image
-                      src={item?.Image}
-                      width={60}
-                      height={40}
-                      alt="product_image"
-                      className="rounded-md object-contain"
-                    />
-                  </td>
-                  <td className="px-4 py-6 text-sm border-b border-gray-200 text-left">
-                    {item?.Product_Name}
-                  </td>
-                  <td className="px-4 py-6 text-sm border-b border-gray-200 text-left">
-                    {item?.Category_Name}
-                  </td>
-                  <td className="px-6 py-6 text-sm border-b border-gray-200 text-left">
-                    {item?.Description}
-                  </td>
-                  <td className="px-6 py-6 text-sm border-b border-gray-200 text-left">
-                    {item?.Variation}
-                  </td>
-                  <td className="px-6 py-6 text-sm border-b border-gray-200 text-right">
-                    ${item?.Price}
-                  </td>
-                  <td className="px-4 py-6 border-b border-gray-200 text-center">
-                    <div
-                      onClick={() => changeStatus(item?.Id, item?.Stock_Status)}
-                      className="inline-block cursor-pointer"
-                    >
-                      <GreenSwitch status={item?.Stock_Status} />
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-6 text-sm text-gray-700 border-b border-gray-200 text-center">
-                    <div className="flex gap-6 justify-center items-center">
-                      <span className="text-xl cursor-pointer">
-                        <CiEdit
-                          onClick={() =>
-                            router.push(`/products/addProduct?id=${item?.Id}`)
-                          }
-                        />
-                      </span>
-                      <span
-                        className="text-xl cursor-pointer "
-                        onClick={() => {
-                          handleClickOpen(), setItemID(item.Id);
-                        }}
-                      >
-                        <RiDeleteBin6Line />
-                      </span>
-                      {open && (
-                        <DeleteDialog
-                          open={open}
-                          handleClose={handleClose}
-                          handleDelete={handleDelete}
-                        />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </>
+          {!product ? (
+            
+            <tr>
+              <td colSpan={8} className="py-6">
+                <div className="flex justify-center items-center w-full">
+                  <TableLoading />
+                </div>
+              </td>
+            </tr>
+          ) : product?.result?.length === 0 ? (
+            
+            <tr>
+              <td colSpan={8} className="py-6 text-center text-gray-500">
+                No products found.
+              </td>
+            </tr>
           ) : (
-            <>
-              <tr>
-                <td colSpan={8} className="py-6">
-                  <div className="flex justify-center items-center w-full">
-                    <TableLoading />
+            
+            product?.result?.map((item: any) => (
+              <tr
+                key={item?.Id}
+                className="hover:bg-gray-50 transition-all duration-300 text-center"
+              >
+                <td className="px-4 py-6 border-b border-gray-200 text-left">
+                  <Image
+                    src={item?.Image}
+                    width={60}
+                    height={40}
+                    alt="product_image"
+                    className="rounded-md object-contain"
+                  />
+                </td>
+                <td className="px-4 py-6 text-sm border-b border-gray-200 text-left">
+                  {item?.Product_Name}
+                </td>
+                <td className="px-4 py-6 text-sm border-b border-gray-200 text-left">
+                  {item?.Category_Name}
+                </td>
+                <td className="px-6 py-6 text-sm border-b border-gray-200 text-left">
+                  {item?.Description}
+                </td>
+                <td className="px-6 py-6 text-sm border-b border-gray-200 text-left">
+                  {item?.Variation}
+                </td>
+                <td className="px-6 py-6 text-sm border-b border-gray-200 text-right">
+                  ${item?.Price}
+                </td>
+                <td className="px-4 py-6 border-b border-gray-200 text-center">
+                  <div
+                    onClick={() => changeStatus(item?.Id, item?.Stock_Status)}
+                    className="inline-block cursor-pointer"
+                  >
+                    <GreenSwitch status={item?.Stock_Status} />
+                  </div>
+                </td>
+                <td className="px-4 py-6 text-sm text-gray-700 border-b border-gray-200 text-center">
+                  <div className="flex gap-6 justify-center items-center">
+                    <span className="text-xl cursor-pointer">
+                      <CiEdit
+                        onClick={() =>
+                          router.push(`/products/addProduct?id=${item?.Id}`)
+                        }
+                      />
+                    </span>
+                    <span
+                      className="text-xl cursor-pointer"
+                      onClick={() => {
+                        handleClickOpen();
+                        setItemID(item.Id);
+                      }}
+                    >
+                      <RiDeleteBin6Line />
+                    </span>
+                    {open && (
+                      <DeleteDialog
+                        open={open}
+                        handleClose={handleClose}
+                        handleDelete={handleDelete}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
-            </>
+            ))
           )}
         </tbody>
       </table>

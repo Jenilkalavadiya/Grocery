@@ -49,6 +49,7 @@ export default function ModalBrand({
     },
 
     validationSchema: AddBrandSchema,
+    // Pass context to Yup for conditional validation
     onSubmit: async (values) => {
       console.log("values", values);
       try {
@@ -57,9 +58,8 @@ export default function ModalBrand({
         formData.append("fk_category_id", values.category);
         formData.append("fk_subcategory_id", values.subCategory);
         formData.append("status", values.status.toString());
-        if (values.image) {
-          formData.append("image", values.image);
-        }
+
+        formData.append("image", values?.image);
 
         if (id) {
           formData.append("id", id);
@@ -71,7 +71,9 @@ export default function ModalBrand({
           url: "/add_brand",
           data: formData,
         });
-        toast.success("Brand Added Successfully");
+        toast.success(
+          id ? "Brand Updated Successfully" : "Brand Added Successfully"
+        );
         console.log("Response: ", res);
         handleClose();
         getbrands();

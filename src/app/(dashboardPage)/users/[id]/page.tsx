@@ -1,3 +1,5 @@
+"use client";
+import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
 import React from "react";
 
@@ -6,13 +8,17 @@ const page = () => {
     <>
       <div className="flex justify-between p-4 items-center w-[100%] mt-[30px]">
         <div className="w-full px-6">
-          <h2 className="text-4xl ml-8 font-bold !text-[#202020]">
-            User Details
-          </h2>
-          <p className="text-gray-500 mt-5 ml-9 text-xl">
-            Dashboard <span className="text-gray-500 ml-5">Users</span>{" "}
-            <span className="text-black ml-5">Users Details</span>
-          </p>
+          <div>
+            <h2 className="text-3xl font-bold !text-[#202020]">Users</h2>
+            <div className=" mt-2">
+              <CustomSeparator
+                value1={"dashboard"}
+                value2={"users"}
+                value3={"user details"}
+                className="flex"
+              />
+            </div>
+          </div>
 
           <div className="overflow-x-auto shadow-2xl mt-6">
             <div className="min-w-full bg-white h-[220px] flex">
@@ -67,7 +73,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto shadow-2xl px-10">
+      <div className="overflow-x-auto  shadow-xl px-10">
         <table className="min-w-full bg-white rounded-2xl ">
           <thead className="bg-[#FAFAFA] text-[#202020]">
             <tr className="text-md  font-bold border-gray-300">

@@ -13,7 +13,7 @@ import CustomSeparator from "@/app/components/Bradcrumbs";
 
 const page = () => {
   const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState<BrandResponse>();
+  const [brand, setBrand] = useState<any>();
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -31,6 +31,7 @@ const page = () => {
     Brand_Name: string;
     SubCategory_Name: string;
     Category_Name: string;
+    Total_Count: number;
   }
 
   interface BrandResponse {

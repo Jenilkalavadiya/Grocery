@@ -1,4 +1,5 @@
 import axios from "axios";
+import { headers } from "next/headers";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";
@@ -45,6 +46,7 @@ export const refreshToken = async () => {
       method: "post",
       url: "/refresh_token",
     });
+
     console.log("response", response);
     const newAccessToken = response.data.accessToken;
     // localStorage.setItem("loginjwt", newAccessToken);
@@ -151,12 +153,3 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// How to use common api function
-// apiRequest({ method: 'post', url: '/api/endpoint', data: { name: 'John' } });
-
-// apiRequest({ method: 'get', url: '/api/endpoint' });
-
-// apiRequest({ method: 'put', url: '/api/endpoint/123', data: { name: 'Jane' } });
-
-// apiRequest({ method: 'delete', url: '/api/endpoint/123' });

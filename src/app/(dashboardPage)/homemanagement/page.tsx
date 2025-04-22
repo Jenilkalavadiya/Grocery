@@ -15,34 +15,51 @@ interface Banners {
 }
 const Page = () => {
   const [open, setOpen] = useState(false);
-  const [renderedSections, setRenderedSections] = useState<string[]>([]);
+  const [renderedSections, setRenderedSections] = useState<string[]>([
+    "banner",
+  ]);
   const [addSection, setAddSection] = useState();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [banner, setBanner] = useState<Banners[]>([]);
-
-  useEffect(() => {
-    const storedSections = localStorage.getItem("renderedSections");
-
-    if (storedSections) {
-      setRenderedSections(JSON.parse(storedSections));
-      getBanners();
-    }
-  }, []);
-
-  // Save renderedSections to localStorage on change
-  useEffect(() => {
-    localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
-  }, [renderedSections]);
-
+  const [selectedSection, setSelectedSection] = useState("");
+  const sectionIdMap = {
+    banner: 1,
+    category: 2,
+    advertise: 3,
+    brand: 4,
+  };
   const getBanners = async () => {
     const res = await apiRequest({
       method: "get",
       url: `/get_slider_with_banner`,
     });
     const response = res?.data?.data;
-    console.log("response", response);
+    console.log("responseBanner", response);
     setBanner(response.banner);
+  };
+
+  useEffect(() => {
+    getBanners();
+  }, []);
+
+  //Post SECTION
+  const postSection = async () => {
+    const sectionId = sectionIdMap[selectedSection];
+    if (selectedSection) {
+      setRenderedSections((prev: any) => [...prev, selectedSection]);
+    }
+
+    console.log("selectedSection", selectedSection);
+    setSelectedSection("");
+
+    const res = await apiRequest({
+      method: "post",
+      url: "/get_section",
+      data: { id: sectionId },
+    });
+
+    console.log("r");
   };
 
   const renderComponent = (section: string) => {
@@ -64,7 +81,6 @@ const Page = () => {
 
   return (
     <div>
-      {/* Conditional Section - Only show initial screen if no section is added */}
       {!hasAddedSection ? (
         <div className="flex items-center justify-center px-7 py-5 mt-15 h-[75vh]">
           <div className="flex flex-col justify-center items-center bg-white shadow-md w-[420px] py-10">
@@ -99,8 +115,11 @@ const Page = () => {
                   open={open}
                   handleClose={handleClose}
                   getBanners={getBanners}
+                  selectedSection={selectedSection}
+                  setSelectedSection={setSelectedSection}
                   setRenderedSections={setRenderedSections}
                   setAddSection={setAddSection}
+                  getSection={postSection}
                 />
               )}
             </div>
@@ -136,7 +155,7 @@ const Page = () => {
 
       {/* Render dynamic sections below */}
       <div className="mt-10 overflow-hidden">
-        {renderedSections.map((section) => renderComponent(section))}
+        {renderedSections?.map((section) => renderComponent(section))}
       </div>
     </div>
   );

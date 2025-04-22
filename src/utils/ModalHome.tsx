@@ -15,22 +15,17 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const sectionIdMap = {
-  banner: 1,
-  category: 2,
-  advertise: 3,
-  brand: 4,
-};
 
 const ModalHome = ({
   open,
   handleClose,
   setRenderedSections,
   setAddSection,
+  setSelectedSection,
+  selectedSection,
+  getSection,
   getBanners,
 }: any) => {
-  const [selectedSection, setSelectedSection] = useState("");
-
   const handleChange = (e: any) => {
     const { value } = e.target;
     setSelectedSection(value);
@@ -38,21 +33,12 @@ const ModalHome = ({
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const sectionId = sectionIdMap[selectedSection];
-    if (selectedSection) {
-      setRenderedSections((prev: any) => [...prev, selectedSection]);
-    }
-    setSelectedSection("");
+
     handleClose();
 
-    const res = await apiRequest({
-      method: "post",
-      url: "/get_section",
-      data: { id: sectionId },
-    });
-
-    setAddSection(res?.data?.data);
+    // setAddSection(res?.data?.data);
     getBanners();
+    getSection();
   };
 
   return (

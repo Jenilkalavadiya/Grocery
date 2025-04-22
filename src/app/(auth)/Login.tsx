@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/api/ApiCall";
 import l2 from "../../../public/l2.png";
+import Cookies from "js-cookie";
+
 const Page = () => {
   const [eye, setEye] = useState(true);
   const router = useRouter();
@@ -41,11 +43,18 @@ const Page = () => {
             localStorage.setItem("userName", JSON.stringify(data?.name));
             localStorage.setItem("auth_token", data?.token);
             localStorage.setItem("refresh_token", data?.refresh_token);
+            // Inside onSubmit, after successful login
+            Cookies.set("auth_token", data?.token, {
+              secure: true,
+              sameSite: "strict",
+            });
+
+            Cookies.set("refresh_token", data?.refresh_token);
             router.push("/dashboard");
           } else {
             toast.error(res?.data?.message);
           }
-        } catch (error:any) {
+        } catch (error: any) {
           console.log("error", error);
           toast.error(error?.response?.data?.message);
         }

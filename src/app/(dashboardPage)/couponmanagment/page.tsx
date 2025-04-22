@@ -11,7 +11,7 @@ import ModalCoupon from "@/utils/ModalCoupon";
 
 const page = () => {
   const [page, setPage] = useState(1);
-  const [coupon, setCoupon] = useState(null);
+  const [coupon, setCoupon] = useState<any>(null);
   const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -45,7 +45,7 @@ const page = () => {
           <div className="mt-2">
             <CustomSeparator
               value1={"dashboard"}
-              value2={"couponmanagement"}
+              value2={"couponmanagment"}
               className="flex"
             />
           </div>
