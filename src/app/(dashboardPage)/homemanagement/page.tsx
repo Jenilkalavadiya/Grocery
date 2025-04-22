@@ -92,7 +92,6 @@ const Page = () => {
                   handleClose={handleClose}
                   getBanners={getBanners}
                   setAddSection={setAddSection}
-                  getSection={postSection}
                 />
               )}
             </div>

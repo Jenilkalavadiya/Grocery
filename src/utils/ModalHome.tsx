@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { DialogActions } from "@mui/material";
 import { apiRequest } from "@/api/ApiCall";
-
+ 
 const style = {
   position: "absolute",
   top: "50%",
@@ -15,23 +15,31 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
+const sectionIdMap = {
+  banner: 1,
+  category: 2,
+  advertise: 3,
+  brand: 4,
+};
+ 
 const ModalHome = ({
   open,
   handleClose,
   setAddSection,
 }: any) => {
+  const [selectedSection, setSelectedSection] = useState("");
+ 
   const handleChange = (e: any) => {
     const { value } = e.target;
     setSelectedSection(value);
   };
-
+ 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const sectionId = sectionIdMap[selectedSection];
     setSelectedSection("");
     handleClose();
-
+ 
     const res = await apiRequest({
       method: "post",
       url: "/get_section",
@@ -40,7 +48,7 @@ const ModalHome = ({
     console.log("object", res?.data?.data);
     setAddSection(res?.data?.data);
   };
-
+ 
   return (
     <Modal
       open={open}
@@ -115,5 +123,5 @@ const ModalHome = ({
     </Modal>
   );
 };
-
+ 
 export default ModalHome;
