@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import CategoryItem from "@/app/components/CategoryItem";
-import { apiRequest, refreshToken } from "@/api/ApiCall";
+import { apiRequest } from "@/api/ApiCall";
 import Button from "@mui/material/Button";
 import ModalCategory from "@/utils/ModalCategory";
 import Image from "next/image";

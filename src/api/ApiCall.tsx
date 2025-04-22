@@ -41,13 +41,17 @@ export const apiRequest = ({ method, url, data = {} }: ApiOptions) => {
 
 export const refreshToken = async () => {
   try {
-    const response = await apiRequest({
-      method: "post",
-      url: "/refresh_token",
-    });
-    console.log("response", response);
-    const newAccessToken = response.data.accessToken;
-    // localStorage.setItem("loginjwt", newAccessToken);
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASEAPI}/refresh_token`,
+      null,
+      {
+        headers: {
+          refresh_token: refresh,
+        },
+      }
+    );
+    console.log("response", response?.data?.data?.new_jwt_token);
+    const newAccessToken = response?.data?.data?.new_jwt_token;
     return newAccessToken;
   } catch (error) {
     localStorage.clear();
@@ -138,7 +142,7 @@ apiClient.interceptors.response.use(
       try {
         const newAccessToken = await refreshToken();
 
-        localStorage.setItem("loginjwt", newAccessToken);
+        localStorage.setItem("auth_token", newAccessToken);
         originalRequest.headers["Authorization"] = newAccessToken;
 
         return apiClient(originalRequest);
@@ -151,12 +155,3 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// How to use common api function
-// apiRequest({ method: 'post', url: '/api/endpoint', data: { name: 'John' } });
-
-// apiRequest({ method: 'get', url: '/api/endpoint' });
-
-// apiRequest({ method: 'put', url: '/api/endpoint/123', data: { name: 'Jane' } });
-
-// apiRequest({ method: 'delete', url: '/api/endpoint/123' });
