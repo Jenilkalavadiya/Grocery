@@ -15,7 +15,9 @@ interface Banners {
 }
 const Page = () => {
   const [open, setOpen] = useState(false);
-  const [renderedSections, setRenderedSections] = useState<string[]>([]);
+  const [renderedSections, setRenderedSections] = useState<string[]>([
+    "banner",
+  ]);
   const [addSection, setAddSection] = useState();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -90,6 +92,7 @@ const Page = () => {
                   handleClose={handleClose}
                   getBanners={getBanners}
                   setAddSection={setAddSection}
+                  getSection={postSection}
                 />
               )}
             </div>
@@ -125,7 +128,7 @@ const Page = () => {
 
       {/* Render dynamic sections below */}
       <div className="mt-10 overflow-hidden">
-        {renderedSections.map((section) => renderComponent(section))}
+        {renderedSections?.map((section) => renderComponent(section))}
       </div>
     </div>
   );

@@ -15,20 +15,12 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const sectionIdMap = {
-  banner: 1,
-  category: 2,
-  advertise: 3,
-  brand: 4,
-};
 
 const ModalHome = ({
   open,
   handleClose,
   setAddSection,
 }: any) => {
-  const [selectedSection, setSelectedSection] = useState("");
-
   const handleChange = (e: any) => {
     const { value } = e.target;
     setSelectedSection(value);

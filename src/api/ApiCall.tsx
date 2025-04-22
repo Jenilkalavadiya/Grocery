@@ -1,4 +1,5 @@
 import axios from "axios";
+import { headers } from "next/headers";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";

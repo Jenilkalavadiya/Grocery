@@ -1,391 +1,46 @@
-import { AddProductSchema } from "@/_components/Validation";
-import { useFormik } from "formik";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import uploadImage from "../../../public/images/upload.png";
-import { apiRequest } from "@/api/ApiCall";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import plus from "../../../public/images/plus.svg";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// Define type for Form Values
-type ProductFormValues = {
-  name: string;
-  category: string;
-  subCategory: string;
-  brand: string;
-  image: File | string | null;
-  title: string;
-  description: string;
-  status: number;
-  [key: string]: any; // to support dynamic fields like variation_0, productPrice_0 etc.
+export function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+  const isAdminLoggedIn = !!req.cookies.get("auth_token");
+
+  const restrictedPaths = [
+    "/dashboard",
+    "/users",
+    "/products",
+    "/couponmanagment",
+    "/homemanagement",
+    "/orders",
+    "/pages",
+    "/category",
+    "/subcategory",
+    "/brands",
+  ];
+
+  if (restrictedPaths.includes(pathname) && !isAdminLoggedIn) {
+    return NextResponse.redirect(new URL("/", req.url)); // Redirect to login
+  }
+
+  if (pathname === "/" && isAdminLoggedIn) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    "/", // Login page
+    "/dashboard",
+    "/users",
+    "/products",
+    "/couponmanagment",
+    "/homemanagement",
+    "/orders",
+    "/pages",
+    "/category",
+    "/subcategory",
+    "/brands",
+  ],
 };
-
-const AddProducts = ({
-  brand,
-  category,
-  subCategory,
-  getProduct,
-  getProductDetail,
-  productId,
-}: any) => {
-  const router = useRouter();
-  const [productDetails, setProductDetails] = useState([{}]);
-
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    setFieldValue,
-  } = useFormik<ProductFormValues>({
-    initialValues: {
-      name: "",
-      category: "",
-      image: null,
-      subCategory: "",
-      brand: "",
-      variation: "",
-      productPrice: "",
-      discount: "",
-      discountPrice: "",
-      title: "",
-      description: "",
-      status: 0,
-    },
-    validationSchema: AddProductSchema,
-    onSubmit: async (values) => {
-      try {
-        const formData = new FormData();
-        formData.append("product_name", values.name);
-        formData.append("title", values.title);
-        formData.append("description", values.description);
-        formData.append("fk_category_id", values.category);
-        formData.append("fk_subcategory_id", values.subCategory);
-        formData.append("fk_brand_id", values.brand);
-        formData.append("stock_status", values.status.toString());
-
-        if (values.image) {
-          formData.append("image", values.image);
-        }
-
-        // Append dynamic variation fields
-        productDetails.forEach((_, index) => {
-          formData.append(
-            `variation[${index}]`,
-            values[`variation_${index}`] || ""
-          );
-          formData.append(
-            `product_price[${index}]`,
-            values[`productPrice_${index}`] || ""
-          );
-          formData.append(
-            `discount[${index}]`,
-            values[`discount_${index}`] || ""
-          );
-          formData.append(
-            `discount_price[${index}]`,
-            values[`discountPrice_${index}`] || ""
-          );
-        });
-
-        if (productId) {
-          formData.append("id", productId);
-        }
-
-        const res = await apiRequest({
-          method: "post",
-          url: "/add_product",
-          data: formData,
-        });
-
-        if (res?.status == 200) {
-          toast.success(res?.data?.data?.MESSAGE);
-          router.push("/products");
-          getProduct();
-        } else {
-          toast.error(res?.data?.message);
-        }
-      } catch (error) {
-        console.log("Error: ", error);
-      }
-    },
-  });
-
-  // Prefill form if editing
-  useEffect(() => {
-    if (getProductDetail && productId) {
-      setFieldValue("name", getProductDetail?.Product_Name || "");
-      setFieldValue(
-        "category",
-        getProductDetail?.Category_id?.toString() || ""
-      );
-      setFieldValue("subCategory", getProductDetail?.Subcategory_id || "");
-      setFieldValue("brand", getProductDetail?.Brand_id || "");
-      setFieldValue("title", getProductDetail?.Title || "");
-      setFieldValue("description", getProductDetail?.Description || "");
-      setFieldValue("status", getProductDetail?.Stock_Status || 0);
-
-      if (
-        getProductDetail?.Image &&
-        typeof getProductDetail.Image === "string"
-      ) {
-        setFieldValue("image", getProductDetail.Image);
-      }
-
-      // Optional: prefill productDetails variations if you have them
-    }
-  }, [getProductDetail, productId, setFieldValue]);
-
-  const addProductDetailSet = () => {
-    const newIndex = productDetails.length;
-    setProductDetails([...productDetails, {}]);
-    // Initialize dynamic field values
-    setFieldValue(`variation_${newIndex}`, "");
-    setFieldValue(`productPrice_${newIndex}`, "");
-    setFieldValue(`discount_${newIndex}`, "");
-    setFieldValue(`discountPrice_${newIndex}`, "");
-  };
-
-  return (
-    <div className="bg-white shadow-xl p-4 mt-4 flex items-center justify-center">
-      <div>
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          <h1 className="font-bold text-xl">
-            {productId ? "Edit Product" : "Add Product"}
-          </h1>
-          <div className="flex gap-8">
-            {/* {/ Item Name /} */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Item Name </span>
-              <input
-                type="text"
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-                placeholder="Item Name"
-              />
-              {errors.name && touched.name && (
-                <div className="text-red-500">{errors.name}</div>
-              )}
-            </div>
-
-            {/* {/ Category /} */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Category</span>
-              <select
-                name="category"
-                value={values.category}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
-              >
-                <option value="">Select</option>
-                {category.map((data: any) => (
-                  <option key={data?.No} value={data?.No.toString()}>
-                    {data.Category_Name}
-                  </option>
-                ))}
-              </select>
-              {errors.category && touched.category && (
-                <div className="text-red-500">{errors.category}</div>
-              )}
-            </div>
-
-            {/* {/ SubCategory /} */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Sub Category</span>
-              <select
-                name="subCategory"
-                value={values.subCategory}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
-              >
-                <option value="">Select</option>
-                {subCategory?.map((data: any) => (
-                  <option key={data?.No} value={data?.No}>
-                    {data?.SubCategory_Name}
-                  </option>
-                ))}
-              </select>
-              {errors.subCategory && touched.subCategory && (
-                <div className="text-red-500">{errors.subCategory}</div>
-              )}
-            </div>
-
-            {/* {/ Brand /} */}
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Brand</span>
-              <select
-                name="brand"
-                value={values.brand}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
-              >
-                <option value="">Select</option>
-                {brand?.map((data: any) => (
-                  <option key={data?.No} value={data?.No}>
-                    {data?.Brand_Name}
-                  </option>
-                ))}
-              </select>
-              {errors.brand && touched.brand && (
-                <div className="text-red-500">{errors.brand}</div>
-              )}
-            </div>
-          </div>
-
-          {/* {/ Product Details /} */}
-          <div>
-            <div className="flex justify-between mt-3 items-center">
-              <h2 className="text-xl font-bold">Product Details</h2>
-              <div className="cursor-pointer" onClick={addProductDetailSet}>
-                <Image src={plus} alt="plus" width={60} height={60} />
-              </div>
-            </div>
-
-            {productDetails.map((_, index) => (
-              <div key={index} className="flex gap-8">
-                {["variation", "productPrice", "discount", "discountPrice"].map(
-                  (field) => (
-                    <div key={field} className="flex flex-col mt-3 gap-2">
-                      <span className="text-gray-400 font-bold capitalize">
-                        {field.replace(/([A-Z])/g, " $1")}
-                      </span>
-                      <input
-                        type="text"
-                        name={`${field}_${index}`}
-                        value={values[`${field}_${index}`] || ""}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
-                        placeholder={field}
-                      />
-                      {errors[`${field}_${index}`] &&
-                        touched[`${field}_${index}`] && (
-                          <div className="text-red-500">
-                            {errors[`${field}_${index}`]}
-                          </div>
-                        )}
-                    </div>
-                  )
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* {/ Other Info /}  */}
-          <h2 className="text-xl font-bold mt-3">Other Info</h2>
-          <div className="flex gap-8">
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Title Name </span>
-              <textarea
-                name="title"
-                value={values.title}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
-                placeholder="Title"
-              />
-            </div>
-
-            <div className="flex flex-col mt-3 gap-2">
-              <span className="text-gray-400 font-bold">Description </span>
-              <textarea
-                name="description"
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="border border-gray-400 focus:outline-none bg-white text-black h-[70px] p-2"
-                placeholder="Description"
-              />
-            </div>
-          </div>
-
-          {/* {/ Image Upload /}  */}
-          <label htmlFor="upload" className="w-[40%]">
-            <input
-              type="file"
-              name="image"
-              id="upload"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  setFieldValue("image", file);
-                }
-              }}
-              className="hidden"
-            />
-
-            {values.image ? (
-              <div className="flex items-start justify-start">
-                <img
-                  src={
-                    typeof values.image === "string"
-                      ? values.image
-                      : URL.createObjectURL(values.image)
-                  }
-                  className="w-[20%]"
-                  alt="Product"
-                />
-              </div>
-            ) : (
-              <div className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[125px] flex flex-col justify-center items-center">
-                <Image
-                  src={uploadImage}
-                  alt="uploadimg"
-                  width={40}
-                  height={40}
-                />
-                <span className="text-gray-500 text-xl">upload image</span>
-              </div>
-            )}
-          </label>
-
-          {/* {/ Status Toggle /}  */}
-          <div className="flex justify-between">
-            <span className="text-gray-400 font-bold">Status</span>
-            <label className="inline-flex items-center mb-5 cursor-pointer">
-              <input
-                type="checkbox"
-                name="status"
-                checked={values.status === 1}
-                onChange={() =>
-                  setFieldValue("status", values.status === 1 ? 0 : 1)
-                }
-                onBlur={handleBlur}
-                className="sr-only peer"
-              />
-              <div className="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-green-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:after:translate-x-full"></div>
-            </label>
-          </div>
-
-          {/* {/ Submit Buttons /} */}
-          <div className="flex items-center mt-3 justify-center gap-2">
-            <button
-              type="submit"
-              className="bg-[#fcc827] cursor-pointer font-bold text-xl p-2 w-[150px]"
-            >
-              {productId ? "Update" : "Save"}
-            </button>
-            <button
-              onClick={() => router.push("/products")}
-              className="font-bold text-xl p-2 w-[150px] cursor-pointer border border-gray-500"
-              type="button"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-export default AddProducts;

@@ -16,7 +16,7 @@ import { Button } from "@mui/material";
 
 const page = () => {
   const [search, setSearch] = useState("");
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<any>(null);
   const [page, setPage] = useState(1);
 
   const handleChange = (e: any) => {
@@ -94,7 +94,7 @@ const page = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(product?.Total_Count / 10))}
+            count={Math.ceil(Number(product?.Total_Count / 5))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

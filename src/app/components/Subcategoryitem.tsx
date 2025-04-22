@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
+import TableLoading from "./TableLoading";
 const Subcategoryitem = ({
   filteredSubCategories,
   getAllSubCategory,
@@ -52,7 +53,7 @@ const Subcategoryitem = ({
     }
   };
   return (
-    <div className="overflow-x-auto shadow-2xl mt-10">
+    <div className="overflow-x-auto shadow-2xl mt-4">
       <table className="min-w-full bg-white rounded-2xl">
         <thead className="bg-[#FAFAFA] text-[#202020]">
           <tr className="text-md  font-bold border-gray-300">
@@ -66,63 +67,81 @@ const Subcategoryitem = ({
           </tr>
         </thead>
         <tbody>
-          {filteredSubCategories?.result?.map((item: any) => (
-            <tr
-              key={item.No}
-              className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-            >
-              <td className="px-4 py-3 text-sm border-b border-gray-200">
-                {item?.No}
-              </td>
-              <td className="px-4 py-3 border-b border-gray-200">
-                <Image
-                  src={item.Image}
-                  width={60}
-                  height={40}
-                  alt="category_image"
-                  className="rounded-full object-contain"
-                />
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.SubCategory_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                {item?.Category_Name}
-              </td>
-              <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                <div onClick={() => statusChange(item?.No, item?.Status)}>
-                  <Greenswitch status={item?.Status} />
-                </div>
-              </td>
-              <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
-                <div className="flex gap-4 items-center">
-                  <span
-                    className="text-2xl cursor-pointer"
-                    onClick={() => {
-                      handleOpen(), setid(item.No);
-                    }}
-                  >
-                    <CiEdit />
-                  </span>
-                  <span
-                    className="text-2xl cursor-pointer"
-                    onClick={() => {
-                      handleClickOpen(), setItemID(item.No);
-                    }}
-                  >
-                    <RiDeleteBin6Line />
-                  </span>
-                  {open && (
-                    <DeleteDialog
-                      open={open}
-                      handleClose={handleClose}
-                      handleDelete={handleDelete}
-                    />
-                  )}
+          {!filteredSubCategories ? (
+            <tr>
+              <td colSpan={6} className="py-6">
+                <div className="flex justify-center items-center w-full">
+                  <TableLoading />
                 </div>
               </td>
             </tr>
-          ))}
+          ) : filteredSubCategories?.result?.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="py-6 text-center text-gray-500">
+                No subcategories found.
+              </td>
+            </tr>
+          ) : (
+            filteredSubCategories?.result?.map((item: any) => (
+              <tr
+                key={item.No}
+                className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+              >
+                <td className="px-4 py-3 text-sm border-b border-gray-200">
+                  {item?.No}
+                </td>
+                <td className="px-4 py-3 border-b border-gray-200">
+                  <Image
+                    src={item.Image}
+                    width={60}
+                    height={40}
+                    alt="category_image"
+                    className="rounded-full object-contain"
+                  />
+                </td>
+                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                  {item?.SubCategory_Name}
+                </td>
+                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                  {item?.Category_Name}
+                </td>
+                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                  <div onClick={() => statusChange(item?.No, item?.Status)}>
+                    <Greenswitch status={item?.Status} />
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+                  <div className="flex gap-4 items-center">
+                    <span
+                      className="text-2xl cursor-pointer"
+                      onClick={() => {
+                        handleOpen();
+                        setid(item.No);
+                      }}
+                    >
+                      <CiEdit />
+                    </span>
+                    <span
+                      className="text-2xl cursor-pointer"
+                      onClick={() => {
+                        handleClickOpen();
+                        setItemID(item.No);
+                      }}
+                    >
+                      <RiDeleteBin6Line />
+                    </span>
+                    {open && (
+                      <DeleteDialog
+                        open={open}
+                        handleClose={handleClose}
+                        handleDelete={handleDelete}
+                      />
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

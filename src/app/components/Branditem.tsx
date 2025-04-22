@@ -47,7 +47,7 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
         toast.error("Status update failed");
       }
       getbrands();
-    } catch (err:any) {
+    } catch (err: any) {
       console.error("Status update error:", err);
       toast.error(err?.response?.data?.message);
     }
@@ -68,82 +68,89 @@ const Branditem = ({ filteredbrand, getbrands, handleOpen, setId }: any) => {
           </tr>
         </thead>
         <tbody>
-          {filteredbrand ? (
-            <>
-              {filteredbrand?.result?.map((item: any) => (
-                <tr
-                  key={item.No}
-                  className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-                >
-                  <td className="px-4 py-3 text-sm border-b border-gray-200">
-                    {item?.No}
-                  </td>
-                  <td className="px-4 py-3 border-b border-gray-200 ">
-                    <Image
-                      src={item?.Image}
-                      width={80}
-                      height={40}
-                      alt="category_image"
-                      className="rounded-full object-contain"
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                    {item?.Brand_Name}
-                  </td>
-                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                    {item?.Category_Name}
-                  </td>
-                  <td className="px-4 py-3 text-md  border-b border-gray-200 text-left">
-                    {item?.SubCategory_Name}
-                  </td>
-                  <td className="px-4 py-6 border-b border-gray-200 text-left">
-                    <div
-                      onClick={() => changeStatus(item?.No, item?.Status)}
-                      className="inline-block cursor-pointer"
-                    >
-                      <GreenSwitch status={item?.Status} />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
-                    <div className="flex gap-4 items-center">
-                      <span
-                        className="text-2xl cursor-pointer"
-                        onClick={() => {
-                          handleOpen(), setId(item?.No);
-                        }}
-                      >
-                        <CiEdit />
-                      </span>
-                      <span
-                        className="text-2xl cursor-pointer"
-                        onClick={() => {
-                          handleClickOpen(), setItemID(item?.No);
-                        }}
-                      >
-                        <RiDeleteBin6Line />
-                      </span>
-                      {open && (
-                        <DeleteDialog
-                          open={open}
-                          handleClose={handleClose}
-                          handleDelete={handleDelete}
-                        />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </>
+          {!filteredbrand ? (
+            //  Loading state
+            <tr>
+              <td colSpan={8} className="py-6">
+                <div className="flex justify-center items-center w-full">
+                  <TableLoading />
+                </div>
+              </td>
+            </tr>
+          ) : filteredbrand?.result?.length === 0 ? (
+            //  No data found state
+            <tr>
+              <td colSpan={8} className="py-6 text-center text-gray-500">
+                No brands found.
+              </td>
+            </tr>
           ) : (
-            <>
-              <tr>
-                <td colSpan={8} className="py-6">
-                  <div className="flex justify-center items-center w-full">
-                    <TableLoading />
+            // Show data
+            filteredbrand.result.map((item: any) => (
+              <tr
+                key={item.No}
+                className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+              >
+                <td className="px-4 py-3 text-sm border-b border-gray-200">
+                  {item?.No}
+                </td>
+                <td className="px-4 py-3 border-b border-gray-200">
+                  <Image
+                    src={item?.Image}
+                    width={80}
+                    height={40}
+                    alt="category_image"
+                    className="rounded-full object-contain"
+                  />
+                </td>
+                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                  {item?.Brand_Name}
+                </td>
+                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                  {item?.Category_Name}
+                </td>
+                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                  {item?.SubCategory_Name}
+                </td>
+                <td className="px-4 py-6 border-b border-gray-200 text-left">
+                  <div
+                    onClick={() => changeStatus(item?.No, item?.Status)}
+                    className="inline-block cursor-pointer"
+                  >
+                    <GreenSwitch status={item?.Status} />
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+                  <div className="flex gap-4 items-center">
+                    <span
+                      className="text-2xl cursor-pointer"
+                      onClick={() => {
+                        handleOpen();
+                        setId(item?.No);
+                      }}
+                    >
+                      <CiEdit />
+                    </span>
+                    <span
+                      className="text-2xl cursor-pointer"
+                      onClick={() => {
+                        handleClickOpen();
+                        setItemID(item?.No);
+                      }}
+                    >
+                      <RiDeleteBin6Line />
+                    </span>
+                    {open && (
+                      <DeleteDialog
+                        open={open}
+                        handleClose={handleClose}
+                        handleDelete={handleDelete}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
-            </>
+            ))
           )}
         </tbody>
       </table>

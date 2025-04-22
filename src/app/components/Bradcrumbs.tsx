@@ -5,9 +5,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { usePathname } from "next/navigation";
 
-
-
-export default function CustomSeparator({ value1, value2 }: any) {
+export default function CustomSeparator({ value1, value2, value3 }: any) {
   const pathname = usePathname();
   const breadcrumbs = [
     <Link
@@ -15,7 +13,7 @@ export default function CustomSeparator({ value1, value2 }: any) {
       key="1"
       color="inherit"
       href={`/${value1}`}
-      className={`!text-xl ${pathname === `/${value1}` ? "text-black" : ""}`}
+      className={`!text-lg ${pathname === `/${value1}` ? "text-black" : ""} capitalize   `}
     >
       {value1}
     </Link>,
@@ -24,10 +22,19 @@ export default function CustomSeparator({ value1, value2 }: any) {
       key="2"
       color="inherit"
       href={`/${value2}`}
-      className={`!text-xl !${pathname === `/${value2}` ? "text-black" : ""}`}
+      className={`!text-lg !${pathname === `/${value2}` ? "text-black" : ""}  capitalize`}
     >
       {value2}
     </Link>,
+    //   <Link
+    //   underline="hover"
+    //   key="2"
+    //   color="inherit"
+    //   href={`/${value3}`}
+    //   className={`!text-xl !${pathname === `/${value3}` ? "text-black" : ""}  capitalize`}
+    // >
+    //   {value3}
+    // </Link>,
   ];
 
   return (

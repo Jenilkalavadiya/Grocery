@@ -12,6 +12,7 @@ import logout from "../../../public/images/logout.svg";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Avatar from "@mui/material/Avatar";
+import Cookies from "js-cookie";
 
 function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -76,6 +77,8 @@ function Header() {
     handleClose();
     setActiveMenuItem("logout");
     localStorage.clear();
+    Cookies.remove("auth_token");
+    Cookies.remove("refresh_token");
     router.push("/");
     toast.success("Logout SuccessFully");
   };
