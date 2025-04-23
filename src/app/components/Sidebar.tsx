@@ -81,7 +81,7 @@ export default function Sidebar() {
                       className="flex items-center gap-4 cursor-pointer"
                       onClick={() => handleCategoryToggle(item.name)}
                     >
-                      <img className="ml-5" src={item.image} alt="" />
+                      <img className="ml-8" src={item.image} alt="" />
                       <span
                         className={`${
                           item.link === pathname
@@ -120,14 +120,14 @@ export default function Sidebar() {
                   </div>
                 ) : (
                   <div className="flex flex-row gap-4 border-b border-b-[#353737]">
-                    <img className="ml-5" src={item.image} alt="" />
+                    <img className="ml-8" src={item.image} alt="pp" />
                     <Link
                       href={item.link}
                       className={`${
                         item.link === pathname
                           ? "text-yellow-200"
                           : "text-white"
-                      }`}
+                      } `}
                     >
                       {item.name}
                     </Link>

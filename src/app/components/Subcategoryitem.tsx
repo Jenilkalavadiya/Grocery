@@ -58,9 +58,9 @@ const Subcategoryitem = ({
         <thead className="bg-[#FAFAFA] text-[#202020]">
           <tr className="text-md  font-bold border-gray-300">
             <th className="px-4 py-3 w-[150px]">No.</th>
-            <th className="px-6 py-3 text-left w-[205px]">Image</th>
-            <th className="px-6 py-3 text-left w-[205px]">Name</th>
-            <th className="px-4 py-3 text-left min-w-[500px]">Category</th>
+            <th className="px-4 py-3 text-left w-[205px]">Image</th>
+            <th className="px-4 py-3 text-left w-[325px]">Name</th>
+            <th className="px-4 py-3 text-left w-[480px]">Category</th>
 
             <th className="px-4 py-3 text-left">Status</th>
             <th className="px-4 py-3 text-left">Actions</th>
@@ -82,35 +82,35 @@ const Subcategoryitem = ({
               </td>
             </tr>
           ) : (
-            filteredSubCategories?.result?.map((item: any) => (
+            filteredSubCategories?.result?.map((item: any, index: any) => (
               <tr
                 key={item.No}
                 className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
               >
-                <td className="px-4 py-3 text-sm border-b border-gray-200">
-                  {item?.No}
+                <td className="px-4 py-5 text-sm border-b border-gray-200">
+                  {index + 1}
                 </td>
-                <td className="px-4 py-3 border-b border-gray-200">
+                <td className="px-4 py-5 border-b border-gray-200">
                   <Image
                     src={item.Image}
                     width={60}
                     height={40}
                     alt="category_image"
-                    className="rounded-full object-contain"
+                    className="object-contain"
                   />
                 </td>
-                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                <td className="px-4 py-5 text-lg border-b border-gray-200 text-left">
                   {item?.SubCategory_Name}
                 </td>
-                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                <td className="px-4 py-5 text-lg border-b border-gray-200 text-left">
                   {item?.Category_Name}
                 </td>
-                <td className="px-4 py-3 text-md border-b border-gray-200 text-left">
+                <td className="px-4 py-5 border-b border-gray-200 text-left">
                   <div onClick={() => statusChange(item?.No, item?.Status)}>
                     <Greenswitch status={item?.Status} />
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">
+                <td className="px-4 py-5 text-sm text-gray-700 border-b border-gray-200">
                   <div className="flex gap-4 items-center">
                     <span
                       className="text-2xl cursor-pointer"

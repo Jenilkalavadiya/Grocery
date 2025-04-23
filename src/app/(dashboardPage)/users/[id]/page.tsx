@@ -73,7 +73,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto  shadow-xl px-10">
+      <div className="overflow-x-auto ">
         <table className="min-w-full bg-white rounded-2xl ">
           <thead className="bg-[#FAFAFA] text-[#202020]">
             <tr className="text-md  font-bold border-gray-300">
