@@ -1,9 +1,14 @@
 "use client";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Grocery from "../../../public/Path 410.png";
 import Image from "next/image";
+import styles from "@/styles/sidebar.module.css";
 const sidebarItems = [
   { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
   { name: "Users", image: "./images/2.svg", link: "/users" },
@@ -26,67 +31,65 @@ const sidebarItems = [
   { name: "FAQ", image: "./images/10.svg", link: "/faq" },
 ];
 
-export default function Sidebar() {
+const drawerWidth = 325;
+
+interface Props {
+  window?: () => Window;
+}
+
+export default function ResponsiveDrawer(props: Props) {
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isClosing, setIsClosing] = React.useState(false);
+
+  const handleDrawerClose = () => {
+    setIsClosing(true);
+    setMobileOpen(false);
+  };
+
+  const handleDrawerTransitionEnd = () => {
+    setIsClosing(false);
+  };
+
+  const handleDrawerToggle = () => {
+    if (!isClosing) {
+      setMobileOpen(!mobileOpen);
+    }
+  };
+
   const [activeCategory, setActiveCategory] = useState(null);
   const pathname = usePathname();
 
   const handleCategoryToggle = (categoryName: any) => {
     setActiveCategory(activeCategory === categoryName ? null : categoryName);
   };
-
-  return (
+  const drawer = (
     <div>
-      <button
-        data-drawer-target="logo-sidebar"
-        data-drawer-toggle="logo-sidebar"
-        aria-controls="logo-sidebar"
-        type="button"
-        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-      >
-        <span className="sr-only">Open sidebar</span>
-        <svg
-          className="w-6 h-6"
-          aria-hidden="true"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clipRule="evenodd"
-            fillRule="evenodd"
-            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-          />
-        </svg>
-      </button>
-      <aside
-        id="logo-sidebar"
-        className="sticky top-0 left-0 z-40 w-[300px] h-screen transition-transform -translate-x-full sm:translate-x-0"
-        aria-label="Sidebar"
-      >
-        <div className="h-full py-6 bg-gray-50 dark:bg-[#202020]">
-          {/* Logo section */}
-          <div className="mb-10 sticky top-0 z-50 bg-gray-50 dark:bg-[#202020]">
+      <List className={` !p-0 !m-0 `}>
+        <div className="min-h-screen py-6 bg-gray-800">
+          {/* Logo */}
+          <div className="mb-8 sticky top-0 z-50 bg-gray-800">
             <Link href="#" className="flex items-center justify-center">
               <Image src={Grocery} width={150} height={100} alt="Logo" />
             </Link>
           </div>
 
-          {/* Sidebar items */}
-          <ul className="space-y-6 overflow-y-auto text-xl leading-10 h-[calc(100vh-150px)]">
+          {/* Sidebar Items */}
+          <ul className="space-y-4 overflow-y-auto text-lg font-medium leading-6 h-[calc(100vh-150px)] px-4 text-gray-300">
             {sidebarItems.map((item, index) => (
               <li key={index}>
                 {item.isCategory ? (
                   <div className="flex flex-col">
                     <div
-                      className="flex items-center gap-4 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors hover:bg-gray-700"
                       onClick={() => handleCategoryToggle(item.name)}
                     >
-                      <img className="ml-8" src={item.image} alt="" />
+                      <img className="w-5 h-5" src={item.image} alt="" />
                       <span
                         className={`${
                           item.link === pathname
-                            ? "text-yellow-200"
-                            : "text-white"
+                            ? "text-yellow-400 font-semibold"
+                            : "text-gray-300"
                         }`}
                       >
                         {item.name}
@@ -94,23 +97,23 @@ export default function Sidebar() {
                     </div>
 
                     {activeCategory === item.name && (
-                      <div className="ml-8 mt-2">
+                      <div className="ml-10 mt-2 space-y-2 text-sm">
                         <Link
                           href="/category"
-                          className={`block px-4 py-2 hover:bg-gray-600 ${
+                          className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
                             pathname === "/category"
-                              ? "text-yellow-200"
-                              : "text-white"
+                              ? "text-yellow-400 bg-gray-700"
+                              : "text-gray-300"
                           }`}
                         >
                           Category
                         </Link>
                         <Link
                           href="/subcategory"
-                          className={`block px-4 py-2 hover:bg-gray-600 ${
+                          className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
                             pathname === "/subcategory"
-                              ? "text-yellow-200"
-                              : "text-white"
+                              ? "text-yellow-400 bg-gray-700"
+                              : "text-gray-300"
                           }`}
                         >
                           Sub Category
@@ -119,15 +122,15 @@ export default function Sidebar() {
                     )}
                   </div>
                 ) : (
-                  <div className="flex flex-row gap-4 border-b border-b-[#353737]">
-                    <img className="ml-8" src={item.image} alt="pp" />
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover:bg-gray-700">
+                    <img className="w-5 h-5" src={item.image} alt="icon" />
                     <Link
                       href={item.link}
                       className={`${
                         item.link === pathname
-                          ? "text-yellow-200"
-                          : "text-white"
-                      } `}
+                          ? "text-yellow-400 font-semibold"
+                          : "text-gray-300"
+                      }`}
                     >
                       {item.name}
                     </Link>
@@ -137,7 +140,57 @@ export default function Sidebar() {
             ))}
           </ul>
         </div>
-      </aside>
+      </List>
     </div>
+  );
+
+  // Remove this const when copying and pasting into your project.
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders"
+      >
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onTransitionEnd={handleDrawerTransitionEnd}
+          onClose={handleDrawerClose}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+          slotProps={{
+            root: {
+              keepMounted: true, // Better open performance on mobile.
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+    </Box>
   );
 }

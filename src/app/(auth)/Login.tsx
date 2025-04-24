@@ -121,6 +121,7 @@ const Page = () => {
                       variant="standard"
                       sx={textFieldStyles}
                       fullWidth
+                      autoFocus
                     />
                   </div>
                   {errors.email && touched.email && (

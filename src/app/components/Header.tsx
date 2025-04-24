@@ -11,7 +11,6 @@ import changePassword from "../../../public/images/change-passwod.svg";
 import logout from "../../../public/images/logout.svg";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import Avatar from "@mui/material/Avatar";
 import Cookies from "js-cookie";
 
 function Header() {

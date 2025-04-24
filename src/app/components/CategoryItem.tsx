@@ -9,7 +9,7 @@ import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import { toast } from "react-toastify";
 import TableLoading from "./TableLoading";
-
+import DataIcon from "../../../public/data.svg";
 const CategoryItem = ({
   filteredCategories,
   getAllCategory,
@@ -61,9 +61,15 @@ const CategoryItem = ({
       <table className="min-w-full bg-white rounded-2xl ">
         <thead className="bg-[#FAFAFA] text-[#202020]">
           <tr className="text-md  font-bold border-gray-300">
-            <th className="px-4 py-3 w-[150px]">No.</th>
+            <th className="px-4 py-3  flex justify-center gap-1.5">
+              No.
+              <Image src={DataIcon} alt="ab" width={12} />
+            </th>
             <th className="px-4 py-3 text-left w-[205px]">Image</th>
-            <th className="px-4 py-3 text-left min-w-[500px]">Category</th>
+            <th className="px-4 py-3 text-left min-w-[500px] flex gap-1.5">
+              Category
+              <Image src={DataIcon} alt="ab" width={12} />
+            </th>
 
             <th className="px-4 py-3 text-left">Status</th>
             <th className="px-4 py-3 text-left">Actions</th>

@@ -9,7 +9,7 @@ const layout = ({ children }: any) => {
 
       <div className="flex !bg-white ">
         <Sidebar />
-        <div className="mt-[80px] px-[56px] overflow-hidden w-full bg-[#F0F0F0] ">
+        <div className="mt-[80px] px-[56px] overflow-hidden w-full bg-[#F0F0F0] h-[885px]">
           {children}
         </div>
       </div>
