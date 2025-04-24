@@ -29,8 +29,6 @@ export default function ModalBrand({
   getbrands,
   id,
 }: any) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
   const {
     values,
     errors,
@@ -82,14 +80,6 @@ export default function ModalBrand({
       }
     },
   });
-  const handleImageChange = (e: any) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFieldValue("image", file);
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
-    }
-  };
 
   // GETBRANDBYID
   const getBrandById = async () => {

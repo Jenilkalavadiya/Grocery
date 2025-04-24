@@ -81,7 +81,11 @@ export default function Sidebar() {
                       className="flex items-center gap-4 cursor-pointer"
                       onClick={() => handleCategoryToggle(item.name)}
                     >
-                      <img className="ml-5" src={item.image} alt="" />
+                      <img
+                        className="ml-5"
+                        src={item.image}
+                        alt=""
+                      />
                       <span
                         className={`${
                           item.link === pathname

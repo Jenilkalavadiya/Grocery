@@ -1,9 +1,48 @@
-import React from 'react'
+"use client";
+import CustomSeparator from "@/app/components/Bradcrumbs";
+import OrderItems from "@/app/components/OrderItems";
+import { Pagination, Stack } from "@mui/material";
+import React, { useState } from "react";
 
 const page = () => {
+  const [page, setPage] = useState(1);
+    const [order, setOrder] = useState<any>();
+  
   return (
-    <div><h1>orders</h1></div>
-  )
-}
+    <div className="text-black">
+      {/* SERCH INPUT  */}
+      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+        <div>
+          <h2 className="text-3xl font-bold !text-[#202020]">Orders</h2>
+          <div className=" mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"orders"}
+              className="flex"
+            />
+          </div>
+        </div>
+      </div>
 
-export default page
+      {/* USERS TABLE************  */}
+      <div className=" m-auto mt-3">
+        <OrderItems order={order} />
+      </div>
+
+      {/* // PAGINATION ******* */}
+      <div className="flex justify-end mt-6 mr-8 mb-8">
+        <Stack spacing={2}>
+          <Pagination
+            //  count={Math.ceil(Number(user?.Total_Count) / 5)}
+            page={page}
+            onChange={(e, value) => setPage(value)}
+            variant="outlined"
+            shape="rounded"
+          />
+        </Stack>
+      </div>
+    </div>
+  );
+};
+
+export default page;
