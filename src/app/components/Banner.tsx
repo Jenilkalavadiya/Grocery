@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 import BannerModal from "@/utils/Banner_post";
 import { toast } from "react-toastify";
 
-const Banner = ({ banner, getBanners, getSection }: any) => {
+const Banner = ({ banner, getBanners }: any) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -20,8 +20,6 @@ const Banner = ({ banner, getBanners, getSection }: any) => {
     getBanners();
     toast.success("Banner Deleted");
   };
-
-  
 
   // console.log("Addsection", banner);
   return (

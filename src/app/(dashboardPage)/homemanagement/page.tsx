@@ -15,33 +15,18 @@ interface Banners {
 }
 const Page = () => {
   const [open, setOpen] = useState(false);
-  const [renderedSections, setRenderedSections] = useState<string[]>([
-    "banner",
-  ]);
+  const [renderedSections, setRenderedSections] = useState<string[]>([]);
+  const [addSection, setAddSection] = useState();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // const [banner, setBanner] = useState<Banners[]>([]);
-
-  // useEffect(() => {
-  //   getBanners();
-  // }, []);
-
-  // const getBanners = async () => {
-  //   const res = await apiRequest({
-  //     method: "get",
-  //     url: `/get_slider_with_banner`,
-  //   });
-  //   const response = res?.data?.data;
-  //   setRenderedSections([response?.id]);
-  //   console.log("response", response);
-  //   setBanner(response.banner);
-  // };
+  const [banner, setBanner] = useState<Banners[]>([]);
 
   useEffect(() => {
     const storedSections = localStorage.getItem("renderedSections");
 
     if (storedSections) {
       setRenderedSections(JSON.parse(storedSections));
+      getBanners();
     }
   }, []);
 
@@ -50,16 +35,25 @@ const Page = () => {
     localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
   }, [renderedSections]);
 
-  const renderComponent = (section: any) => {
+  const getBanners = async () => {
+    const res = await apiRequest({
+      method: "get",
+      url: `/get_all_home_management?fk_section_id=1`,
+    });
+    const response = res?.data?.data;
+    console.log("response", response?.result?.banner);
+  };
+
+  const renderComponent = (section: string) => {
     switch (section) {
       case "banner":
-        return <Banner key="banner" />;
+        return <Banner key="banner" banner={banner} getBanners={getBanners} />;
       case "category":
         return <ShopByCategory key="category" />;
-      case "brand":
-        return <BrandHomemange key="brand" />;
       case "advertise":
         return <Advertisment key="advertise" />;
+      case "brand":
+        return <BrandHomemange key="brand" />;
       default:
         return null;
     }
@@ -69,6 +63,7 @@ const Page = () => {
 
   return (
     <div>
+      {/* Conditional Section - Only show initial screen if no section is added */}
       {!hasAddedSection ? (
         <div className="flex items-center justify-center px-7 py-5 mt-15 h-[75vh]">
           <div className="flex flex-col justify-center items-center bg-white shadow-md w-[420px] py-10">
@@ -98,7 +93,15 @@ const Page = () => {
               >
                 Add Section
               </Button>
-              {open && <ModalHome open={open} handleClose={handleClose} />}
+              {open && (
+                <ModalHome
+                  open={open}
+                  handleClose={handleClose}
+                  getBanners={getBanners}
+                  setRenderedSections={setRenderedSections}
+                  setAddSection={setAddSection}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -132,7 +135,7 @@ const Page = () => {
 
       {/* Render dynamic sections below */}
       <div className="mt-10 overflow-hidden">
-        {renderedSections?.map((section) => renderComponent(section))}
+        {renderedSections.map((section) => renderComponent(section))}
       </div>
     </div>
   );

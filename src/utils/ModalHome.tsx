@@ -18,11 +18,16 @@ const style = {
 const sectionIdMap = {
   banner: 1,
   category: 2,
-  brand: 3,
-  advertise: 4,
+  advertise: 3,
+  brand: 4,
 };
 
-const ModalHome = ({ open, handleClose, setRenderedSections }: any) => {
+const ModalHome = ({
+  open,
+  handleClose,
+  setRenderedSections,
+  setAddSection,
+}: any) => {
   const [selectedSection, setSelectedSection] = useState("");
 
   const handleChange = (e: any) => {
@@ -33,6 +38,9 @@ const ModalHome = ({ open, handleClose, setRenderedSections }: any) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const sectionId = sectionIdMap[selectedSection];
+    if (selectedSection) {
+      setRenderedSections((prev: any) => [...prev, selectedSection]);
+    }
     setSelectedSection("");
     handleClose();
 
@@ -41,8 +49,8 @@ const ModalHome = ({ open, handleClose, setRenderedSections }: any) => {
       url: "/add_section",
       data: { id: sectionId },
     });
-    console.log("object", res?.data?.data);
-    setRenderedSections(res?.data?.data);
+
+    setAddSection(res?.data?.data);
   };
 
   return (
@@ -81,28 +89,27 @@ const ModalHome = ({ open, handleClose, setRenderedSections }: any) => {
               />
               <label htmlFor="2">Shop By Category</label>
             </div>
-
-            <div className="flex flex-row space-x-5 justify-start">
-              <input
-                type="radio"
-                name="section"
-                value="brand"
-                id="3"
-                checked={selectedSection === "brand"}
-                onChange={handleChange}
-              />
-              <label className="3">Slider with Brand</label>
-            </div>
             <div className="flex flex-row space-x-5 justify-start">
               <input
                 type="radio"
                 name="section"
                 value="advertise"
-                id="4"
+                id="3"
                 checked={selectedSection === "advertise"}
                 onChange={handleChange}
               />
-              <label htmlFor="4">Slider with Advertisement</label>
+              <label htmlFor="3">Slider with Advertisement</label>
+            </div>
+            <div className="flex flex-row space-x-5 justify-start">
+              <input
+                type="radio"
+                name="section"
+                value="brand"
+                id="4"
+                checked={selectedSection === "brand"}
+                onChange={handleChange}
+              />
+              <label className="4">Slider with Brand</label>
             </div>
           </div>
           <DialogActions>
