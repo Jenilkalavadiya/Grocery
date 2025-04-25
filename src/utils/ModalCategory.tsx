@@ -86,6 +86,7 @@ export default function ModalCategory({
       getCategoryByID();
     }
   }, [itemID]);
+  
   return (
     <div className="">
       <Modal

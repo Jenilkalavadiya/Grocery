@@ -67,31 +67,29 @@ const Usersitem = ({ user, getUsers }: any) => {
               // Show actual user rows
               user?.result?.map((item: any) => (
                 <tr
-                  key={item?.user_id}
+                  key={item?.User_id}
                   className="hover:bg-gray-50 transition-all duration-300 text-center"
                 >
                   <td className="px-4 py-6 border-b border-gray-200  ">
-                    {item?.user_id}
+                    {item?.User_id}
                   </td>
                   <td className="px-4 py-6 text-sm border-b border-gray-200  ">
-                    <Link href={`/users/${item?.user_id}`}>
-                      {item?.fullname}
+                    <Link href={`/users/${item?.User_id}`}>
+                      {item?.FullName}
                     </Link>
                   </td>
                   <td className="px-4 py-6 text-sm border-b border-gray-200 ">
-                    {item?.user_email}
+                    {item?.Mobile_no}
                   </td>
                   <td className="px-6 py-6 text-sm border-b border-gray-200 ">
-                    {item?.user_mobile_no}
+                    {item?.Email}
                   </td>
                   <td className="px-4 py-6 border-b border-gray-200  ">
                     <div
-                      onClick={() =>
-                        changeStatus(item?.user_id, item?.user_status)
-                      }
+                      onClick={() => changeStatus(item?.User_id, item?.Status)}
                       className="inline-block cursor-pointer"
                     >
-                      <GreenSwitch status={item?.user_status} />
+                      <GreenSwitch status={item?.Status} />
                     </div>
                   </td>
                 </tr>

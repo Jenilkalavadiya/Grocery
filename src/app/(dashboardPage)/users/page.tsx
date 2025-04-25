@@ -28,7 +28,7 @@ export default function users() {
         method: "get",
         url: `/getusers?pageNumber=${page}&pageLimit=5&search=${search}`,
       });
-
+      console.log("first", res);
       const data = await res?.data?.data;
       setUser(data);
     } catch (error) {}
@@ -37,6 +37,7 @@ export default function users() {
   useEffect(() => {
     getUsers();
   }, [page, search]);
+  console.log("Userslist",user)
 
   return (
     <div className="text-black">
