@@ -22,8 +22,18 @@ const Page = () => {
   const [banner, setBanner] = useState<Banners[]>([]);
 
   useEffect(() => {
-    getBanners();
+    const storedSections = localStorage.getItem("renderedSections");
+
+    if (storedSections) {
+      setRenderedSections(JSON.parse(storedSections));
+      getBanners();
+    }
   }, []);
+
+  // Save renderedSections to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
+  }, [renderedSections]);
 
   const getBanners = async () => {
     const res = await apiRequest({
@@ -31,14 +41,13 @@ const Page = () => {
       url: `/get_slider_with_banner`,
     });
     const response = res?.data?.data;
-    setRenderedSections([response?.id]);
     console.log("response", response);
     setBanner(response.banner);
   };
 
-  const renderComponent = (section: any) => {
+  const renderComponent = (section: string) => {
     switch (section) {
-      case 1:
+      case "banner":
         return <Banner key="banner" banner={banner} getBanners={getBanners} />;
       case "category":
         return <ShopByCategory key="category" />;
@@ -55,6 +64,7 @@ const Page = () => {
 
   return (
     <div>
+      {/* Conditional Section - Only show initial screen if no section is added */}
       {!hasAddedSection ? (
         <div className="flex items-center justify-center px-7 py-5 mt-15 h-[75vh]">
           <div className="flex flex-col justify-center items-center bg-white shadow-md w-[420px] py-10">
@@ -89,6 +99,7 @@ const Page = () => {
                   open={open}
                   handleClose={handleClose}
                   getBanners={getBanners}
+                  setRenderedSections={setRenderedSections}
                   setAddSection={setAddSection}
                 />
               )}

@@ -25,7 +25,9 @@ const sectionIdMap = {
 const ModalHome = ({
   open,
   handleClose,
+  setRenderedSections,
   setAddSection,
+  getBanners,
 }: any) => {
   const [selectedSection, setSelectedSection] = useState("");
 
@@ -37,6 +39,9 @@ const ModalHome = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const sectionId = sectionIdMap[selectedSection];
+    if (selectedSection) {
+      setRenderedSections((prev: any) => [...prev, selectedSection]);
+    }
     setSelectedSection("");
     handleClose();
 
@@ -45,8 +50,9 @@ const ModalHome = ({
       url: "/get_section",
       data: { id: sectionId },
     });
-    console.log("object", res?.data?.data);
+
     setAddSection(res?.data?.data);
+    getBanners();
   };
 
   return (
