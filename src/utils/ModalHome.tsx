@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { DialogActions } from "@mui/material";
 import { apiRequest } from "@/api/ApiCall";
- 
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -18,37 +18,33 @@ const style = {
 const sectionIdMap = {
   banner: 1,
   category: 2,
-  advertise: 3,
-  brand: 4,
+  brand: 3,
+  advertise: 4,
 };
- 
-const ModalHome = ({
-  open,
-  handleClose,
-  setAddSection,
-}: any) => {
+
+const ModalHome = ({ open, handleClose, setRenderedSections }: any) => {
   const [selectedSection, setSelectedSection] = useState("");
- 
+
   const handleChange = (e: any) => {
     const { value } = e.target;
     setSelectedSection(value);
   };
- 
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const sectionId = sectionIdMap[selectedSection];
     setSelectedSection("");
     handleClose();
- 
+
     const res = await apiRequest({
       method: "post",
-      url: "/get_section",
+      url: "/add_section",
       data: { id: sectionId },
     });
     console.log("object", res?.data?.data);
-    setAddSection(res?.data?.data);
+    setRenderedSections(res?.data?.data);
   };
- 
+
   return (
     <Modal
       open={open}
@@ -85,27 +81,28 @@ const ModalHome = ({
               />
               <label htmlFor="2">Shop By Category</label>
             </div>
-            <div className="flex flex-row space-x-5 justify-start">
-              <input
-                type="radio"
-                name="section"
-                value="advertise"
-                id="3"
-                checked={selectedSection === "advertise"}
-                onChange={handleChange}
-              />
-              <label htmlFor="3">Slider with Advertisement</label>
-            </div>
+
             <div className="flex flex-row space-x-5 justify-start">
               <input
                 type="radio"
                 name="section"
                 value="brand"
-                id="4"
+                id="3"
                 checked={selectedSection === "brand"}
                 onChange={handleChange}
               />
-              <label className="4">Slider with Brand</label>
+              <label className="3">Slider with Brand</label>
+            </div>
+            <div className="flex flex-row space-x-5 justify-start">
+              <input
+                type="radio"
+                name="section"
+                value="advertise"
+                id="4"
+                checked={selectedSection === "advertise"}
+                onChange={handleChange}
+              />
+              <label htmlFor="4">Slider with Advertisement</label>
             </div>
           </div>
           <DialogActions>
@@ -123,5 +120,5 @@ const ModalHome = ({
     </Modal>
   );
 };
- 
+
 export default ModalHome;

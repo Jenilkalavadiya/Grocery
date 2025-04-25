@@ -23,7 +23,7 @@ const Banner = ({ banner, getBanners, getSection }: any) => {
 
   
 
-  console.log("Addsection", banner);
+  // console.log("Addsection", banner);
   return (
     <section className="bg-white p-6 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Banner Slider</h2>

@@ -18,36 +18,48 @@ const Page = () => {
   const [renderedSections, setRenderedSections] = useState<string[]>([
     "banner",
   ]);
-  const [addSection, setAddSection] = useState();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [banner, setBanner] = useState<Banners[]>([]);
+  // const [banner, setBanner] = useState<Banners[]>([]);
+
+  // useEffect(() => {
+  //   getBanners();
+  // }, []);
+
+  // const getBanners = async () => {
+  //   const res = await apiRequest({
+  //     method: "get",
+  //     url: `/get_slider_with_banner`,
+  //   });
+  //   const response = res?.data?.data;
+  //   setRenderedSections([response?.id]);
+  //   console.log("response", response);
+  //   setBanner(response.banner);
+  // };
 
   useEffect(() => {
-    getBanners();
+    const storedSections = localStorage.getItem("renderedSections");
+
+    if (storedSections) {
+      setRenderedSections(JSON.parse(storedSections));
+    }
   }, []);
 
-  const getBanners = async () => {
-    const res = await apiRequest({
-      method: "get",
-      url: `/get_slider_with_banner`,
-    });
-    const response = res?.data?.data;
-    setRenderedSections([response?.id]);
-    console.log("response", response);
-    setBanner(response.banner);
-  };
+  // Save renderedSections to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
+  }, [renderedSections]);
 
   const renderComponent = (section: any) => {
     switch (section) {
-      case 1:
-        return <Banner key="banner" banner={banner} getBanners={getBanners} />;
+      case "banner":
+        return <Banner key="banner" />;
       case "category":
         return <ShopByCategory key="category" />;
-      case "advertise":
-        return <Advertisment key="advertise" />;
       case "brand":
         return <BrandHomemange key="brand" />;
+      case "advertise":
+        return <Advertisment key="advertise" />;
       default:
         return null;
     }
@@ -86,14 +98,7 @@ const Page = () => {
               >
                 Add Section
               </Button>
-              {open && (
-                <ModalHome
-                  open={open}
-                  handleClose={handleClose}
-                  getBanners={getBanners}
-                  setAddSection={setAddSection}
-                />
-              )}
+              {open && <ModalHome open={open} handleClose={handleClose} />}
             </div>
           </div>
         </div>
