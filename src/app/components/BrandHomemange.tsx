@@ -60,7 +60,6 @@ const BrandHomemange = () => {
             </button>
           </div>
         ))}
-        Add new category
         <div className="min-w-[150px] h-[180px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer">
           <Image src={plus} alt="plus" width={50} height={55} />
         </div>

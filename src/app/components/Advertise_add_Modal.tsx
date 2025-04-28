@@ -2,8 +2,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Image from "next/image";
-import close from "../../public/images/close.svg";
-import uploadImage from "../../public/images/upload.png";
+import close from "../../../public/images/close.svg";
+import uploadImage from "../../../public/images/upload.png";
 import { useFormik } from "formik";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
@@ -18,8 +18,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-export default function BannerModal({ open, handleClose, getComponents }: any) {
+const Advertise_add_Modal = ({ open, handleClose, getComponents }: any) => {
   const { values, handleBlur, handleSubmit, setFieldValue } = useFormik({
     initialValues: { image: null },
     onSubmit: async (values) => {
@@ -27,7 +26,7 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
       const formData = new FormData();
       if (values?.image) {
         formData.append("image", values.image);
-        formData.append("fk_section_id", "1");
+        formData.append("fk_section_id", "4");
       }
       const res = await apiRequest({
         method: "post",
@@ -106,4 +105,6 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
       </Modal>
     </div>
   );
-}
+};
+
+export default Advertise_add_Modal;

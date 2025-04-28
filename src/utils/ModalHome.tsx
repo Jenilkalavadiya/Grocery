@@ -18,8 +18,8 @@ const style = {
 const sectionIdMap = {
   banner: 1,
   category: 2,
-  advertise: 3,
-  brand: 4,
+  brand: 3,
+  advertise: 4,
 };
 
 const ModalHome = ({
@@ -49,8 +49,8 @@ const ModalHome = ({
       url: "/add_section",
       data: { id: sectionId },
     });
-
-    setAddSection(res?.data?.data);
+    console.log("setAddFunc", res?.data?.data?.section_id);
+    setAddSection(res?.data?.data?.section_id);
   };
 
   return (
@@ -93,23 +93,23 @@ const ModalHome = ({
               <input
                 type="radio"
                 name="section"
-                value="advertise"
+                value="brand"
                 id="3"
-                checked={selectedSection === "advertise"}
+                checked={selectedSection === "brand"}
                 onChange={handleChange}
               />
-              <label htmlFor="3">Slider with Advertisement</label>
+              <label htmlFor="3">Slider with Brand</label>
             </div>
             <div className="flex flex-row space-x-5 justify-start">
               <input
                 type="radio"
                 name="section"
-                value="brand"
+                value="advertise"
                 id="4"
-                checked={selectedSection === "brand"}
+                checked={selectedSection === "advertise"}
                 onChange={handleChange}
               />
-              <label className="4">Slider with Brand</label>
+              <label htmlFor="4">Slider with Advertisement</label>
             </div>
           </div>
           <DialogActions>

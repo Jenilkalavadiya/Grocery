@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 import BannerModal from "@/utils/Banner_post";
 import { toast } from "react-toastify";
 
-const Banner = ({ banner, getBanners }: any) => {
+const Banner = ({ component, getComponents }: any) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -15,9 +15,9 @@ const Banner = ({ banner, getBanners }: any) => {
     console.log("res", itemID);
     const res = await apiRequest({
       method: "delete",
-      url: `/delete_slider_with_banner?id=${itemID}`,
+      url: `/delete_home_management?id=${itemID}&fk_section_id=1`,
     });
-    getBanners();
+    getComponents();
     toast.success("Banner Deleted");
   };
 
@@ -26,7 +26,7 @@ const Banner = ({ banner, getBanners }: any) => {
     <section className="bg-white p-6 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Banner Slider</h2>
       <div className="flex gap-4 overflow-x-auto">
-        {banner?.map((item: any, index: any) => (
+        {component?.banner?.map((item: any, index: any) => (
           <div key={index} className="relative min-w-[250px]">
             <img
               src={item?.image}
@@ -57,7 +57,7 @@ const Banner = ({ banner, getBanners }: any) => {
             <BannerModal
               open={open}
               handleClose={handleClose}
-              getBanners={getBanners}
+              getComponents={getComponents}
             />
           )}
         </div>

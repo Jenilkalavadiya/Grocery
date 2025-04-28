@@ -75,7 +75,7 @@ export default function ResponsiveDrawer(props: Props) {
           </div>
 
           {/* Sidebar Items */}
-          <ul className="space-y-4 overflow-y-auto text-lg font-medium leading-6 h-[calc(100vh-150px)] px-4 text-gray-300">
+          <ul className="space-y-4 sidebar overflow-y-auto text-lg font-medium leading-6 h-[calc(100vh-150px)] px-4 text-gray-300">
             {sidebarItems.map((item, index) => (
               <li key={index}>
                 {item.isCategory ? (

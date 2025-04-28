@@ -19,39 +19,53 @@ const Page = () => {
   const [addSection, setAddSection] = useState();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [banner, setBanner] = useState<Banners[]>([]);
+  const [component, setComponent] = useState<Banners[]>([]);
 
+  // Local Storage Logic
   useEffect(() => {
-    const storedSections = localStorage.getItem("renderedSections");
-
-    if (storedSections) {
-      setRenderedSections(JSON.parse(storedSections));
-      getBanners();
+    const savedSections = localStorage.getItem("renderedSections");
+    if (savedSections) {
+      setRenderedSections(JSON.parse(savedSections));
     }
   }, []);
 
-  // Save renderedSections to localStorage on change
   useEffect(() => {
     localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
   }, [renderedSections]);
 
-  const getBanners = async () => {
+  const getComponents = async () => {
     const res = await apiRequest({
       method: "get",
-      url: `/get_all_home_management?fk_section_id=1`,
+      url: `/get_all_home_management?fk_section_id=${addSection}`,
     });
     const response = res?.data?.data;
-    console.log("response", response?.result?.banner);
+    console.log(
+      "/get_all_home_management?fk_section_id=${addSection}",
+      response?.result
+    );
+    setComponent(response?.result);
   };
-
+  // console.log("BANNER", component);
   const renderComponent = (section: string) => {
     switch (section) {
       case "banner":
-        return <Banner key="banner" banner={banner} getBanners={getBanners} />;
+        return (
+          <Banner
+            key="banner"
+            component={component}
+            getComponents={getComponents}
+          />
+        );
       case "category":
         return <ShopByCategory key="category" />;
       case "advertise":
-        return <Advertisment key="advertise" />;
+        return (
+          <Advertisment
+            key="advertise"
+            component={component}
+            getComponents={getComponents}
+          />
+        );
       case "brand":
         return <BrandHomemange key="brand" />;
       default:
@@ -60,6 +74,10 @@ const Page = () => {
   };
 
   const hasAddedSection = renderedSections.length > 0;
+
+  useEffect(() => {
+    getComponents();
+  }, [addSection]);
 
   return (
     <div>
@@ -97,7 +115,6 @@ const Page = () => {
                 <ModalHome
                   open={open}
                   handleClose={handleClose}
-                  getBanners={getBanners}
                   setRenderedSections={setRenderedSections}
                   setAddSection={setAddSection}
                 />
@@ -121,13 +138,20 @@ const Page = () => {
             >
               Add Section
             </Button>
-            {open && <ModalHome open={open} handleClose={handleClose} />}
+            {open && (
+              <ModalHome
+                open={open}
+                handleClose={handleClose}
+                setAddSection={setAddSection}
+              />
+            )}
           </div>
           {open && (
             <ModalHome
               open={open}
               handleClose={handleClose}
               setRenderedSections={setRenderedSections}
+              setAddSection={setAddSection}
             />
           )}
         </div>

@@ -12,7 +12,7 @@
 
 /* Scrollbar Thumb */
 .sidebar::-webkit-scrollbar-thumb {
-  background-color: #1e2939; /* Change to your desired thumb color */
+  background-color: yellow; /* Change to your desired thumb color */
   border-radius: 4px;
 }
 
