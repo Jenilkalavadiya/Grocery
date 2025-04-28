@@ -1,10 +1,13 @@
 "use client";
+
 import { apiRequest } from "@/api/ApiCall";
+import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const page = ({ params }: any) => {
-  const { id } = params;
+const page = () => {
+  const { id } = useParams();
 
   const [userDetails, setUserDetails] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
@@ -15,9 +18,10 @@ const page = ({ params }: any) => {
         method: "get",
         url: `/get_user_details?id=${id}`,
       });
+      console.log("order", res);
       if (res?.data) {
-        setUserDetails(res?.data?.result[0]);
-        setOrders(res?.data?.result[0]?.order || []);
+        setUserDetails(res?.data?.data?.result[0]);
+        setOrders(res?.data?.data?.result[0]?.order || []);
       }
     } catch (error) {
       console.log(error);
@@ -33,13 +37,18 @@ const page = ({ params }: any) => {
 
   return (
     <div>
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-col px-2">
-          <h1 className="text-3xl font-bold">Users Details</h1>
-          <p className="text-gray-500 mt-2">
-            Dashboard <span className="text-gray-500 ml-5">Users</span>{" "}
-            <span className="text-black ml-5">Users Details</span>
-          </p>
+      <div className="flex mt-5 flex-row justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold !text-[#202020] mt-5 ">
+            Users Details
+          </h2>
+          <div className=" mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"users"}
+              className="flex"
+            />
+          </div>
         </div>
       </div>
       <div className="flex flex-row items-center justify-between shadow-lg">
@@ -49,7 +58,7 @@ const page = ({ params }: any) => {
             alt="user Photo"
             width={180}
             height={180}
-            className="rounded-full shadow-lg"
+            className="rounded-full p-4 "
           />
         </div>
         <div className="flex flex-col">
@@ -70,7 +79,7 @@ const page = ({ params }: any) => {
               alt="email"
               width={18}
               height={18}
-              className="mb-1"
+              className="ml-4"
             />
             <p className="ml-2 mb-2">{userDetails?.email}</p>
           </div>
@@ -85,19 +94,22 @@ const page = ({ params }: any) => {
             <p className="ml-2 mb-2">
               {userDetails?.address?.map((address: any, index: number) => (
                 <span key={index}>
-                  {address.address_line1}, {address.address_line2}{" "}
+                  {address?.address_line1}, {address?.address_line2}{" "}
                 </span>
               ))}
             </p>
           </div>
         </div>
         <div className="flex flex-row mr-15 ml-25 mb-20">
-          <p className="text-gray-400 ">Total Order: {orders?.length}</p>
+          <p className="text-gray-400 font-bold">
+            Total Order:{" "}
+            <span className="text-black font-bold">{orders?.length}</span>
+          </p>
           <p className="text-gray-400 ml-7 font-bold">
             Status:{" "}
-            {/* <span className="text-black font-bold">
-              {userDetails.is_active === 0 ? "Inactive" : "Active"}
-            </span> */}
+            <span className="text-black font-bold">
+              {userDetails?.is_active === 0 ? "Inactive" : "Active"}
+            </span>
           </p>
         </div>
       </div>
