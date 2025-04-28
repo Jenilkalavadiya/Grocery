@@ -84,15 +84,7 @@ export default function ResponsiveDrawer(props: Props) {
                       className="flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors hover:bg-gray-700"
                       onClick={() => handleCategoryToggle(item.name)}
                     >
-<<<<<<< HEAD
                       <img className="w-5 h-5" src={item.image} alt="" />
-=======
-                      <img
-                        className="ml-5"
-                        src={item.image}
-                        alt=""
-                      />
->>>>>>> 4bda37f1884c52648329566fb67ff2702a6bf12d
                       <span
                         className={`${
                           item.link === pathname

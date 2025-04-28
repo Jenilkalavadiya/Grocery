@@ -4,9 +4,7 @@ import dynamic from "next/dynamic";
 import { apiRequest } from "@/api/ApiCall";
 
 // Dynamically import the chart to prevent SSR issues
-const MyChart = dynamic(() => import("../../components/MyChart"), {
-  ssr: false,
-});
+
 const Dashboard = () => {
   const [num, setNum] = useState([]);
   const cards = [
