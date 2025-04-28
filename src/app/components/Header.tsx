@@ -78,7 +78,8 @@ function Header() {
     localStorage.clear();
     Cookies.remove("auth_token");
     Cookies.remove("refresh_token");
-    router.push("/");
+    window.location.href = "/";
+    // router.push("/");
     toast.success("Logout SuccessFully");
   };
 

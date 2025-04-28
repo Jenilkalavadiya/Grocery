@@ -93,7 +93,7 @@ const AddProducts = ({
         } else {
           toast.error(res?.data?.message);
         }
-      } catch (error:any) {
+      } catch (error: any) {
         console.log("Error: ", error);
         toast.error(error?.response?.data?.message);
       }
@@ -142,16 +142,16 @@ const AddProducts = ({
   };
 
   return (
-    <div className="bg-white shadow-xl p-4 mt-4 flex items-center justify-center">
+    <div className=" bg-white shadow-xl p-4 mt-4 flex items-center justify-center">
       <div>
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <h1 className="font-bold text-xl">
             {productId ? "Edit Product" : "Add Product"}
           </h1>
 
-          {/* Main Fields */}
+          {/* {/ Main Fields /} */}
           <div className="flex gap-8 flex-wrap">
-            {/* Name */}
+            {/* {/ Name /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Item Name</span>
               <input
@@ -168,7 +168,7 @@ const AddProducts = ({
               )}
             </div>
 
-            {/* Category */}
+            {/* {/ Category /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Category</span>
               <select
@@ -190,7 +190,7 @@ const AddProducts = ({
               )}
             </div>
 
-            {/* SubCategory */}
+            {/* {/ SubCategory /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Sub Category</span>
               <select
@@ -212,7 +212,7 @@ const AddProducts = ({
               )}
             </div>
 
-            {/* Brand */}
+            {/* {/ Brand /} */}
             <div className="flex flex-col mt-3 gap-2">
               <span className="text-gray-400 font-bold">Brand</span>
               <select
@@ -235,7 +235,7 @@ const AddProducts = ({
             </div>
           </div>
 
-          {/* Product Details */}
+          {/* {/ Product Details /} */}
           <div className="flex justify-between mt-3 items-center">
             <h2 className="text-xl font-bold">Product Details</h2>
             <div onClick={addProductDetail} className="cursor-pointer">
@@ -284,7 +284,7 @@ const AddProducts = ({
             </div>
           ))}
 
-          {/* Title & Description */}
+          {/* {/ Title & Description /} */}
           <h2 className="text-xl font-bold">Other Info</h2>
           <div className="flex gap-8 flex-wrap">
             <div className="flex flex-col mt-3 gap-2">
@@ -320,7 +320,7 @@ const AddProducts = ({
             </div>
           </div>
 
-          {/* Image Upload */}
+          {/* {/ Image Upload /} */}
           <label htmlFor="upload" className="w-[40%] cursor-pointer">
             <input
               type="file"
@@ -352,7 +352,7 @@ const AddProducts = ({
             )}
           </label>
 
-          {/* Status Toggle */}
+          {/* {/ Status Toggle /}  */}
           <div className="flex justify-between">
             <span className="text-gray-400 font-bold">Status</span>
             <label className="inline-flex items-center mb-5 cursor-pointer">
@@ -370,7 +370,7 @@ const AddProducts = ({
             </label>
           </div>
 
-          {/* Submit Buttons */}
+          {/* {/ Submit Buttons /}  */}
           <div className="flex gap-4 mt-6 justify-center">
             <button
               type="submit"

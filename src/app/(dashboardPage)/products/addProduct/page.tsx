@@ -105,7 +105,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="max-w-[1400px] mt-2 m-auto p-2">
+    <div className=" mt-2 m-auto p-2">
       <AddProducts
         brand={brand}
         category={category}

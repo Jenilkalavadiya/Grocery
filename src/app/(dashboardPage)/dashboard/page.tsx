@@ -1,20 +1,48 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import React, { useEffect, useMemo, useState } from "react";
 import { apiRequest } from "@/api/ApiCall";
-
-// Dynamically import the chart to prevent SSR issues
+import Link from "next/link"; // Import Link for routing
 
 const Dashboard = () => {
-  const [num, setNum] = useState([]);
-  const cards = [
-    { title: "Users", count: num?.user_count, icon: "👤" },
-    { title: "Products", count: num?.product_count, icon: "📦" },
-    { title: "Brands", count: num?.brands_count, icon: "🏷️" },
-    { title: "Coupon Management", count: num?.coupon_count, icon: "🎟️" },
-    { title: "Category", count: num?.category_count, icon: "🗂️" },
-    { title: "Sub Category", count: num?.sub_category_count, icon: "🧾" },
-  ];
+  const [num, setNum] = useState<any>([]);
+
+  const cards = useMemo(
+    () => [
+      { title: "Users", count: num?.user_count, icon: "👤", link: "/users" },
+      {
+        title: "Products",
+        count: num?.product_count,
+        icon: "📦",
+        link: "/products",
+      },
+      {
+        title: "Brands",
+        count: num?.brands_count,
+        icon: "🏷️",
+        link: "/brands",
+      },
+      {
+        title: "Coupon Management",
+        count: num?.coupon_count,
+        icon: "🎟️",
+        link: "/couponmanagment",
+      },
+      {
+        title: "Category",
+        count: num?.category_count,
+        icon: "🗂️",
+        link: "/category",
+      },
+      {
+        title: "Sub Category",
+        count: num?.sub_category_count,
+        icon: "🧾",
+        link: "/subcategory",
+      },
+      { title: "Orders", count: num?.order_count, icon: "🛒", link: "/orders" },
+    ],
+    [num]
+  );
 
   const getDashboard = async () => {
     const res = await apiRequest({
@@ -31,23 +59,25 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="p-6 min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="p-8 min-h-screen">
+        <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
           {cards.map((card, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-2xl">{card.icon}</span>
-                <h2 className="text-lg font-semibold">{card.title}</h2>
+            <Link key={index} href={card.link}>
+              <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between hover:shadow-2xl transition-all transform hover:scale-105 ease-in-out w-full max-w-[450px]">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-4xl">{card.icon}</span>
+                  <h2 className="text-xl font-semibold text-gray-700">
+                    {card.title}
+                  </h2>
+                </div>
+                <div className="text-4xl font-bold text-gray-900 mb-2">
+                  {card.count ? card.count : 0}
+                </div>
+                <div className="text-sm text-gray-500">Details</div>
               </div>
-              <span className="text-2xl">{card.count}</span>
-              <div className="text-3xl font-bold text-gray-700"></div>
-            </div>
+            </Link>
           ))}
-          {/* <MyChart /> */}
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
 "use client";
 
+import Link from "next/link";
 import TableLoading from "./TableLoading";
-
 const OrderItems = ({ order }: any) => {
   return (
     <div>
@@ -19,8 +19,8 @@ const OrderItems = ({ order }: any) => {
           </thead>
 
           <tbody>
-            {!order && (
-              // Show loading
+            {!order ? (
+              //  Loading state
               <tr>
                 <td colSpan={8} className="py-6">
                   <div className="flex justify-center items-center w-full">
@@ -28,6 +28,48 @@ const OrderItems = ({ order }: any) => {
                   </div>
                 </td>
               </tr>
+            ) : order?.result?.length === 0 ? (
+              //  No data found state
+              <tr>
+                <td colSpan={8} className="py-6 text-center text-gray-500">
+                  No brands found.
+                </td>
+              </tr>
+            ) : (
+              // Show data
+              order?.result?.map((item: any) => (
+                <tr
+                  key={item.Order_no}
+                  className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+                >
+                  <td className="px-4 py-3 text-sm  border-gray-200">
+                    <Link href={`/orders/${item?.Order_no}`}>
+                      {item?.Order_no}
+                    </Link>
+                  </td>
+
+                  <td className="px-4 py-3 text-md  border-gray-200 ">
+                    {new Date(item?.Date).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-gray-200 ">
+                    {item?.Firstname} {item?.Lastname}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-gray-200 ">
+                    ${item?.Total_Amount}
+                  </td>
+                  <td className="px-4 py-3 text-md  border-gray-200 ">
+                    {item?.Payment_type === 0 ? "Cash" : "Card"}
+                  </td>
+
+                  <td
+                    className={`py-3 px-4 text-md 
+       ${ item.Status === 0? "text-orange-500": item.Status === 1 ? "text-red-800": item.Status === 3 ? "text-green-800" : ""
+       }`}
+                  >
+                    {item.Status === 0? "Preparing": item.Status === 1? "Reject" : item.Status === 3 ? "Completed" : ""}
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>

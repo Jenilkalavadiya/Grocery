@@ -1,12 +1,32 @@
 "use client";
+import { apiRequest } from "@/api/ApiCall";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import OrderItems from "@/app/components/OrderItems";
 import { Pagination, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
   const [page, setPage] = useState(1);
     const [order, setOrder] = useState<any>();
+
+
+    const getOrderList = async () => {
+      try {
+        const res = await apiRequest({
+          method: "get",
+          url: `/get_orders`,
+        });
+        console.log("order", res.data.data);
+        setOrder(res?.data?.data)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    useEffect(() => {
+      getOrderList();
+    }, []);
+  
   
   return (
     <div className="text-black">

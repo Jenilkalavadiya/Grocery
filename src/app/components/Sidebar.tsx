@@ -9,6 +9,7 @@ import { useState } from "react";
 import Grocery from "../../../public/Path 410.png";
 import Image from "next/image";
 import styles from "@/styles/sidebar.module.css";
+
 const sidebarItems = [
   { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
   { name: "Users", image: "./images/2.svg", link: "/users" },

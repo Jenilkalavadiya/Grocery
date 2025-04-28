@@ -3,7 +3,7 @@
 import { apiRequest } from "@/api/ApiCall";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const page = () => {
@@ -11,6 +11,9 @@ const page = () => {
 
   const [userDetails, setUserDetails] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
+  const pathname = usePathname();
+
+  const isUserDetailsPage = pathname.startsWith("/users/");
 
   const getUserDetails = async () => {
     try {
@@ -46,6 +49,7 @@ const page = () => {
             <CustomSeparator
               value1={"dashboard"}
               value2={"users"}
+              value3={isUserDetailsPage ? "UserDetails" : undefined}
               className="flex"
             />
           </div>
@@ -152,9 +156,24 @@ const page = () => {
                   {order.payment_type === 0 ? "Cash" : "Card"}
                 </td>
                 <td
-                  className={`py-3 px-4 text-md ${order.order_status === 3 ? "text-green-800" : "text-red-800"}`}
+                  className={`py-3 px-4 text-md 
+       ${
+         order.order_status === 0
+           ? "text-orange-500"
+           : order.order_status === 1
+             ? "text-red-800"
+             : order.order_status === 3
+               ? "text-green-800"
+               : ""
+       }`}
                 >
-                  {order.order_status === 3 ? "Completed" : "Pending"}
+                  {order.order_status === 0
+                    ? "Preparing"
+                    : order.order_status === 1
+                      ? "Reject"
+                      : order.order_status === 3
+                        ? "Completed"
+                        : ""}
                 </td>
               </tr>
             ))}
