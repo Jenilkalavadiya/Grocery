@@ -48,14 +48,14 @@ const GetProduct = ({ product, getProduct }: any) => {
       });
 
       if (res?.status === 200) {
-        toast.success("Stock status updated");
+        toast.success("product status updated");
         getProduct();
       } else {
-        toast.error("Status update failed");
+        toast.error("product update failed");
       }
-    } catch (err) {
-      console.error("Status update error:", err);
-      toast.error("Error updating status");
+    } catch (err: any) {
+      console.error("product update error:", err);
+      toast.error(err?.response?.data?.message);
     }
   };
 
@@ -76,7 +76,6 @@ const GetProduct = ({ product, getProduct }: any) => {
         </thead>
         <tbody>
           {!product ? (
-            
             <tr>
               <td colSpan={8} className="py-6">
                 <div className="flex justify-center items-center w-full">
@@ -85,14 +84,12 @@ const GetProduct = ({ product, getProduct }: any) => {
               </td>
             </tr>
           ) : product?.result?.length === 0 ? (
-            
             <tr>
               <td colSpan={8} className="py-6 text-center text-gray-500">
                 No products found.
               </td>
             </tr>
           ) : (
-            
             product?.result?.map((item: any) => (
               <tr
                 key={item?.Id}

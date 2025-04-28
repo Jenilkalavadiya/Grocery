@@ -1,95 +1,168 @@
 "use client";
+
+import { apiRequest } from "@/api/ApiCall";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
-import React from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const page = () => {
-  return (
-    <>
-      <div className="flex justify-between p-4 items-center w-[100%] mt-[30px]">
-        <div className="w-full px-6">
-          <div>
-            <h2 className="text-3xl font-bold !text-[#202020]">Users</h2>
-            <div className=" mt-2">
-              <CustomSeparator
-                value1={"dashboard"}
-                value2={"users"}
-                value3={"user details"}
-                className="flex"
-              />
-            </div>
-          </div>
+  const { id } = useParams();
 
-          <div className="overflow-x-auto shadow-2xl mt-6">
-            <div className="min-w-full bg-white h-[220px] flex">
-              <div className="flex items-center ml-5">
-                <Image
-                  src="/user.png"
-                  alt="user Photo"
-                  width={180}
-                  height={180}
-                />
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-black font-bold text-2xl md:mr-60 lg:mr-130 mt-10 ml-4">
-                  Virat Kohli
-                </h1>
-                <div className="flex flex-row items-center ml-4">
-                  <Image
-                    src="/images/phoneicon.png"
-                    alt="mobile"
-                    height={8}
-                    width={18}
-                    className="mb-2 mt-6"
-                  />{" "}
-                  <p className="text-xl mt-4 ml-3">9090909090</p>
-                  <Image
-                    src="/images/mailicon.png"
-                    alt="mail"
-                    height={8}
-                    width={18}
-                    className="mb-2 mt-6 ml-10"
-                  />{" "}
-                  <p className="text-xl mt-4 ml-4">abc123@gmail.com{}</p>
-                </div>
-                <div className="flex flex-row items-center  ml-4">
-                  <Image
-                    src="/images/locationicon.png"
-                    alt="address"
-                    height={8}
-                    width={18}
-                    className="mb-2 mt-6"
-                  />
-                  <p className="text-xl mt-4 ml-4">
-                    31/outer ring road indl A,Delhi,Mumbai,111021,India
-                  </p>
-                </div>
-              </div>
-              <div className="w-[400px] flex justify-end mt-10 ml-4 gap-[76px] text-xl">
-                <p className="">Total Order:{}</p>
-                <p className="">Status{}</p>
-              </div>
-            </div>
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [orders, setOrders] = useState<any[]>([]);
+
+  const getUserDetails = async () => {
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_user_details?id=${id}`,
+      });
+      console.log("order", res);
+      if (res?.data) {
+        setUserDetails(res?.data?.data?.result[0]);
+        setOrders(res?.data?.data?.result[0]?.order || []);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, [id]);
+
+  console.log("User Details:", userDetails);
+  console.log("Orders:", orders);
+
+  return (
+    <div>
+      <div className="flex mt-5 flex-row justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold !text-[#202020] mt-5 ">
+            Users Details
+          </h2>
+          <div className=" mt-2">
+            <CustomSeparator
+              value1={"dashboard"}
+              value2={"users"}
+              className="flex"
+            />
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto ">
-        <table className="min-w-full bg-white rounded-2xl ">
-          <thead className="bg-[#FAFAFA] text-[#202020]">
-            <tr className="text-md  font-bold border-gray-300">
-              <th className="px-4 py-3 w-[150px]">Order. No</th>
-              <th className="px-6 py-3 text-left w-[255px]">Date</th>
-              <th className="px-6 py-3 text-left w-[305px]">User Details</th>
-              <th className="px-4 py-3 text-left ">Amount</th>
-
-              <th className="px-4 py-3 text-left">Payment Type</th>
-              <th className="px-4 py-3 text-left">Status</th>
+      <div className="flex flex-row items-center justify-between shadow-lg">
+        <div>
+          <Image
+            src="/user.png"
+            alt="user Photo"
+            width={180}
+            height={180}
+            className="rounded-full p-4 "
+          />
+        </div>
+        <div className="flex flex-col">
+          <h1 className="text-black font-bold text-2xl md:mr-60 lg:mr-130 mb-3">
+            {userDetails?.firstname} {userDetails?.lastname}
+          </h1>
+          <div className="flex flex-row items-center">
+            <Image
+              src="/images/phoneicon.png"
+              alt="mobile"
+              width={18}
+              height={18}
+              className="mb-1"
+            />
+            <p className="ml-2 mb-2">{userDetails?.mobile_no}</p>
+            <Image
+              src="/images/mailicon.png"
+              alt="email"
+              width={18}
+              height={18}
+              className="ml-4"
+            />
+            <p className="ml-2 mb-2">{userDetails?.email}</p>
+          </div>
+          <div className="flex flex-row items-center">
+            <Image
+              src="/images/locationicon.png"
+              alt="address"
+              width={18}
+              height={18}
+              className="mb-1"
+            />
+            <p className="ml-2 mb-2">
+              {userDetails?.address?.map((address: any, index: number) => (
+                <span key={index}>
+                  {address?.address_line1}, {address?.address_line2}{" "}
+                </span>
+              ))}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-row mr-15 ml-25 mb-20">
+          <p className="text-gray-400 font-bold">
+            Total Order:{" "}
+            <span className="text-black font-bold">{orders?.length}</span>
+          </p>
+          <p className="text-gray-400 ml-7 font-bold">
+            Status:{" "}
+            <span className="text-black font-bold">
+              {userDetails?.is_active === 0 ? "Inactive" : "Active"}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div>
+        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-5">
+          <thead>
+            <tr>
+              <th className="py-3 px-4 text-left text-md font-semibold text-black">
+                Order No.
+              </th>
+              <th className="py-3 px-4 text-left text-md font-semibold text-black">
+                Date
+              </th>
+              <th className="py-3 px-4 text-left text-md font-semibold text-black">
+                User Details
+              </th>
+              <th className="py-3 px-4 text-left text-md font-semibold text-black">
+                Amount
+              </th>
+              <th className="py-3 px-4 text-left text-md font-semibold text-black">
+                Payment Type
+              </th>
+              <th className="py-3 px-4 text-left text-md font-semibold text-black">
+                Status
+              </th>
             </tr>
           </thead>
-          <tbody>{/* Content */}</tbody>
+          <tbody>
+            {orders?.map((order: any, index: number) => (
+              <tr key={index}>
+                <td className="py-3 px-4 text-md">{order.order_no}</td>
+                <td className="py-3 px-4 text-md">
+                  {new Date(order.created_date).toLocaleDateString()}
+                </td>
+                <td className="py-3 px-4 text-md">
+                  {userDetails?.firstname} {userDetails?.lastname}
+                </td>
+                <td className="py-3 px-4 text-md">{order.grand_total}</td>
+                <td className="py-3 px-4 text-md">
+                  {order.payment_type === 0 ? "Cash" : "Card"}
+                </td>
+                <td
+                  className={`py-3 px-4 text-md ${order.order_status === 3 ? "text-green-800" : "text-red-800"}`}
+                >
+                  {order.order_status === 3 ? "Completed" : "Pending"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
+        <div className="flex justify-end bottom-0 top-100"></div>
       </div>
-    </>
+    </div>
   );
 };
 

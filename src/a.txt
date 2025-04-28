@@ -1,46 +1,39 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+ <Image
+                src="/user.png"
+                alt="user Photo"
+                width={180}
+                height={180}
+                className="rounded-full shadow-lg"
+              />
+            </div>
 
-export function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
-  const isAdminLoggedIn = !!req.cookies.get("auth_token");
-
-  const restrictedPaths = [
-    "/dashboard",
-    "/users",
-    "/products",
-    "/couponmanagment",
-    "/homemanagement",
-    "/orders",
-    "/pages",
-    "/category",
-    "/subcategory",
-    "/brands",
-  ];
-
-  if (restrictedPaths.includes(pathname) && !isAdminLoggedIn) {
-    return NextResponse.redirect(new URL("/", req.url)); // Redirect to login
-  }
-
-  if (pathname === "/" && isAdminLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
-  }
-
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: [
-    "/", // Login page
-    "/dashboard",
-    "/users",
-    "/products",
-    "/couponmanagment",
-    "/homemanagement",
-    "/orders",
-    "/pages",
-    "/category",
-    "/subcategory",
-    "/brands",
-  ],
-};
+            {/* User Details */}
+            <div className="flex flex-col lg:ml-8">
+              <h1 className="text-3xl font-bold text-gray-800">{`${userDetail?.firstname} ${userDetail?.lastname}`}</h1>
+              <div className="mt-4 flex items-center gap-6 text-lg text-gray-600">
+                <Image
+                  src="/images/phoneicon.png"
+                  alt="mobile"
+                  width={18}
+                  height={18}
+                  className="mb-1"
+                />
+                <p>{userDetail.mobile_no}</p>
+              </div>
+              <div className="mt-4 flex items-center gap-6 text-lg text-gray-600">
+                <Image
+                  src="/images/mailicon.png"
+                  alt="email"
+                  width={18}
+                  height={18}
+                  className="mb-1"
+                />
+                <p>{userDetail.email}</p>
+              </div>
+              <div className="mt-4 flex items-center gap-6 text-lg text-gray-600">
+                <Image
+                  src="/images/locationicon.png"
+                  alt="address"
+                  width={18}
+                  height={18}
+                  className="mb-1"

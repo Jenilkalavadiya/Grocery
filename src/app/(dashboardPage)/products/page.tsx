@@ -57,7 +57,7 @@ const page = () => {
           </div>
         </div>
 
-        {/* SEARCH USERS INPUT ***************** */}
+        {/* SEARCH Produucts INPUT ***************** */}
 
         <div className="searchfiled flex gap-3">
           <div className="border border-[#DADDE1] bg-white flex justify-center">
