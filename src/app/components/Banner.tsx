@@ -17,8 +17,9 @@ const Banner = ({ component, getComponents }: any) => {
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=1`,
     });
-    getComponents();
+
     toast.success("Banner Deleted");
+    getComponents();
   };
 
   // console.log("Addsection", banner);

@@ -61,7 +61,7 @@ const page = () => {
       {/* SERCH INPUT  */}
       <div className="flex justify-between items-center w-[100%] mt-[30px]">
         <div>
-          <h2 className="text-3xl font-bold !text-[#202020]">Categories</h2>
+          <h2 className="text-3xl font-bold !text-[#202020] ">Categoriesdkfjghkjghhjs</h2>
           <div className="mt-2">
             <CustomSeparator
               value1={"dashboard"}

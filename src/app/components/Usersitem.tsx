@@ -21,10 +21,10 @@ const Usersitem = ({ user, getUsers }: any) => {
       console.log("status", res);
       if (res?.status === 200) {
         toast.success(res?.data?.data?.message);
+        // getUsers();
       } else {
         toast.error("Status update failed");
       }
-      getUsers();
     } catch (err: any) {
       console.error("Status update error:", err);
       toast.error(err?.response?.data?.message);

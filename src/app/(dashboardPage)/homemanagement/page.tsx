@@ -1,31 +1,145 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import ModalHome from "@/utils/ModalHome";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import { DialogActions } from "@mui/material";
 import Banner from "@/app/components/Banner";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import ShopByCategory from "@/app/components/ShopByCategory";
 import Advertisment from "@/app/components/Advertisment";
 import BrandHomemange from "@/app/components/BrandHomemange";
 import { apiRequest } from "@/api/ApiCall";
+
+const sectionIdMap: Record<string, number> = {
+  banner: 1,
+  category: 2,
+  brand: 3,
+  advertise: 4,
+};
+
+const modalStyle = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 interface Banners {
   Image: string;
   Section_Name: string;
   Id: number;
 }
+
+interface AddSectionModalProps {
+  open: boolean;
+  handleClose: () => void;
+  setRenderedSections: React.Dispatch<React.SetStateAction<string[]>>;
+  renderedSections: string[];
+}
+
+const AddSectionModal: React.FC<AddSectionModalProps> = ({
+  open,
+  handleClose,
+  setRenderedSections,
+  renderedSections,
+}) => {
+  const [selectedSection, setSelectedSection] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedSection(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSection) return;
+
+    setRenderedSections((prev) => {
+      if (prev.includes(selectedSection)) return prev;
+      return [...prev, selectedSection];
+    });
+
+    await apiRequest({
+      method: "post",
+      url: "/add_section",
+      data: { id: sectionIdMap[selectedSection] },
+    });
+
+    setSelectedSection("");
+    handleClose();
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Box sx={modalStyle} className="!p-0 !border-none !w-[415px]">
+        <form
+          className="flex flex-col bg-white py-6 justify-center items-center text-xl"
+          onSubmit={handleSubmit}
+        >
+          <h1 className="text-2xl font-bold">Add Section</h1>
+          <div className="flex flex-col justify-start mt-5 space-y-5">
+            {Object.keys(sectionIdMap).map((key, index) => (
+              <div className="flex flex-row space-x-5 justify-start" key={key}>
+                <input
+                  type="radio"
+                  name="section"
+                  value={key}
+                  id={String(index + 1)}
+                  checked={selectedSection === key}
+                  onChange={handleChange}
+                  disabled={renderedSections.includes(key)}
+                />
+
+                <label htmlFor={String(index + 1)}>
+                  {key === "banner"
+                    ? "Slider with Banner"
+                    : key === "category"
+                      ? "Shop By Category"
+                      : key === "brand"
+                        ? "Slider with Brand"
+                        : "Slider with Advertisement"}
+                </label>
+              </div>
+            ))}
+          </div>
+          <DialogActions>
+            <div className="flex justify-center items-center mt-5">
+              <button
+                type="submit"
+                className="px-6 py-2 bg-amber-400 font-bold"
+              >
+                Submit
+              </button>
+            </div>
+          </DialogActions>
+        </form>
+      </Box>
+    </Modal>
+  );
+};
+
+// Main Page Component Cheee
 const Page = () => {
   const [open, setOpen] = useState(false);
   const [renderedSections, setRenderedSections] = useState<string[]>([]);
-  const [addSection, setAddSection] = useState();
+  const [componentsData, setComponentsData] = useState<
+    Record<string, Banners[]>
+  >({});
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [component, setComponent] = useState<Banners[]>([]);
 
-  // Local Storage Logic
+  const hasAddedSection = renderedSections.length > 0;
+
   useEffect(() => {
-    const savedSections = localStorage.getItem("renderedSections");
-    if (savedSections) {
-      setRenderedSections(JSON.parse(savedSections));
+    const saved = localStorage.getItem("renderedSections");
+    if (saved) {
+      setRenderedSections(JSON.parse(saved));
     }
   }, []);
 
@@ -33,37 +147,54 @@ const Page = () => {
     localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
   }, [renderedSections]);
 
-  const getComponents = async () => {
-    const res = await apiRequest({
-      method: "get",
-      url: `/get_all_home_management?fk_section_id=${addSection}`,
-    });
-    const response = res?.data?.data;
-    console.log(
-      "/get_all_home_management?fk_section_id=${addSection}",
-      response?.result
+  const fetchAll = async () => {
+    const dataMap: Record<string, Banners[]> = {};
+
+    await Promise.all(
+      renderedSections.map(async (section) => {
+        const sectionId = sectionIdMap[section];
+        try {
+          const res = await apiRequest({
+            method: "get",
+            url: `/get_all_home_management?fk_section_id=${sectionId}`,
+          });
+          dataMap[section] = res?.data?.data?.result || [];
+        } catch (err) {
+          console.error(`Error fetching section ${section}`, err);
+        }
+      })
     );
-    setComponent(response?.result);
+
+    setComponentsData(dataMap);
   };
-  // console.log("BANNER", component);
+  useEffect(() => {
+    if (renderedSections.length > 0) {
+      fetchAll();
+    }
+  }, [renderedSections]);
+
   const renderComponent = (section: string) => {
+    const data = componentsData[section] || [];
+
     switch (section) {
       case "banner":
         return (
-          <Banner
-            key="banner"
-            component={component}
-            getComponents={getComponents}
-          />
+          <Banner key="banner" component={data} getComponents={() => {}} />
         );
       case "category":
-        return <ShopByCategory key="category" />;
+        return (
+          <ShopByCategory
+            key="category"
+            component={data}
+            getComponents={() => {}}
+          />
+        );
       case "advertise":
         return (
           <Advertisment
             key="advertise"
-            component={component}
-            getComponents={getComponents}
+            component={data}
+            getComponents={() => {}}
           />
         );
       case "brand":
@@ -73,17 +204,10 @@ const Page = () => {
     }
   };
 
-  const hasAddedSection = renderedSections.length > 0;
-
-  useEffect(() => {
-    getComponents();
-  }, [addSection]);
-
   return (
     <div>
-      {/* Conditional Section - Only show initial screen if no section is added */}
       {!hasAddedSection ? (
-        <div className="flex items-center justify-center px-7 py-5 mt-15 h-[75vh]">
+        <div className="flex items-center justify-center px-7 py-5 mt-15 h-[calc(100vh-180px)]">
           <div className="flex flex-col justify-center items-center bg-white shadow-md w-[420px] py-10">
             <h1 className="text-[30px] font-bold tracking-wide">
               Home Management
@@ -111,19 +235,10 @@ const Page = () => {
               >
                 Add Section
               </Button>
-              {open && (
-                <ModalHome
-                  open={open}
-                  handleClose={handleClose}
-                  setRenderedSections={setRenderedSections}
-                  setAddSection={setAddSection}
-                />
-              )}
             </div>
           </div>
         </div>
       ) : (
-        // New Layout wrapper if at least one section is added
         <div className="flex justify-between items-center w-[100%] mt-[30px]">
           <div>
             <h2 className="text-3xl font-bold !text-[#202020]">
@@ -138,26 +253,17 @@ const Page = () => {
             >
               Add Section
             </Button>
-            {open && (
-              <ModalHome
-                open={open}
-                handleClose={handleClose}
-                setAddSection={setAddSection}
-              />
-            )}
           </div>
-          {open && (
-            <ModalHome
-              open={open}
-              handleClose={handleClose}
-              setRenderedSections={setRenderedSections}
-              setAddSection={setAddSection}
-            />
-          )}
         </div>
       )}
 
-      {/* Render dynamic sections below */}
+      <AddSectionModal
+        open={open}
+        handleClose={handleClose}
+        setRenderedSections={setRenderedSections}
+        renderedSections={renderedSections}
+      />
+
       <div className="mt-10 overflow-hidden">
         {renderedSections.map((section) => renderComponent(section))}
       </div>
