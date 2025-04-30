@@ -73,7 +73,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {Object.keys(num).length > 0
           ? cards.map((card, index) => (
-            <Link>
+            <Link key={index} href={card.link}>
               <div
                 key={index}
                 className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
