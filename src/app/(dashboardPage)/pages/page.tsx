@@ -2,14 +2,15 @@
 
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import EditorPages from "@/app/components/EditorPages";
+import withAuth from "@/protected/withAuth";
 import { Button } from "@mui/material";
 import ImageNext from "next/image";
 
-export default function EditorPage() {
+function EditorPage() {
   return (
-    <div className="text-black">
+    <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px]">
         <div>
           <h2 className="text-3xl  font-bold !text-[#202020]">Pages</h2>
           <div className="mt-2">
@@ -36,3 +37,4 @@ export default function EditorPage() {
     </div>
   );
 }
+export default withAuth(EditorPage);

@@ -9,8 +9,9 @@ import axios from "axios";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
 import icon from "../../../../public/images/search.svg";
+import withAuth from "@/protected/withAuth";
 
-export default function users() {
+ function users() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<any>();
@@ -37,12 +38,12 @@ export default function users() {
   useEffect(() => {
     getUsers();
   }, [page, search]);
-  console.log("Userslist",user)
+  console.log("Userslist", user);
 
   return (
-    <div className="text-black">
+    <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Users</h2>
           <div className=" mt-2">
@@ -92,3 +93,4 @@ export default function users() {
     </div>
   );
 }
+export default withAuth(users)

@@ -8,6 +8,7 @@ import Subcategoryitem from "@/app/components/Subcategoryitem";
 import Button from "@mui/material/Button";
 import ModalSubCategory from "@/utils/ModalSubCategory";
 import CustomSeparator from "@/app/components/Bradcrumbs";
+import withAuth from "@/protected/withAuth";
 function subcategory() {
   const [search, setSearch] = useState("");
   const [subcategory, setSubCategory] = useState<SubcategoryResponse>();
@@ -71,8 +72,8 @@ function subcategory() {
   }, [page, search]);
   console.log("subcategory", subcategory);
   return (
-    <div className="text-black h-[calc(100vh-120px)]">
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+    <div className="text-black h-[calc(100vh-111px)]">
+      <div className="flex justify-between items-center w-[100%] my-[30px]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Sub Categories</h2>
           <div className="mt-2">
@@ -146,4 +147,4 @@ function subcategory() {
   );
 }
 
-export default subcategory;
+export default withAuth(subcategory);

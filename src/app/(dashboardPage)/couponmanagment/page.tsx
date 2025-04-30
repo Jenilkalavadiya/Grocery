@@ -8,7 +8,7 @@ import GetCoupon from "@/app/components/GetCoupon";
 import { apiRequest } from "@/api/ApiCall";
 import { Button } from "@mui/material";
 import ModalCoupon from "@/utils/ModalCoupon";
-
+import withAuth from "@/protected/withAuth";
 const page = () => {
   const [page, setPage] = useState(1);
   const [coupon, setCoupon] = useState<any>(null);
@@ -35,9 +35,9 @@ const page = () => {
     getCoupon();
   }, [page]);
   return (
-    <div className="text-black">
+    <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px]">
         <div>
           <h2 className="text-3xl  font-bold !text-[#202020]">
             Coupon Management
@@ -97,4 +97,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

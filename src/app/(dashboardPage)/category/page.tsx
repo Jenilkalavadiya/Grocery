@@ -9,6 +9,7 @@ import ModalCategory from "@/utils/ModalCategory";
 import Image from "next/image";
 import icon from "../../../../public/search.png";
 import CustomSeparator from "@/app/components/Bradcrumbs";
+import withAuth from "@/protected/withAuth";
 
 const page = () => {
   const [search, setSearch] = useState("");
@@ -57,11 +58,11 @@ const page = () => {
   }, [page, search]);
 
   return (
-    <div className="text-black">
+    <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px] ">
         <div>
-          <h2 className="text-3xl font-bold !text-[#202020] ">Categoriesdkfjghkjghhjs</h2>
+          <h2 className="text-3xl font-bold !text-[#202020] ">Categories</h2>
           <div className="mt-2">
             <CustomSeparator
               value1={"dashboard"}
@@ -120,7 +121,7 @@ const page = () => {
       </div>
 
       {/* // PAGINATION ******* */}
-      <div className="flex justify-end mt-6 mr-8 mb-8">
+      <div className="flex justify-end my-6 mr-8">
         <Stack spacing={2}>
           <Pagination
             count={Math.ceil(Number(category?.Total_Count) / 5)}
@@ -135,4 +136,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

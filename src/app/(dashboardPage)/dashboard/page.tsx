@@ -5,6 +5,7 @@ import { apiRequest } from "@/api/ApiCall";
 import { Skeleton } from "@mui/material";
 import CountUp from "react-countup";
 import { toast } from "react-toastify";
+import withAuth from "../../../protected/withAuth";
 // Dynamically import the chart to prevent SSR issues
 
 const Dashboard = () => {
@@ -70,4 +71,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

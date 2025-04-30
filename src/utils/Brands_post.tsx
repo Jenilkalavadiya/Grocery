@@ -7,6 +7,7 @@ import uploadImage from "../../public/images/upload.png";
 import { useFormik } from "formik";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 const style = {
   position: "absolute",
   top: "50%",
@@ -19,27 +20,32 @@ const style = {
   p: 4,
 };
 
-export default function BannerModal({ open, handleClose, getComponents }: any) {
-  const { values, handleBlur, handleSubmit, setFieldValue } = useFormik({
-    initialValues: { image: null },
-    onSubmit: async (values) => {
-      console.log(values);
-      const formData = new FormData();
-      if (values?.image) {
-        formData.append("image", values.image);
-        formData.append("fk_section_id", "1");
-      }
-      const res = await apiRequest({
-        method: "post",
-        url: "/add_home_management",
-        data: formData,
-      });
-      // console.log("Response", res);
-      getComponents();
-      toast.success(res?.data?.data?.MESSAGE);
-      handleClose();
-    },
-  });
+export default function Brands_post({ open, handleClose, getComponents }: any) {
+  const [category, setCategory] = React.useState([]);
+  const { values, handleBlur, handleSubmit, setFieldValue, handleChange } =
+    useFormik({
+      initialValues: { image: null },
+      onSubmit: async (values) => {
+        console.log(values);
+        const formData = new FormData();
+        if (values?.image) {
+          //   formData.append("fk_category_id", values.category);
+          formData.append("fk_section_id", "3");
+          //   formData.append("offer", values.offer);
+          formData.append("image", values.image);
+        }
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_home_management",
+          data: formData,
+        });
+        // console.log("Response", res);
+        getComponents();
+        toast.success(res?.data?.data?.MESSAGE);
+        handleClose();
+      },
+    });
+
   return (
     <div>
       <Modal
@@ -55,6 +61,7 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
                 <Image src={close} alt="close" width={18} height={25} />
               </button>
             </div>
+            <h1 className="text-center text-2xl font-bold">Add New</h1>
             <input
               type="file"
               name="image"
@@ -96,6 +103,7 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
                 </div>
               )}
             </label>
+
             <div className="flex mt-5">
               <button type="submit" className="w-[350px] bg-amber-300 p-3">
                 Save

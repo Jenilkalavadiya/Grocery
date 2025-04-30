@@ -10,6 +10,7 @@ import icon from "../../../../public/images/search.svg";
 import ModalBrand from "@/utils/ ModalBrand";
 import Image from "next/image";
 import CustomSeparator from "@/app/components/Bradcrumbs";
+import withAuth from "@/protected/withAuth";
 
 const page = () => {
   const [search, setSearch] = useState("");
@@ -101,7 +102,7 @@ const page = () => {
   return (
     <div className="text-black">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px] h-[calc[]]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Brands</h2>
           <div className=" mt-2">
@@ -177,4 +178,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

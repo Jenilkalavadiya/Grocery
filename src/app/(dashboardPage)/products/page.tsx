@@ -13,6 +13,7 @@ import { apiRequest } from "@/api/ApiCall";
 import Image from "next/image";
 import icon from "../../../../public/images/search.svg";
 import { Button } from "@mui/material";
+import withAuth from "@/protected/withAuth";
 
 const page = () => {
   const [search, setSearch] = useState("");
@@ -43,9 +44,9 @@ const page = () => {
 
   const router = useRouter();
   return (
-    <div className="text-black">
+    <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px]">
         <div>
           <h2 className="text-3xl  font-bold !text-[#202020]">Products</h2>
           <div className=" mt-2">
@@ -106,4 +107,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

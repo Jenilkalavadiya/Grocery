@@ -10,6 +10,7 @@ import ShopByCategory from "@/app/components/ShopByCategory";
 import Advertisment from "@/app/components/Advertisment";
 import BrandHomemange from "@/app/components/BrandHomemange";
 import { apiRequest } from "@/api/ApiCall";
+import withAuth from "@/protected/withAuth";
 
 const sectionIdMap: Record<string, number> = {
   banner: 1,
@@ -179,14 +180,14 @@ const Page = () => {
     switch (section) {
       case "banner":
         return (
-          <Banner key="banner" component={data} getComponents={() => {}} />
+          <Banner key="banner" component={data} getComponents={fetchAll} />
         );
       case "category":
         return (
           <ShopByCategory
             key="category"
             component={data}
-            getComponents={() => {}}
+            getComponents={fetchAll}
           />
         );
       case "advertise":
@@ -194,11 +195,12 @@ const Page = () => {
           <Advertisment
             key="advertise"
             component={data}
-            getComponents={() => {}}
+            getComponents={fetchAll}
           />
         );
       case "brand":
-        return <BrandHomemange key="brand" />;
+        return <BrandHomemange key="brand"  component={data}
+        getComponents={fetchAll}/>;
       default:
         return null;
     }
@@ -239,7 +241,7 @@ const Page = () => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-between items-center w-[100%] mt-[30px]">
+        <div className="flex justify-between items-center w-[100%] my-[40px]">
           <div>
             <h2 className="text-3xl font-bold !text-[#202020]">
               Home Management
@@ -264,11 +266,11 @@ const Page = () => {
         renderedSections={renderedSections}
       />
 
-      <div className="mt-10 overflow-hidden">
+      <div className="h-[calc(100vh-205px)] ">
         {renderedSections.map((section) => renderComponent(section))}
       </div>
     </div>
   );
 };
 
-export default Page;
+export default withAuth(Page);
