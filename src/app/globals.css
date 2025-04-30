@@ -9,3 +9,24 @@ body {
   padding: 0;
   font-family: "Poppins", sans-serif;
 }
+
+::selection {
+  background: #f3cd22 !important;
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  border-radius: 50px;
+  width: 10px;
+  height: 10px;
+  background-color: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f3cd22;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}

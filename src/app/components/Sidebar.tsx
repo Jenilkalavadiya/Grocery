@@ -65,68 +65,29 @@ export default function ResponsiveDrawer(props: Props) {
     setActiveCategory(activeCategory === categoryName ? null : categoryName);
   };
   const drawer = (
-    <div>
-      <List className={` !p-0 !m-0 `}>
-        <div className="min-h-screen py-6 bg-gray-800">
-          {/* Logo */}
-          <div className="mb-8 sticky top-0 z-50 bg-gray-800">
-            <Link href="#" className="flex items-center justify-center">
-              <Image src={Grocery} width={150} height={100} alt="Logo" />
-            </Link>
-          </div>
+    <div className="bg-gray-800 h-screen">
+      <List disablePadding className="bg-gray-800">
+        {/* Logo */}
+        <div className="sticky top-0 z-50 py-4.5">
+          <Link href="#" className="flex items-center justify-center">
+            <Image src={Grocery} width={150} height={100} alt="Logo" />
+          </Link>
+        </div>
 
-          {/* Sidebar Items */}
-          <ul className="space-y-4 overflow-y-auto text-lg font-medium leading-6 h-[calc(100vh-150px)] px-4 text-gray-300">
-            {sidebarItems.map((item, index) => (
-              <li key={index}>
-                {item.isCategory ? (
-                  <div className="flex flex-col">
-                    <div
-                      className="flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors hover:bg-gray-700"
-                      onClick={() => handleCategoryToggle(item.name)}
-                    >
-                      <img className="w-5 h-5" src={item.image} alt="" />
-                      <span
-                        className={`${
-                          item.link === pathname
-                            ? "text-yellow-400 font-semibold"
-                            : "text-gray-300"
-                        }`}
-                      >
-                        {item.name}
-                      </span>
-                    </div>
-
-                    {activeCategory === item.name && (
-                      <div className="ml-10 mt-2 space-y-2 text-sm">
-                        <Link
-                          href="/category"
-                          className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
-                            pathname === "/category"
-                              ? "text-yellow-400 bg-gray-700"
-                              : "text-gray-300"
-                          }`}
-                        >
-                          Category
-                        </Link>
-                        <Link
-                          href="/subcategory"
-                          className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
-                            pathname === "/subcategory"
-                              ? "text-yellow-400 bg-gray-700"
-                              : "text-gray-300"
-                          }`}
-                        >
-                          Sub Category
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover:bg-gray-700">
-                    <img className="w-5 h-5" src={item.image} alt="icon" />
-                    <Link
-                      href={item.link}
+        {/* Sidebar Items */}
+        <ul
+          className={`space-y-4 mb-2 overflow-y-auto text-lg font-medium leading-6 max-h-[calc(100vh-80px)]  px-4 text-gray-300 cursor-pointer`}
+        >
+          {sidebarItems.map((item, index) => (
+            <li key={index}>
+              {item.isCategory ? (
+                <div className="flex flex-col">
+                  <div
+                    className="flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors hover:bg-gray-700"
+                    onClick={() => handleCategoryToggle(item.name)}
+                  >
+                    <img className="w-5 h-5" src={item.image} alt="" />
+                    <span
                       className={`${
                         item.link === pathname
                           ? "text-yellow-400 font-semibold"
@@ -134,13 +95,52 @@ export default function ResponsiveDrawer(props: Props) {
                       }`}
                     >
                       {item.name}
-                    </Link>
+                    </span>
                   </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+
+                  {activeCategory === item.name && (
+                    <div className="ml-10 mt-2 space-y-2 text-sm">
+                      <Link
+                        href="/category"
+                        className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
+                          pathname === "/category"
+                            ? "text-yellow-400 bg-gray-700"
+                            : "text-gray-300"
+                        }`}
+                      >
+                        Category
+                      </Link>
+                      <Link
+                        href="/subcategory"
+                        className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
+                          pathname === "/subcategory"
+                            ? "text-yellow-400 bg-gray-700"
+                            : "text-gray-300"
+                        }`}
+                      >
+                        Sub Category
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover:bg-gray-700">
+                  <img className="w-5 h-5" src={item.image} alt="icon" />
+                  <Link
+                    href={item.link}
+                    className={`${
+                      item.link === pathname
+                        ? "text-yellow-400 font-semibold"
+                        : "text-gray-300"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
       </List>
     </div>
   );

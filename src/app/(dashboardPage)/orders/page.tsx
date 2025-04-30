@@ -2,6 +2,7 @@
 import { apiRequest } from "@/api/ApiCall";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import OrderItems from "@/app/components/OrderItems";
+import withAuth from "@/protected/withAuth";
 import { Pagination, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
@@ -29,9 +30,9 @@ const page = () => {
   
   
   return (
-    <div className="text-black">
+    <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
-      <div className="flex justify-between items-center w-[100%] mt-[30px]">
+      <div className="flex justify-between items-center w-[100%] my-[30px]">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Orders</h2>
           <div className=" mt-2">
@@ -65,4 +66,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

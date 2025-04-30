@@ -3,47 +3,73 @@ import React, { useState } from "react";
 import off from "../../../public/off.svg";
 import plus from "../../../public/plus.png";
 import { apiRequest } from "@/api/ApiCall";
+import { Button } from "@mui/material";
+import { toast } from "react-toastify";
+import Shop_by_Category_post from "@/utils/Shop_by_Category_post";
 
-const ShopByCategory = () => {
-  const [shopCategogy, setShopCategogy] = useState([]);
-  const getShopCategory = async () => {
+const ShopByCategory = ({ component, getComponents }: any) => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleDelete = async (itemID: number) => {
+    console.log("res", itemID);
     const res = await apiRequest({
-      method: "get",
-      url: `/get_slider_with_shop_by_category`,
+      method: "delete",
+      url: `/delete_home_management?id=${itemID}&fk_section_id=2`,
     });
-    const response = res?.data?.data;
-    console.log("response", response);
-    setShopCategogy(response.banner);
+    toast.success("Banner Deleted");
+    getComponents();
   };
+
+  console.log("Compo Catgeoty", component);
   return (
     <div>
-      <section className="bg-white p-4 rounded shadow mt-5">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold">Shop by Category</h2>
+      <section className="bg-white p-4 rounded shadow mt-5 ">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold ">Shop by Category</h2>
         </div>
-        <div className="flex gap-4 overflow-x-auto pb-2 w-full">
-          {shopCategogy.map((cat, index) => (
+        <div className="flex gap-4 p-3.5">
+          {component[0]?.shop_by_category?.map((item: any, index: any) => (
             <div
               key={index}
-              className="min-w-[120px] bg-white rounded-md p-4 text-center relative shadow-sm"
+              className="w-[160px] bg-white overflow-y-hidden  text-center p-2 relative shadow-sm"
             >
               <img
-                src={cat.Image}
-                alt={cat.name}
-                className="w-[150px] h-25 object-contain mx-auto mb-2 border-gray-500 p-3"
+                src={item.image}
+                alt={index + 1}
+                className="w-[140] h-[90px] object-contain mx-auto mb-2 border-gray-500 p-3"
               />
-              <h3 className="text-sm font-medium !text-left text-black">
-                {cat.name}
-              </h3>
-              <p className="text-sm text-gray-500 text-left ">{cat.discount}</p>
-              <button className="absolute top-1 right-1 bg-white rounded-full p-1 ">
-                <Image src={off} alt="close" width={35} height={25} />
+              <button
+                onClick={() => {
+                  handleDelete(item?.id);
+                }}
+              >
+                <Image
+                  src={off}
+                  alt="close"
+                  width={35}
+                  height={25}
+                  className="absolute top-1 right-1"
+                />
               </button>
+              <h3 className="text-sm font-medium !text-left text-black">
+                {item.category?.category_name}
+              </h3>
+              <p className="text-sm text-gray-500 text-left ">{item.offer}</p>
             </div>
           ))}
 
-          <div className="min-w-[150px] h-[180px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer">
-            <Image src={plus} alt="plus" width={50} height={55} />
+          <div className="w-[160px] bg-[#FAFAFA] border-0 flex items-center justify-center  cursor-pointer">
+            <Button onClick={handleOpen}>
+              <Image src={plus} alt="plus" width={50} height={55} />
+            </Button>
+            {open && (
+              <Shop_by_Category_post
+                open={open}
+                handleClose={handleClose}
+                getComponents={getComponents}
+              />
+            )}
           </div>
         </div>
       </section>

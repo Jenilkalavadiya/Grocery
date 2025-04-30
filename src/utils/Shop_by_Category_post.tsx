@@ -7,6 +7,7 @@ import uploadImage from "../../public/images/upload.png";
 import { useFormik } from "formik";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 const style = {
   position: "absolute",
   top: "50%",
@@ -19,27 +20,53 @@ const style = {
   p: 4,
 };
 
-export default function BannerModal({ open, handleClose, getComponents }: any) {
-  const { values, handleBlur, handleSubmit, setFieldValue } = useFormik({
-    initialValues: { image: null },
-    onSubmit: async (values) => {
-      console.log(values);
-      const formData = new FormData();
-      if (values?.image) {
-        formData.append("image", values.image);
-        formData.append("fk_section_id", "1");
-      }
+export default function Shop_by_Category_post({
+  open,
+  handleClose,
+  getComponents,
+}: any) {
+  const [category, setCategory] = React.useState([]);
+  const { values, handleBlur, handleSubmit, setFieldValue, handleChange } =
+    useFormik({
+      initialValues: { image: null, category: "", offer: "" },
+      onSubmit: async (values) => {
+        console.log(values);
+        const formData = new FormData();
+        if (values?.image) {
+          formData.append("fk_category_id", values.category);
+          formData.append("fk_section_id", "2");
+          formData.append("offer", values.offer);
+          formData.append("image", values.image);
+        }
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_home_management",
+          data: formData,
+        });
+        // console.log("Response", res);
+        getComponents();
+        toast.success(res?.data?.data?.MESSAGE);
+        handleClose();
+      },
+    });
+
+  const getAllCategory = async () => {
+    try {
       const res = await apiRequest({
-        method: "post",
-        url: "/add_home_management",
-        data: formData,
+        method: "get",
+        url: `/getcategories?pageNumber=1&pageLimit=5`,
       });
-      // console.log("Response", res);
-      getComponents();
-      toast.success(res?.data?.data?.MESSAGE);
-      handleClose();
-    },
-  });
+
+      const data = await res?.data?.data?.result;
+      console.log("REs", data);
+      setCategory(data);
+    } catch (error: any) {
+      error.message("Something went wrong");
+    }
+  };
+  useEffect(() => {
+    getAllCategory();
+  }, []);
   return (
     <div>
       <Modal
@@ -55,6 +82,7 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
                 <Image src={close} alt="close" width={18} height={25} />
               </button>
             </div>
+            <h1 className="text-center text-2xl font-bold">Add New</h1>
             <input
               type="file"
               name="image"
@@ -96,6 +124,39 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
                 </div>
               )}
             </label>
+
+            <div className="flex flex-col space-x-5 justify-start ">
+              <label className="text-gray-400 my-2.5">Select Category</label>
+              <select
+                className="font-bold px-3 py-2 mt-2 border border-gray-200 text-black"
+                name="category"
+                value={values.category || "Select"}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                <option value="Select" disabled>
+                  Select
+                </option>
+                {category.map((item: any, index: number) => (
+                  <option key={index} value={item.No}>
+                    {item.Category_Name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col space-x-5 justify-start ">
+              <label className="text-gray-400 my-2.5">Offer</label>
+              <input
+                type="text"
+                name="offer"
+                placeholder="For Ex 50% Off"
+                className="font-bold border-1 border-gray-200 py-2 px-3 text-black"
+                value={values.offer}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </div>
+
             <div className="flex mt-5">
               <button type="submit" className="w-[350px] bg-amber-300 p-3">
                 Save

@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { apiRequest } from "@/api/ApiCall";
-import Link from "next/link"; // Import Link for routing
+import { Skeleton } from "@mui/material";
+import CountUp from "react-countup";
+import { toast } from "react-toastify";
+import withAuth from "../../../protected/withAuth";
+import Link from "next/link";
+// Dynamically import the chart to prevent SSR issues
 
 const Dashboard = () => {
   const [num, setNum] = useState<any>([]);
@@ -45,43 +50,57 @@ const Dashboard = () => {
   );
 
   const getDashboard = async () => {
-    const res = await apiRequest({
-      method: "get",
-      url: "/get_dashboard_detail",
-    });
-    setNum(res?.data?.data);
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: "/get_dashboard_detail",
+      });
+      setNum(res?.data?.data);
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+    }
   };
 
   useEffect(() => {
     getDashboard();
   }, []);
-  console.log("response", num);
+  // console.log("response", Object.keys(num).length);
 
+  // const skeletonLength = Object.keys(num).length;
   return (
-    <>
-      <div className="p-8 min-h-screen">
-        <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-          {cards.map((card, index) => (
-            <Link key={index} href={card.link}>
-              <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between hover:shadow-2xl transition-all transform hover:scale-105 ease-in-out w-full max-w-[450px]">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-4xl">{card.icon}</span>
-                  <h2 className="text-xl font-semibold text-gray-700">
-                    {card.title}
-                  </h2>
+    <div className="p-6 h-[calc(100vh-80px)]">
+      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {Object.keys(num).length > 0
+          ? cards.map((card, index) => (
+            <Link>
+              <div
+                key={index}
+                className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-2xl">{card.icon}</span>
+                  <h2 className="text-lg font-semibold">{card.title}</h2>
                 </div>
-                <div className="text-4xl font-bold text-gray-900 mb-2">
-                  {card.count ? card.count : 0}
-                </div>
-                <div className="text-sm text-gray-500">Details</div>
+                <span className="text-2xl">
+                  <CountUp end={card.count} duration={1} useEasing={false} />
+                </span>
               </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))
+          : cards.map((_, index) => (
+              <Skeleton
+                key={index}
+                variant="rectangular"
+                animation="wave"
+                width="100%"
+                height={100}
+                className="rounded-lg"
+              />
+            ))}
       </div>
-    </>
+    </div>
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

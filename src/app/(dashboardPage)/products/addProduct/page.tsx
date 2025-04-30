@@ -3,6 +3,7 @@
 import { AddSubCategorySchema } from "@/_components/Validation";
 import { apiRequest } from "@/api/ApiCall";
 import AddProducts from "@/app/components/AddProducts";
+import withAuth from "@/protected/withAuth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -117,4 +118,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default withAuth(AddProduct);
