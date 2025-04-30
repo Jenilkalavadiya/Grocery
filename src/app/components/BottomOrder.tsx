@@ -1,62 +1,68 @@
-import Image from "next/image"
-import OrderTable from "./OrderTable"
+import Image from "next/image";
+import OrderTable from "./OrderTable";
 
-const BottomOrder = ({orderDetails}:any) => {
+const BottomOrder = ({ orderDetails, orderTable, total }: any) => {
   return (
-    <div className="mt-4 flex gap-4 w-full">
-        {/* BOTTOM LEFT */}
-        <div className="w-[300px] p-5 shadow-xl border-gray-200 border">
-          <div className="flex gap-4 items-center">
-            <Image
-              src="/user.png"
-              alt="user Photo"
-              width={100}
-              height={100}
-              className="rounded-full p-4"
-            />
-            <p className="font-bold">Virat Kohli</p>
-          </div>
-
-          <div className="flex gap-4 mb-3 items-center">
-            <Image
-              src="/images/phoneicon.png"
-              alt="mobile"
-              width={18}
-              height={18}
-              className=""
-            />
-            <p className="">8997978745</p>
-          </div>
-          <div className="flex gap-4 mb-3 items-center">
-            <Image
-              src="/images/mailicon.png"
-              alt="email"
-              width={18}
-              height={18}
-              className=""
-            />
-            <p className="">viratkohli@gmail.com</p>
-          </div>
-
-          <div className="flex gap-4 mt-2 items-center">
-            <Image
-              src="/images/locationicon.png"
-              alt="address"
-              width={18}
-              height={18}
-              className=""
-            />
-            <p className=" ">31 outer ringroad delhi mumbai india</p>
-          </div>
+    <div className=" flex gap-4 w-full ">
+      {/* BOTTOM LEFT */}
+      <div className="w-[300px] p-5 mt-4 shadow-md h-[250px] border-gray-200 border">
+        <div className="flex gap-2 items-center">
+          <Image
+            src="/user.png"
+            alt="user Photo"
+            width={100}
+            height={100}
+            className="rounded-full p-4"
+          />
+          <p className="font-bold text-lg">
+            {orderDetails?.user?.firstname}
+            {orderDetails?.user?.lastname}
+          </p>
         </div>
 
-        {/* BOTTOM RIGHT TABLE DATA */}
-        <div className="shadow-xl border-gray-200 border  w-[1000px] mt-[-40px] p-5 flex ">
-          {/* Order Table */}
-          <OrderTable orderDetails={orderDetails} />
+        <div className="flex gap-4 mb-3 items-center">
+          <Image
+            src="/images/phoneicon.png"
+            alt="mobile"
+            width={18}
+            height={18}
+            className=""
+          />
+          <p className="">{orderDetails?.user?.mobile_no}</p>
+        </div>
+        <div className="flex gap-4 mb-3 items-center">
+          <Image
+            src="/images/mailicon.png"
+            alt="email"
+            width={18}
+            height={18}
+            className=""
+          />
+          <p className="">{orderDetails?.user?.email}</p>
+        </div>
+
+        <div className="flex gap-4 mt-2 items-center">
+          <Image
+            src="/images/locationicon.png"
+            alt="address"
+            width={18}
+            height={18}
+            className=""
+          />
+          <p className=" ">
+            {orderDetails?.address?.address_line1}
+            {orderDetails?.address?.address_line2}
+          </p>
         </div>
       </div>
-  )
-}
 
-export default BottomOrder
+      {/* BOTTOM RIGHT TABLE DATA */}
+      <div className="shadow-md border-gray-200 border  w-[1000px] mt-[-55px] p-5 flex ">
+        {/* Order Table */}
+        <OrderTable orderTable={orderTable} total={total} />
+      </div>
+    </div>
+  );
+};
+
+export default BottomOrder;

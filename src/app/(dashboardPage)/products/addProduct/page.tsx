@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 const AddProduct = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get("id");
-  console.log("id", search);
   useEffect(() => {
     if (search) {
       setProductId(search);
@@ -97,7 +96,7 @@ const AddProduct = () => {
       });
       console.log("getProductById", res?.data);
       if (res?.data?.code == 1) {
-        setGetProductDetail(res?.data?.data?.DATA);
+        setGetProductDetail(res?.data?.data?.DATA[0]);
       }
     } catch (error) {
       console.error("Error fetching product by id:", error);

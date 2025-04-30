@@ -48,12 +48,19 @@ export const AddProductSchema = Yup.object().shape({
   productDetails: Yup.array().of(
     Yup.object().shape({
       variation: Yup.string().required("Variation is required"),
-      productPrice: Yup.number().required("Price is required"),
-      discount: Yup.number().required("Discount is required"),
-      discountPrice: Yup.number().required("Discount price is required"),
+      productPrice: Yup.number()
+        .transform((value, originalValue) => Number(originalValue) || undefined)
+        .required("Price is required"),
+      discount: Yup.number()
+        .transform((value, originalValue) => Number(originalValue) || undefined)
+        .required("Discount is required"),
+      discountPrice: Yup.number()
+        .transform((value, originalValue) => Number(originalValue) || undefined)
+        .required("Discount price is required"),
     })
   ),
 });
+
 
 export const AddCoupon = Yup.object({
   name: Yup.string().required("Coupon name is required."),

@@ -3,15 +3,41 @@ import BottomOrder from "@/app/components/BottomOrder";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import OrderTable from "@/app/components/OrderTable";
 import TopOrder from "@/app/components/TopOrder";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, usePathname } from "next/navigation";
 import { Button } from "@mui/material";
+import { apiRequest } from "@/api/ApiCall";
 
 const OrderDetails = () => {
   const [orderDetails, setOrderDetails] = useState([]);
+  const [orderTable, setOrderTable] = useState([]);
+  const [total, setTotal] = useState([]);
+
   const pathname = usePathname();
+  const { id } = useParams();
 
   const isOrderDetailsPage = pathname.startsWith("/orders/");
+
+  const getOrderDetails = async () => {
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_order_products_details?id=${id}`,
+      });
+      console.log("order", res);
+      if (res?.data) {
+        setOrderDetails(res?.data?.data?.getDataById);
+        setOrderTable(res?.data?.data?.getData);
+        setTotal(res?.data?.data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getOrderDetails();
+  }, [id]);
 
   return (
     <div>
@@ -46,8 +72,8 @@ const OrderDetails = () => {
         </div>
       </div>
 
-      <TopOrder />
-      <BottomOrder orderDetails={orderDetails} />
+      <TopOrder orderDetails={orderDetails}  />
+      <BottomOrder orderDetails={orderDetails} orderTable={orderTable} total={total}/>
     </div>
   );
 };

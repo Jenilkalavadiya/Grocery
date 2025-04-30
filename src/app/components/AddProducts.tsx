@@ -16,9 +16,9 @@ interface ProductDetail {
 }
 
 const AddProducts = ({
-  brand,
-  category,
-  subCategory,
+  brand = [],
+  category = [],
+  subCategory = [],
   getProduct,
   getProductDetail,
   productId,
@@ -56,26 +56,39 @@ const AddProducts = ({
     onSubmit: async (values) => {
       try {
         const formData = new FormData();
+
+        // Append basic fields
         formData.append("product_name", values.name);
-        formData.append(
-          "product_price",
-          values.productDetails[0]?.productPrice
-        );
-        formData.append("variation", values.productDetails[0]?.variation);
-        formData.append("discount", values.productDetails[0]?.discount);
-        formData.append(
-          "discount_price",
-          values.productDetails[0]?.discountPrice
-        );
-        formData.append("title", values.title);
-        formData.append("description", values.description);
         formData.append("fk_category_id", values.category);
         formData.append("fk_subcategory_id", values.subCategory);
         formData.append("fk_brand_id", values.brand);
         formData.append("stock_status", values.status.toString());
-        if (values.image && typeof values.image !== "string") {
+
+        // Append all product details
+        values.productDetails.forEach((detail, index) => {
+          formData.append(
+            `products[${index}][product_price]`,
+            detail.productPrice
+          );
+          formData.append(`products[${index}][variation]`, detail.variation);
+          formData.append(`products[${index}][discount]`, detail.discount);
+          formData.append(
+            `products[${index}][discount_price]`,
+            detail.discountPrice
+          );
+          formData.append(`products[${index}][title]`, values.title);
+          formData.append(
+            `products[${index}][description]`,
+            values.description
+          );
+        });
+
+        // Append image if it's a File
+        if (values.image) {
           formData.append("image", values.image);
         }
+
+        // Add product ID if editing
         if (productId) {
           formData.append("id", productId);
         }
@@ -86,7 +99,7 @@ const AddProducts = ({
           data: formData,
         });
 
-        if (res?.status == 200) {
+        if (res?.status === 200) {
           toast.success(res?.data?.data?.MESSAGE);
           router.push("/products");
           getProduct();
@@ -101,6 +114,7 @@ const AddProducts = ({
   });
 
   useEffect(() => {
+    console.log("getProductDetail:", getProductDetail);
     if (getProductDetail && productId) {
       setFieldValue("name", getProductDetail?.Product_Name || "");
       setFieldValue(
@@ -113,6 +127,16 @@ const AddProducts = ({
       setFieldValue("description", getProductDetail?.Description || "");
       setFieldValue("status", getProductDetail?.Stock_Status || 0);
 
+      const productDetailsArray = [
+        {
+          variation: getProductDetail?.Variation || "",
+          productPrice: getProductDetail?.Product_Price || "",
+          discount: getProductDetail?.Discount || "",
+          discountPrice: getProductDetail?.Discount_Price || "",
+        },
+      ];
+      setFieldValue("productDetails", productDetailsArray);
+
       if (
         getProductDetail?.Image &&
         typeof getProductDetail.Image === "string"
@@ -124,7 +148,7 @@ const AddProducts = ({
 
   const addProductDetail = () => {
     const newDetails = [
-      ...values.productDetails,
+      ...values?.productDetails,
       {
         variation: "",
         productPrice: "",
@@ -136,7 +160,7 @@ const AddProducts = ({
   };
 
   const removeProductDetail = (index: number) => {
-    const updatedDetails = [...values.productDetails];
+    const updatedDetails = [...values?.productDetails];
     updatedDetails.splice(index, 1);
     setFieldValue("productDetails", updatedDetails);
   };
@@ -179,7 +203,7 @@ const AddProducts = ({
                 className="w-[300px] border border-gray-400 focus:outline-none bg-white h-[50px] p-2"
               >
                 <option value="">Select</option>
-                {category.map((data: any) => (
+                {category?.map((data: any) => (
                   <option key={data?.No} value={data?.No.toString()}>
                     {data.Category_Name}
                   </option>
@@ -201,7 +225,7 @@ const AddProducts = ({
                 className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
               >
                 <option value="">Select</option>
-                {subCategory.map((data: any) => (
+                {subCategory?.map((data: any) => (
                   <option key={data?.No} value={data?.No}>
                     {data.SubCategory_Name}
                   </option>
@@ -223,7 +247,7 @@ const AddProducts = ({
                 className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
               >
                 <option value="">Select</option>
-                {brand.map((data: any) => (
+                {brand?.map((data: any) => (
                   <option key={data?.No} value={data?.No}>
                     {data.Brand_Name}
                   </option>
@@ -243,9 +267,9 @@ const AddProducts = ({
             </div>
           </div>
 
-          {values.productDetails.map((_, index) => (
+          {values?.productDetails?.map((_, index) => (
             <div key={index} className="flex gap-8 mt-3 flex-wrap">
-              {["variation", "productPrice", "discount", "discountPrice"].map(
+              {["variation", "productPrice", "discount", "discountPrice"]?.map(
                 (field) => (
                   <div key={field} className="flex flex-col mt-3 gap-2">
                     <span className="text-gray-400 font-bold capitalize">
@@ -254,7 +278,7 @@ const AddProducts = ({
                     <input
                       type="text"
                       name={`productDetails[${index}].${field}`}
-                      value={(values.productDetails[index] as any)[field]}
+                      value={(values?.productDetails[index] as any)[field]}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-2"
@@ -270,7 +294,7 @@ const AddProducts = ({
                 )
               )}
 
-              {values.productDetails.length > 1 && (
+              {values?.productDetails.length > 1 && (
                 <div className="flex items-end">
                   <button
                     type="button"
@@ -321,7 +345,7 @@ const AddProducts = ({
           </div>
 
           {/* {/ Image Upload /} */}
-          <label htmlFor="upload" className="w-[40%] cursor-pointer">
+          {/* <label htmlFor="upload" className="w-[40%] cursor-pointer">
             <input
               type="file"
               id="upload"
@@ -334,7 +358,7 @@ const AddProducts = ({
               }}
               className="hidden"
             />
-            {values.image ? (
+            {values?.image ? (
               <img
                 src={
                   typeof values.image === "string"
@@ -348,6 +372,45 @@ const AddProducts = ({
               <div className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[125px] flex flex-col justify-center items-center">
                 <Image src={uploadImage} alt="upload" width={40} height={40} />
                 <span className="text-gray-500 text-xl">Upload Image</span>
+              </div>
+            )}
+          </label> */}
+          <label htmlFor="upload" className="w-full">
+            <input
+              type="file"
+              name="image"
+              id="upload"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setFieldValue("image", file);
+                }
+              }}
+              className="hidden"
+            />
+
+            {values.image ? (
+              <div className=" flex items-start justify-center">
+                <img
+                  src={
+                    typeof values.image === "string"
+                      ? values.image
+                      : URL.createObjectURL(values.image)
+                  }
+                  className="w-[150px] mt-3"
+                  alt="Product"
+                />
+              </div>
+            ) : (
+              <div className="w-[350px] mt-3 bg-[#FAFAFA] text-black h-[125px] flex flex-col justify-center items-center">
+                <Image
+                  src={uploadImage}
+                  alt="uploadimg"
+                  className="w-[40px] h-[40px]"
+                  width={50}
+                  height={40}
+                />
+                <span className="text-gray-500 text-xl">upload image</span>
               </div>
             )}
           </label>

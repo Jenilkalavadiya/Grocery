@@ -30,6 +30,7 @@ const GetProduct = ({ product, getProduct }: any) => {
       method: "delete",
       url: `/deleteproduct?id=${itemID}`,
     });
+    toast.success("Deleted SucccesFully");
     getProduct();
     console.log(res);
     setOpen(false);

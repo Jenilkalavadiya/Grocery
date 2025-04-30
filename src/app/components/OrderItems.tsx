@@ -43,7 +43,7 @@ const OrderItems = ({ order }: any) => {
                   className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
                 >
                   <td className="px-4 py-3 text-sm  border-gray-200">
-                    <Link href={`/orders/${item?.Order_no}`}>
+                    <Link href={`/orders/${item?.Order_id}`}>
                       {item?.Order_no}
                     </Link>
                   </td>
