@@ -13,6 +13,7 @@ import l2 from "../../../../public/l2.png";
 
 import OtpInput from "react-otp-input";
 import { apiRequest } from "@/api/ApiCall";
+import withoutAuth from "@/protected/withoutAuth";
 
 const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
@@ -128,4 +129,4 @@ const VerifyOtpPage = () => {
   );
 };
 
-export default VerifyOtpPage;
+export default withoutAuth(VerifyOtpPage);

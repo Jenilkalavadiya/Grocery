@@ -1,20 +1,28 @@
+import Loader from "@/app/loading";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
 
 const withAuth = (WrappedComponent: any) => {
   return (props: any) => {
     const router = useRouter();
-    const isAuthenticated =
-      typeof window !== "undefined" && localStorage.getItem("auth_token");
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
+      null
+    );
 
     useEffect(() => {
-      if (!isAuthenticated) {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
         router.push("/");
+        setIsAuthenticated(false);
+      } else {
+        setIsAuthenticated(true);
       }
-    }, [isAuthenticated]);
+    }, [router]);
 
-    return isAuthenticated ? <WrappedComponent {...props} /> : null;
+    // Optional: show nothing or a loading indicator while checking auth
+    if (isAuthenticated === null) return <Loader />;
+
+    return <WrappedComponent {...props} />;
   };
 };
 

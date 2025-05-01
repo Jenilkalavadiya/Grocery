@@ -28,7 +28,7 @@ const OrderDetails = () => {
       if (res?.data) {
         setOrderDetails(res?.data?.data?.getDataById);
         setOrderTable(res?.data?.data?.getData);
-        setTotal(res?.data?.data)
+        setTotal(res?.data?.data);
       }
     } catch (error) {
       console.log(error);
@@ -40,7 +40,7 @@ const OrderDetails = () => {
   }, [id]);
 
   return (
-    <div>
+    <div className="h-[calc(100vh-125px)]">
       <div className="flex justify-between items-center w-[100%] mt-10">
         <div>
           <h2 className="text-3xl font-bold !text-[#202020]">Orders Details</h2>
@@ -72,8 +72,12 @@ const OrderDetails = () => {
         </div>
       </div>
 
-      <TopOrder orderDetails={orderDetails}  />
-      <BottomOrder orderDetails={orderDetails} orderTable={orderTable} total={total}/>
+      <TopOrder orderDetails={orderDetails} />
+      <BottomOrder
+        orderDetails={orderDetails}
+        orderTable={orderTable}
+        total={total}
+      />
     </div>
   );
 };

@@ -134,20 +134,39 @@ export default function ModalSubCategory({
             {/* CATEGROY********* */}
 
             <span className="text-gray-400 font-bold">Category</span>
-            <select
-              name="category"
-              value={values.category}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-[350px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
-            >
-              <option value="">Select</option>
-              {category?.map((data: any) => (
-                <option key={data?.No} value={data.No}>
-                  {data.Category_Name}
-                </option>
-              ))}
-            </select>
+            <div className="relative w-[350px]">
+              <select
+                name="category"
+                value={values.category}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full border border-gray-400 bg-white h-[50px] p-2 pr-10 appearance-none focus:outline-none"
+              >
+                <option value="">Select</option>
+                {category?.map((data: any) => (
+                  <option key={data?.No} value={data.No}>
+                    {data.Category_Name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Dropdown Icon */}
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
 
             {errors.category && touched.category && (
               <div className="text-red-500">{errors.category}</div>
@@ -213,7 +232,7 @@ export default function ModalSubCategory({
                   onBlur={handleBlur}
                   className="sr-only peer !border-0"
                 />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+                <div className="relative w-11 h-6 bg-gray-200  dark:peer-focus:ring-green-800 rounded-full  dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 "></div>
               </label>
             </div>
 

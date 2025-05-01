@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/api/ApiCall";
 import l2 from "../../../public/l2.png";
-import Cookies from "js-cookie";
+import withoutAuth from "@/protected/withoutAuth";
 
 const Page = () => {
   const [eye, setEye] = useState(true);
@@ -43,13 +43,7 @@ const Page = () => {
             localStorage.setItem("userName", JSON.stringify(data?.name));
             localStorage.setItem("auth_token", data?.token);
             localStorage.setItem("refresh_token", data?.refresh_token);
-            // Inside onSubmit, after successful login
-            Cookies.set("auth_token", data?.token, {
-              secure: true,
-              sameSite: "strict",
-            });
 
-            Cookies.set("refresh_token", data?.refresh_token);
             router.push("/dashboard");
           } else {
             toast.error(res?.data?.message);
@@ -75,9 +69,9 @@ const Page = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-col items-center w-full z-10">
+      <div className="flex flex-col items-center justify-center w-full z-10 my-30">
         <div
-          className={`${styles.content} bg-white shadow-2xl flex flex-col items-center text-black`}
+          className={`${styles.content} bg-white shadow-2xl flex flex-col items-center  text-black`}
         >
           <Image
             src="/logo.png"
@@ -203,4 +197,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withoutAuth(Page);
