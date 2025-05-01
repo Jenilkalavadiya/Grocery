@@ -42,8 +42,12 @@ export const AddProductSchema = Yup.object().shape({
   category: Yup.string().required("Category is required"),
   subCategory: Yup.string().required("Subcategory is required"),
   brand: Yup.string().required("Brand is required"),
-  title: Yup.string().required("Title is required"),
-  description: Yup.string().required("Description is required"),
+  otherInfo: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string().required("Title is required"),
+      description: Yup.string().required("Description is required"),
+    })
+  ),
   status: Yup.number().required("Status is required"),
   productDetails: Yup.array().of(
     Yup.object().shape({

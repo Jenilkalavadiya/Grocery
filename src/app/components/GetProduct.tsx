@@ -15,7 +15,7 @@ import TableLoading from "./TableLoading";
 const GetProduct = ({ product, getProduct }: any) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState();
-
+  console.log("product", product);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -28,7 +28,7 @@ const GetProduct = ({ product, getProduct }: any) => {
   const handleDelete = async () => {
     const res = await apiRequest({
       method: "delete",
-      url: `/deleteproduct?id=${itemID}`,
+      url: `/deleteproductvariation?id=${itemID}`,
     });
     toast.success("Deleted SucccesFully");
     getProduct();
@@ -44,7 +44,7 @@ const GetProduct = ({ product, getProduct }: any) => {
     try {
       const res = await apiRequest({
         method: "post",
-        url: `/status_change`,
+        url: `/status_change_variation`,
         data: { id, stock_status: newStatus },
       });
 
@@ -122,7 +122,9 @@ const GetProduct = ({ product, getProduct }: any) => {
                 </td>
                 <td className="px-4 py-6 border-b border-gray-200 text-center">
                   <div
-                    onClick={() => changeStatus(item?.Id, item?.Stock_Status)}
+                    onClick={() =>
+                      changeStatus(item?.Product_var_id, item?.Stock_Status)
+                    }
                     className="inline-block cursor-pointer"
                   >
                     <GreenSwitch status={item?.Stock_Status} />
@@ -133,7 +135,9 @@ const GetProduct = ({ product, getProduct }: any) => {
                     <span className="text-xl cursor-pointer">
                       <CiEdit
                         onClick={() =>
-                          router.push(`/products/addProduct?id=${item?.Id}`)
+                          router.push(
+                            `/products/addProduct?id=${item?.Product_var_id}`
+                          )
                         }
                       />
                     </span>
@@ -141,7 +145,7 @@ const GetProduct = ({ product, getProduct }: any) => {
                       className="text-xl cursor-pointer"
                       onClick={() => {
                         handleClickOpen();
-                        setItemID(item.Id);
+                        setItemID(item.Product_var_id);
                       }}
                     >
                       <RiDeleteBin6Line />

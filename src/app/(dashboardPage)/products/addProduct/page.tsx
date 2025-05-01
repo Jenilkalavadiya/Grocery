@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 const AddProduct = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get("id");
+  console.log("serach", search);
   useEffect(() => {
     if (search) {
       setProductId(search);
@@ -21,8 +22,12 @@ const AddProduct = () => {
   const [subCategory, setSubCategory] = useState([]);
   const [brand, setBrand] = useState([]);
   const [productId, setProductId] = useState<string | null>(null);
-  const [getProductDetail, setGetProductDetail] = useState(null);
+  const [newProductId, setNewProductId] = useState<string | null>(null);
 
+  const [getProductDetail, setGetProductDetail] = useState(null);
+  const [selectBox, setSelectBox] = useState(null);
+
+  console.log("productId", productId);
   // GET CATEGORY ****************
   const getAllCategory = async () => {
     try {
@@ -70,7 +75,7 @@ const AddProduct = () => {
         url: `/get_brands?pageNumber=${page}&pageLimit=10`,
       });
 
-      console.log("brand", res);
+      // console.log("brand", res);
       const data = await res?.data?.data?.result;
       setBrand(data);
     } catch (error) {
@@ -93,11 +98,14 @@ const AddProduct = () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/get_product_by_id?id=${productId}`,
+        url: `/get_product_by_variation?id=${productId}`,
       });
-      console.log("getProductById", res?.data);
+      console.log("getProductById", res);
       if (res?.data?.code == 1) {
         setGetProductDetail(res?.data?.data?.DATA[0]);
+        setNewProductId(res?.data?.data?.DATA[0].Product_id);
+
+        setSelectBox(res?.data?.data?.result[0]);
       }
     } catch (error) {
       console.error("Error fetching product by id:", error);
@@ -112,7 +120,10 @@ const AddProduct = () => {
         subCategory={subCategory}
         getProduct={getProduct}
         productId={productId}
+        newProductId={newProductId}
+        variationId={productId}
         getProductDetail={getProductDetail}
+        selectBox={selectBox}
       />
     </div>
   );
