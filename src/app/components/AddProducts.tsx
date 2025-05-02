@@ -64,7 +64,7 @@ const AddProducts = ({
     validationSchema: AddProductSchema,
     onSubmit: async (values) => {
       try {
-        const formData = buildFormData(values, variationId, newProductId)
+        const formData = buildFormData(values, variationId, newProductId);
         const res = await apiRequest({
           method: "post",
           url: "/add_product",
@@ -353,7 +353,7 @@ const AddProducts = ({
               onBlur={handleBlur}
               className="sr-only peer !border-0"
             />
-            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+            <div className="relative w-11 h-6 bg-gray-200  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
           </label>
         </div>
 

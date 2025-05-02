@@ -53,18 +53,23 @@ export const AddProductSchema = Yup.object().shape({
     Yup.object().shape({
       variation: Yup.string().required("Variation is required"),
       productPrice: Yup.number()
+        .typeError("productPrice price must be a number")
+        .positive("productPrice price must be greater than zero.")
         .transform((value, originalValue) => Number(originalValue) || undefined)
         .required("Price is required"),
       discount: Yup.number()
+        .typeError("Discount price must be a number")
+        .positive("Discount price must be greater than zero.")
         .transform((value, originalValue) => Number(originalValue) || undefined)
         .required("Discount is required"),
       discountPrice: Yup.number()
+        .typeError("discountPrice price must be a number")
+        .positive("discountPrice price must be greater than zero.")
         .transform((value, originalValue) => Number(originalValue) || undefined)
-        .required("Discount price is required"),
+        .required("discountPrice price is required"),
     })
   ),
 });
-
 
 export const AddCoupon = Yup.object({
   name: Yup.string().required("Coupon name is required."),

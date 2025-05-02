@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -35,34 +34,82 @@ import {
   Trash,
 } from "lucide-react";
 
+import { apiRequest } from "@/api/ApiCall";
+import { toast } from "react-toastify";
+
 const EditorPages = () => {
+  const [termsList, setTermsList] = useState([]);
+
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        codeBlock: false,
-      }),
+      StarterKit.configure({ codeBlock: false }),
       Underline,
       Link.configure({ openOnClick: false }),
       Image,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
       CodeBlock,
       HorizontalRule,
       Blockquote,
       TextStyle,
       Color,
     ],
-    content: "<p>Edit me ✍️</p>",
+    content: "<p>Write Here </p>",
   });
 
-  if (!editor) return null;
-  return (
-    <main className="  p-6">
-      {/* Logo */}
+  const fetchTerms = async () => {
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: "/get_terms_conditions",
+      });
+      const allTerms = res?.data?.data?.result || [];
+      setTermsList(allTerms);
+    } catch (error) {
+      toast.error("Failed to load terms and conditions.");
+      console.error(error);
+    }
+  };
 
-      {/* Editor */}
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-md shadow">
+  useEffect(() => {
+    if (editor) fetchTerms();
+  }, [editor]);
+
+  const handleSave = async () => {
+    if (!editor) return;
+
+    const htmlContent = editor.getHTML().trim();
+    const isEmpty = htmlContent === "<p></p>" || htmlContent === "";
+
+    if (isEmpty) {
+      toast.warning("Cannot save empty content.");
+      return;
+    }
+
+    const formdata = new URLSearchParams();
+    formdata.append("text", htmlContent);
+
+    try {
+      await apiRequest({
+        method: "post",
+        url: "/terms_and_condition",
+        data: formdata,
+      });
+      const htmlContent = editor.getHTML().trim();
+      const isEmpty = htmlContent === "";
+
+      toast.success("Terms & Conditions saved successfully!");
+      fetchTerms();
+    } catch (error) {
+      console.error("Error saving content:", error);
+      toast.error("Failed to save Terms & Conditions.");
+    }
+  };
+
+  if (!editor) return null;
+
+  return (
+    <main className="p-6">
+      <div className="w-full p-6 bg-white rounded-md shadow">
         {/* Toolbar */}
         <div className="flex flex-wrap gap-2 mb-4">
           <ToolbarButton
@@ -176,14 +223,46 @@ const EditorPages = () => {
         {/* Editor Content */}
         <EditorContent
           editor={editor}
-          className="min-h-[300px]  p-4  focus:outline-none prose prose-sm sm:prose lg:prose-lg max-w-none"
+          className="min-h-[300px] p-4 focus:outline-none prose prose-sm sm:prose lg:prose-lg max-w-none"
         />
+
+        {/* Save Button */}
+        <div className="mt-4 text-right">
+          <button
+            onClick={handleSave}
+            className="bg-[#FCC827] text-black font-bold py-2 px-4 rounded hover:bg-yellow-400"
+          >
+            Add Page
+          </button>
+        </div>
+      </div>
+
+      {/* All Previous Terms */}
+      <div className="mt-10 bg-white p-6 rounded-md shadow">
+        <h3 className="text-lg font-semibold mb-4">All Previous Entries</h3>
+        <ul className="space-y-4">
+          {termsList
+            .filter((item: any) => item?.Terms_and_Conditions?.trim() !== "")
+            .map((item: any) => (
+              <li
+                key={item?.terms_and_condition_id}
+                className="bg-gray-100 p-3 rounded"
+              >
+                <div
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: item.Terms_and_Conditions,
+                  }}
+                />
+              </li>
+            ))}
+        </ul>
       </div>
     </main>
   );
 };
 
-// Reusable toolbar button component
+// Toolbar Button
 function ToolbarButton({ icon, onClick, active }: any) {
   return (
     <button

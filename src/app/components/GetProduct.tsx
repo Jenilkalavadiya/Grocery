@@ -123,11 +123,14 @@ const GetProduct = ({ product, getProduct }: any) => {
                 <td className="px-4 py-6 border-b border-gray-200 text-center">
                   <div
                     onClick={() =>
-                      changeStatus(item?.Product_var_id, item?.Stock_Status)
+                      changeStatus(
+                        item?.Product_var_id,
+                        item?.Vriation_stock_status
+                      )
                     }
                     className="inline-block cursor-pointer"
                   >
-                    <GreenSwitch status={item?.Stock_Status} />
+                    <GreenSwitch status={item?.Vriation_stock_status} />
                   </div>
                 </td>
                 <td className="px-4 py-6 text-sm text-gray-700 border-b border-gray-200 text-center">
@@ -145,7 +148,7 @@ const GetProduct = ({ product, getProduct }: any) => {
                       className="text-xl cursor-pointer"
                       onClick={() => {
                         handleClickOpen();
-                        setItemID(item.Product_var_id);
+                        setItemID(item?.Product_var_id);
                       }}
                     >
                       <RiDeleteBin6Line />
