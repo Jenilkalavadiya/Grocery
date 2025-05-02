@@ -24,7 +24,7 @@ const ShopByCategory = ({ component, getComponents }: any) => {
   console.log("Compo Catgeoty", component);
   return (
     <div>
-      <section className="bg-white p-4 rounded shadow mt-5 ">
+      <section className="bg-white p-4 rounded shadow mt-5  ">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold ">Shop by Category</h2>
         </div>

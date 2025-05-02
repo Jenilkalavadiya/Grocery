@@ -11,8 +11,8 @@ body {
 }
 
 ::selection {
-  background: #f3cd22 !important;
-  color: #fff;
+  /* background: #f3cd22 !important; */
+  /* color: #fff; */
 }
 
 ::-webkit-scrollbar {

@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import l2 from "../../../../public/l2.png";
 import { apiRequest } from "@/api/ApiCall";
+import withoutAuth from "@/protected/withoutAuth";
 
 const ResetPassword = () => {
   const [eye, setEye] = useState(true);
@@ -176,4 +177,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default withoutAuth(ResetPassword);

@@ -6,7 +6,8 @@ import CountUp from "react-countup";
 import { toast } from "react-toastify";
 import withAuth from "../../../protected/withAuth";
 import Link from "next/link";
-// Dynamically import the chart to prevent SSR issues
+import Bar_chart from "@/app/components/(charts)/Bar_chart";
+import RadarChart from "@/app/components/(charts)/Radar_chart";
 
 const Dashboard = () => {
   const [num, setNum] = useState<any>([]);
@@ -73,19 +74,21 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {Object.keys(num).length > 0
           ? cards.map((card, index) => (
-            <Link key={index} href={card.link}>
-              <div
-                key={index}
-                className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-2xl">{card.icon}</span>
-                  <h2 className="text-lg font-semibold">{card.title}</h2>
+              <Link href={card.link} key={index}>
+                <div
+                  key={index}
+                  className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xl text-[#1E2939] font-semibold">
+                      {card.title}
+                    </span>
+                    <h2 className="text-2xl">{card.icon}</h2>
+                  </div>
+                  <span className="text-4xl">
+                    <CountUp end={card.count} duration={1} useEasing={false} />
+                  </span>
                 </div>
-                <span className="text-2xl">
-                  <CountUp end={card.count} duration={1} useEasing={false} />
-                </span>
-              </div>
               </Link>
             ))
           : cards.map((_, index) => (
@@ -98,6 +101,10 @@ const Dashboard = () => {
                 className="rounded-lg"
               />
             ))}
+      </div>
+      <div className="Chartys flex justify-between my-5">
+        <Bar_chart num={num} />
+        <RadarChart num={num} />
       </div>
     </div>
   );

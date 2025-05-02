@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import l2 from "../../../../public/l2.png";
 import { apiRequest } from "@/api/ApiCall";
+import withoutAuth from "@/protected/withoutAuth";
 
 const Page = () => {
   const [input, setInput] = useState({
@@ -44,7 +45,7 @@ const Page = () => {
           localStorage.setItem("otp", await data?.otp);
           toast.success(res?.data?.message);
           router.push("/verifyotp");
-        } catch (error:any) {
+        } catch (error: any) {
           console.log(error);
           toast.error(error?.response?.data?.message);
         }
@@ -156,4 +157,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withoutAuth(Page);

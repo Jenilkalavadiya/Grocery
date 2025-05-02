@@ -143,9 +143,13 @@ const Page = () => {
       setRenderedSections(JSON.parse(saved));
     }
   }, []);
-
   useEffect(() => {
-    localStorage.setItem("renderedSections", JSON.stringify(renderedSections));
+    if (renderedSections.length > 0) {
+      localStorage.setItem(
+        "renderedSections",
+        JSON.stringify(renderedSections)
+      );
+    }
   }, [renderedSections]);
 
   const fetchAll = async () => {
@@ -199,8 +203,13 @@ const Page = () => {
           />
         );
       case "brand":
-        return <BrandHomemange key="brand"  component={data}
-        getComponents={fetchAll}/>;
+        return (
+          <BrandHomemange
+            key="brand"
+            component={data}
+            getComponents={fetchAll}
+          />
+        );
       default:
         return null;
     }
