@@ -18,6 +18,66 @@ interface ProductDetail {
   discountPrice: string;
 }
 
+interface OtherInfo {
+  title: string;
+  description: string;
+}
+
+interface FormValues {
+  name: string;
+  category: string;
+  image: File | string | null;
+  subCategory: string;
+  brand: string;
+  otherInfo: OtherInfo[];
+  status: number;
+  productDetails: ProductDetail[];
+}
+
+interface Category {
+  No: number;
+  Category_Name: string;
+}
+
+interface SubCategory {
+  No: number;
+  SubCategory_Name: string;
+}
+
+interface Brand {
+  No: number;
+  Brand_Name: string;
+}
+
+interface ProductDetailData {
+  Product_Name: string;
+  Variation: string;
+  Product_Price: string;
+  Discount: string;
+  Discount_Price: string;
+  Stock_Status: number;
+  Title: string;
+  Description: string;
+  Image: string;
+}
+
+interface SelectBox {
+  Category_id: number;
+  SubCategory_id: number;
+  Brand_id: number;
+}
+
+interface AddProductsProps {
+  brand?: Brand[];
+  category?: Category[];
+  subCategory?: SubCategory[];
+  getProduct: () => void;
+  getProductDetail?: ProductDetailData;
+  variationId?: string;
+  selectBox?: SelectBox;
+  newProductId?: string;
+}
+
 const AddProducts = ({
   brand = [],
   category = [],
@@ -27,7 +87,7 @@ const AddProducts = ({
   variationId,
   selectBox,
   newProductId,
-}: any) => {
+}: AddProductsProps) => {
   const router = useRouter();
   console.log("variationId", newProductId);
   const {
@@ -38,7 +98,7 @@ const AddProducts = ({
     handleChange,
     handleSubmit,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<FormValues>({
     initialValues: {
       name: "",
       category: "",
@@ -78,22 +138,23 @@ const AddProducts = ({
         } else {
           toast.error(res?.data?.message);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.log("Error: ", error);
-        toast.error(error?.response?.data?.message);
+        if (error && typeof error === "object" && "response" in error) {
+          const err = error as { response?: { data?: { message?: string } } };
+          toast.error(err?.response?.data?.message);
+        }
       }
     },
   });
-
-  // EDIT PRODUCTSSSSSSSSSSSSSSSSSSS
 
   useEffect(() => {
     console.log("getProductDetail:", getProductDetail);
     if (getProductDetail && variationId && selectBox) {
       setFieldValue("name", getProductDetail?.Product_Name || "");
       setFieldValue("category", selectBox?.Category_id?.toString() || "");
-      setFieldValue("subCategory", selectBox?.SubCategory_id || "");
-      setFieldValue("brand", selectBox?.Brand_id || "");
+      setFieldValue("subCategory", selectBox?.SubCategory_id?.toString() || "");
+      setFieldValue("brand", selectBox?.Brand_id?.toString() || "");
       setFieldValue("status", getProductDetail?.Stock_Status || 0);
 
       const productDetailsArray = [
@@ -197,7 +258,7 @@ const AddProducts = ({
               className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
             >
               <option value="">Select</option>
-              {category?.map((data: any) => (
+              {category?.map((data) => (
                 <option key={data?.No} value={data?.No.toString()}>
                   {data.Category_Name}
                 </option>
@@ -219,8 +280,8 @@ const AddProducts = ({
               className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
             >
               <option value="">Select</option>
-              {subCategory?.map((data: any) => (
-                <option key={data?.No} value={data?.No}>
+              {subCategory?.map((data) => (
+                <option key={data?.No} value={data?.No.toString()}>
                   {data.SubCategory_Name}
                 </option>
               ))}
@@ -241,8 +302,8 @@ const AddProducts = ({
               className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
             >
               <option value="">Select</option>
-              {brand?.map((data: any) => (
-                <option key={data?.No} value={data?.No}>
+              {brand?.map((data) => (
+                <option key={data?.No} value={data?.No.toString()}>
                   {data.Brand_Name}
                 </option>
               ))}

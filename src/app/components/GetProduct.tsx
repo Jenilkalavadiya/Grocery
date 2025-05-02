@@ -92,8 +92,7 @@ const GetProduct = ({ product, getProduct }: any) => {
             </tr>
           ) : (
             product?.result?.map((item: any) => (
-              <tr
-                key={item?.Id}
+              <tr  key={item?.Id}
                 className="hover:bg-gray-50 transition-all duration-300 text-center"
               >
                 <td className="px-4 py-6 border-b border-gray-200 text-left">

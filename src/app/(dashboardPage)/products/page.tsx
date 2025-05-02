@@ -1,13 +1,10 @@
 "use client";
 
-// import axios from "axios";
-
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/navigation";
 import CustomSeparator from "@/app/components/Bradcrumbs";
-import Dashboard from "../dashboard/page";
 import GetProduct from "@/app/components/GetProduct";
 import { apiRequest } from "@/api/ApiCall";
 import Image from "next/image";
@@ -15,12 +12,22 @@ import icon from "../../../../public/images/search.svg";
 import { Button } from "@mui/material";
 import withAuth from "@/protected/withAuth";
 
-const page = () => {
-  const [search, setSearch] = useState("");
-  const [product, setProduct] = useState<any>(null);
-  const [page, setPage] = useState(1);
+interface ProductData {
+  Total_Count: number;
 
-  const handleChange = (e: any) => {
+  products?: Array<{
+    id: string;
+    name: string;
+  
+  }>;
+}
+
+const Product = () => {
+  const [search, setSearch] = useState<string>("");
+  const [product, setProduct] = useState<ProductData | null>(null);
+  const [page, setPage] = useState<number>(1);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedSearch = e.target.value.trim();
     setSearch(trimmedSearch);
     setPage(1);
@@ -70,7 +77,7 @@ const page = () => {
                 type="text"
                 placeholder="Search Products... "
                 value={search}
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
                 className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
             </div>
@@ -97,7 +104,9 @@ const page = () => {
           <Pagination
             count={Math.ceil(Number(product?.Total_Count / 5))}
             page={page}
-            onChange={(e, value) => setPage(value)}
+            onChange={(_event: React.ChangeEvent<unknown>, value: number) =>
+              setPage(value)
+            }
             variant="outlined"
             shape="rounded"
           />
@@ -107,4 +116,4 @@ const page = () => {
   );
 };
 
-export default withAuth(page);
+export default withAuth(Product);

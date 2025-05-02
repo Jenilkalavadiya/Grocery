@@ -17,8 +17,10 @@ import l2 from "../../../public/l2.png";
 import withoutAuth from "@/protected/withoutAuth";
 
 import logo from "../../../public/logo.png";
-import email from "../../../public/email.png";
+import email1 from "../../../public/email.png";
+import pass1 from "../../../public/pass.png";
 import l1 from "../../../public/l1.png";
+import newl3 from "../../../public/newl3.png";
 
 const Page = () => {
   const [eye, setEye] = useState(true);
@@ -101,7 +103,7 @@ const Page = () => {
                   <div className="flex items-center gap-2">
                     <div className="mt-3">
                       <Image
-                        src={email}
+                        src={email1}
                         alt="Email Icon"
                         width={16}
                         height={20}
@@ -134,7 +136,7 @@ const Page = () => {
                     <div className="mt-3">
                       <span>
                         <Image
-                          src="/pass.png"
+                          src={pass1}
                           alt="password"
                           width={20}
                           height={20}
@@ -190,7 +192,7 @@ const Page = () => {
       {/* SECOND IMAGE */}
       <div className={`${styles.secondImage}`}>
         <Image
-          src="/newl3.png"
+          src={newl3}
           width={520}
           height={350}
           className={`${styles.logoImage}`}

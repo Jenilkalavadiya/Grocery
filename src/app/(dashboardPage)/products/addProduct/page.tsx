@@ -119,7 +119,6 @@ const AddProduct = () => {
         category={category}
         subCategory={subCategory}
         getProduct={getProduct}
-        productId={productId}
         newProductId={newProductId}
         variationId={productId}
         getProductDetail={getProductDetail}
