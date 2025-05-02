@@ -56,7 +56,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
           start_date: startDateFormatted,
           end_date: endDateFormatted,
           coupon_code: values.couponCode,
-          ...(id && { id }), 
+          ...(id && { id }),
         };
 
         const res = await apiRequest({
@@ -159,8 +159,13 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
             {/* Minimum Purchase */}
             <span className="text-gray-400 font-bold">Minimum Purchase </span>
             <input
-              type="text"
+              type="number"
               name="minimumPurchase"
+              onKeyDown={(e) => {
+                if (["e", "E", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               value={values.minimumPurchase}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -174,8 +179,13 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
             {/* Discount Price */}
             <span className="text-gray-400 font-bold">Discount Price </span>
             <input
-              type="text"
+              type="number"
               name="discountPrice"
+              onKeyDown={(e) => {
+                if (["e", "E", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               value={values.discountPrice}
               onChange={handleChange}
               onBlur={handleBlur}

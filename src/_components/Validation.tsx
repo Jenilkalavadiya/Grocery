@@ -42,25 +42,34 @@ export const AddProductSchema = Yup.object().shape({
   category: Yup.string().required("Category is required"),
   subCategory: Yup.string().required("Subcategory is required"),
   brand: Yup.string().required("Brand is required"),
-  title: Yup.string().required("Title is required"),
-  description: Yup.string().required("Description is required"),
+  otherInfo: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string().required("Title is required"),
+      description: Yup.string().required("Description is required"),
+    })
+  ),
   status: Yup.number().required("Status is required"),
   productDetails: Yup.array().of(
     Yup.object().shape({
       variation: Yup.string().required("Variation is required"),
       productPrice: Yup.number()
+        .typeError("productPrice price must be a number")
+        .positive("productPrice price must be greater than zero.")
         .transform((value, originalValue) => Number(originalValue) || undefined)
         .required("Price is required"),
       discount: Yup.number()
+        .typeError("Discount price must be a number")
+        .positive("Discount price must be greater than zero.")
         .transform((value, originalValue) => Number(originalValue) || undefined)
         .required("Discount is required"),
       discountPrice: Yup.number()
+        .typeError("discountPrice price must be a number")
+        .positive("discountPrice price must be greater than zero.")
         .transform((value, originalValue) => Number(originalValue) || undefined)
-        .required("Discount price is required"),
+        .required("discountPrice price is required"),
     })
   ),
 });
-
 
 export const AddCoupon = Yup.object({
   name: Yup.string().required("Coupon name is required."),

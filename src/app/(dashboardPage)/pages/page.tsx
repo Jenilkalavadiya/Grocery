@@ -22,15 +22,19 @@ function EditorPage() {
           </div>
         </div>
 
-        {/*  Add Coupon ***************** */}
-
+        {/*  Add Pages ***************** */}
+        {/* 
         <Button
           className="!bg-[#FCC827] !text-black !font-extrabold h-[45px] p-1"
 
           // variant="outlined"
         >
           Add Page
-        </Button>
+        </Button> */}
+      </div>
+
+      <div>
+        <h2 className="font-bold text-xl">Terms & Conditions </h2>
       </div>
 
       <EditorPages />

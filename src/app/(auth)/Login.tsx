@@ -16,6 +16,10 @@ import { apiRequest } from "@/api/ApiCall";
 import l2 from "../../../public/l2.png";
 import withoutAuth from "@/protected/withoutAuth";
 
+import logo from "../../../public/logo.png";
+import email from "../../../public/email.png";
+import l1 from "../../../public/l1.png";
+
 const Page = () => {
   const [eye, setEye] = useState(true);
   const router = useRouter();
@@ -74,7 +78,7 @@ const Page = () => {
           className={`${styles.content} bg-white shadow-2xl flex flex-col items-center  text-black`}
         >
           <Image
-            src="/logo.png"
+            src={logo}
             className={`${styles.logo}`}
             width={250}
             height={60}
@@ -82,7 +86,7 @@ const Page = () => {
           />
           <div className="flex mt-8 items-center justify-center">
             <Image
-              src="/l1.png"
+              src={l1}
               className={`${styles.login}`}
               width={215}
               height={115}
@@ -97,7 +101,7 @@ const Page = () => {
                   <div className="flex items-center gap-2">
                     <div className="mt-3">
                       <Image
-                        src="/email.png"
+                        src={email}
                         alt="Email Icon"
                         width={16}
                         height={20}
