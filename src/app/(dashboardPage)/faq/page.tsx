@@ -10,16 +10,17 @@ interface Faq {
   Faq_id: number;
   Question: string;
 }
-const page = () => {
+const Page = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [open, setOpen] = useState(false);
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
-    const res = await apiRequest({
+    // console.log("res", itemID);
+    const result = await apiRequest({
       method: "delete",
       url: `/delete_faqs?id=${itemID}`,
     });
     toast.success("Faq Deleted");
+    console.log("Result", result);
     getfaqs();
   };
   const handleOpen = async () => {
@@ -98,4 +99,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -3,8 +3,7 @@
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import EditorPages from "@/app/components/EditorPages";
 import withAuth from "@/protected/withAuth";
-import { Button } from "@mui/material";
-import ImageNext from "next/image";
+
 
 function EditorPage() {
   return (

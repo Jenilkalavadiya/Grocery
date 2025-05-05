@@ -38,7 +38,12 @@ import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 
 const EditorPages = () => {
-  const [termsList, setTermsList] = useState([]);
+  interface Term {
+    terms_and_condition_id: string;
+    Terms_and_Conditions: string;
+  }
+
+  const [termsList, setTermsList] = useState<Term[]>([]);
 
   const editor = useEditor({
     extensions: [
@@ -94,8 +99,8 @@ const EditorPages = () => {
         url: "/terms_and_condition",
         data: formdata,
       });
-      const htmlContent = editor.getHTML().trim();
-      const isEmpty = htmlContent === "";
+      // const htmlContent = editor.getHTML().trim();
+      // const isEmpty = htmlContent === "";
 
       toast.success("Terms & Conditions saved successfully!");
       fetchTerms();
@@ -108,8 +113,8 @@ const EditorPages = () => {
   if (!editor) return null;
 
   return (
-    <main className="p-6">
-      <div className="w-full p-6 bg-white rounded-md shadow">
+    <main className="">
+      <div className="w-full p-6 bg-white rounded-md shadow my-3.5">
         {/* Toolbar */}
         <div className="flex flex-wrap gap-2 mb-4">
           <ToolbarButton
@@ -223,7 +228,7 @@ const EditorPages = () => {
         {/* Editor Content */}
         <EditorContent
           editor={editor}
-          className="min-h-[300px] p-4 focus:outline-none prose prose-sm sm:prose lg:prose-lg max-w-none"
+          className="min-h-[300px] !border-none p-4 focus:outline-none prose prose-sm sm:prose lg:prose-lg max-w-none"
         />
 
         {/* Save Button */}
@@ -242,8 +247,8 @@ const EditorPages = () => {
         <h3 className="text-lg font-semibold mb-4">All Previous Entries</h3>
         <ul className="space-y-4">
           {termsList
-            .filter((item: any) => item?.Terms_and_Conditions?.trim() !== "")
-            .map((item: any) => (
+            .filter((item: Term) => item?.Terms_and_Conditions?.trim() !== "")
+            .map((item: Term) => (
               <li
                 key={item?.terms_and_condition_id}
                 className="bg-gray-100 p-3 rounded"
@@ -263,7 +268,15 @@ const EditorPages = () => {
 };
 
 // Toolbar Button
-function ToolbarButton({ icon, onClick, active }: any) {
+function ToolbarButton({
+  icon,
+  onClick,
+  active,
+}: {
+  icon: React.ReactNode;
+  onClick: () => void;
+  active?: boolean;
+}) {
   return (
     <button
       onClick={onClick}

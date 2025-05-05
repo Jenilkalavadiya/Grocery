@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Grocery from "../../../public/Path 410.png";
 import Image from "next/image";
-import styles from "@/styles/sidebar.module.css";
 
 const sidebarItems = [
   { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
@@ -69,7 +68,7 @@ export default function ResponsiveDrawer(props: Props) {
       <List disablePadding className="bg-gray-800">
         {/* Logo */}
         <div className="sticky top-0 z-50 py-4.5">
-          <Link href="#" className="flex items-center justify-center">
+          <Link href="/dashboard" className="flex items-center justify-center">
             <Image src={Grocery} width={150} height={100} alt="Logo" />
           </Link>
         </div>
