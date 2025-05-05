@@ -179,6 +179,8 @@ const AddProducts = ({
       if (getProductDetail?.Image) {
         setFieldValue("image", getProductDetail.Image);
       }
+
+      console.log("imagePassed", getProductDetail.Image);
     }
   }, [getProductDetail, variationId, setFieldValue, selectBox]);
 
@@ -376,7 +378,7 @@ const AddProducts = ({
 
           {values?.image ? (
             <div className="flex items-start justify-center">
-              <img
+              <Image
                 src={
                   typeof values?.image === "string"
                     ? values?.image
@@ -384,6 +386,8 @@ const AddProducts = ({
                 }
                 className="w-[150px] mt-3"
                 alt="Product"
+                width={150}
+                height={40}
               />
             </div>
           ) : (

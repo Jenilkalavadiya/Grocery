@@ -5,6 +5,17 @@ import waiting from "../../../public/waiting.svg";
 import compelted from "../../../public/compelted.svg";
 import Image from "next/image";
 
+interface OrderDetails {
+  order_no: string;
+  order_type: number;
+  payment_type: number;
+  order_status: number;
+}
+
+interface TopOrderProps {
+  orderDetails: OrderDetails | null;
+}
+
 const stepIcons = [neworder, preparing, ready, waiting, compelted];
 
 const stepLabels = [
@@ -15,7 +26,7 @@ const stepLabels = [
   "Completed",
 ];
 
-const TopOrder = ({ orderDetails }: any) => {
+const TopOrder = ({ orderDetails }: TopOrderProps) => {
   const activeStep = orderDetails?.order_status || 0;
 
   return (

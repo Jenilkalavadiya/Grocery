@@ -12,14 +12,21 @@ import icon from "../../../../public/images/search.svg";
 import { Button } from "@mui/material";
 import withAuth from "@/protected/withAuth";
 
+interface ProductItem {
+  Id: string;
+  Image: string;
+  Product_Name: string;
+  Category_Name: string;
+  Description: string;
+  Variation: string;
+  Price: string;
+  Product_var_id: number;
+  Vriation_stock_status: number;
+}
+
 interface ProductData {
   Total_Count: number;
-
-  products?: Array<{
-    id: string;
-    name: string;
-  
-  }>;
+  result: ProductItem[];
 }
 
 const Product = () => {

@@ -2,21 +2,32 @@
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
-import CategoryItem from "@/app/components/CategoryItem";
 import Usersitem from "@/app/components/Usersitem";
 import { apiRequest } from "@/api/ApiCall";
-import axios from "axios";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
 import icon from "../../../../public/images/search.svg";
 import withAuth from "@/protected/withAuth";
 
- function users() {
+interface User {
+  User_id: string;
+  FullName: string;
+  Mobile_no: string;
+  Email: string;
+  Status: number;
+}
+
+interface UserData {
+  Total_Count: number;
+  result: User[];
+}
+
+function Users() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<UserData | null>(null);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedSearch = e.target.value.trim();
     setSearch(trimmedSearch);
     setPage(1);
@@ -32,7 +43,9 @@ import withAuth from "@/protected/withAuth";
       console.log("first", res);
       const data = await res?.data?.data;
       setUser(data);
-    } catch (error) {}
+    } catch (error: unknown) {
+      console.error("Error fetching users:", error);
+    }
   };
 
   useEffect(() => {
@@ -93,4 +106,4 @@ import withAuth from "@/protected/withAuth";
     </div>
   );
 }
-export default withAuth(users)
+export default withAuth(Users);

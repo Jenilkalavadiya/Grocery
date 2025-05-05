@@ -1,11 +1,44 @@
 "use client";
 
-import { AddSubCategorySchema } from "@/_components/Validation";
 import { apiRequest } from "@/api/ApiCall";
 import AddProducts from "@/app/components/AddProducts";
 import withAuth from "@/protected/withAuth";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+interface Category {
+  No: number;
+  Category_Name: string;
+}
+
+interface SubCategory {
+  No: number;
+  SubCategory_Name: string;
+}
+
+interface Brand {
+  No: number;
+  Brand_Name: string;
+}
+
+interface ProductDetail {
+  Product_id: string;
+  Product_Name: string;
+  Variation: string;
+  Product_Price: string;
+  Discount: string;
+  Discount_Price: string;
+  Stock_Status: number;
+  Title: string;
+  Description: string;
+  Image: string;
+}
+
+interface SelectBox {
+  Category_id: number;
+  SubCategory_id: number;
+  Brand_id: number;
+}
 
 const AddProduct = () => {
   const searchParams = useSearchParams();
@@ -17,15 +50,14 @@ const AddProduct = () => {
     }
   }, [search]);
 
-  const [page, setPage] = useState(1);
-  const [category, setCategory] = useState([]);
-  const [subCategory, setSubCategory] = useState([]);
-  const [brand, setBrand] = useState([]);
+  const [category, setCategory] = useState<Category[]>([]);
+  const [subCategory, setSubCategory] = useState<SubCategory[]>([]);
+  const [brand, setBrand] = useState<Brand[]>([]);
   const [productId, setProductId] = useState<string | null>(null);
   const [newProductId, setNewProductId] = useState<string | null>(null);
-
-  const [getProductDetail, setGetProductDetail] = useState(null);
-  const [selectBox, setSelectBox] = useState(null);
+  const [getProductDetail, setGetProductDetail] =
+    useState<ProductDetail | null>(null);
+  const [selectBox, setSelectBox] = useState<SelectBox | null>(null);
 
   console.log("productId", productId);
   // GET CATEGORY ****************
@@ -33,19 +65,21 @@ const AddProduct = () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/getcategories?pageNumber=${page}&pageLimit=10`,
+        url: `/getcategories?pageNumber=1&pageLimit=10`,
       });
 
       const data = await res?.data?.data?.result;
       setCategory(data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     getAllCategory();
     getAllSubCategory();
     getbrands();
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     if (productId) {
@@ -72,10 +106,9 @@ const AddProduct = () => {
     try {
       const res = await apiRequest({
         method: "get",
-        url: `/get_brands?pageNumber=${page}&pageLimit=10`,
+        url: `/get_brands?pageNumber=1&pageLimit=10`,
       });
 
-      // console.log("brand", res);
       const data = await res?.data?.data?.result;
       setBrand(data);
     } catch (error) {
@@ -90,7 +123,6 @@ const AddProduct = () => {
       url: `/get_products?pageNumber=1&pageLimit=10`,
     });
     console.log("getProduct", res);
-    const data = await res?.data?.data?.result;
   };
 
   // GET PRODUCT BY ID
@@ -101,10 +133,9 @@ const AddProduct = () => {
         url: `/get_product_by_variation?id=${productId}`,
       });
       console.log("getProductById", res);
-      if (res?.data?.code == 1) {
+      if (res?.data?.code === 1) {
         setGetProductDetail(res?.data?.data?.DATA[0]);
         setNewProductId(res?.data?.data?.DATA[0].Product_id);
-
         setSelectBox(res?.data?.data?.result[0]);
       }
     } catch (error) {
@@ -113,7 +144,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className=" mt-2 m-auto p-2 h-[calc(100vh-111px)]">
+    <div className=" mt-2 m-auto p-2 h-[calc(100vh-110px)]">
       <AddProducts
         brand={brand}
         category={category}

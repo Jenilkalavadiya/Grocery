@@ -12,33 +12,45 @@ import Image from "next/image";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
 
-const page = () => {
-  const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState<any>();
-  const [page, setPage] = useState(1);
-  const [open, setOpen] = useState(false);
+interface Brand {
+  No: number;
+  Image: string;
+  Brand_Name: string;
+  SubCategory_Name: string;
+  Category_Name: string;
+  Total_Count: number;
+  Status: number;
+}
+
+interface BrandResponse {
+  Total_Count: number | undefined;
+  result: Brand[];
+}
+
+interface Category {
+  No: number;
+  Category_Name: string;
+}
+
+interface SubCategory {
+  No: number;
+  SubCategory_Name: string;
+}
+
+const BrandsPage = () => {
+  const [search, setSearch] = useState<string>("");
+  const [brand, setBrand] = useState<BrandResponse | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(false);
+  const [category, setCategory] = useState<Category[] | null>(null);
+  const [subCategory, setSubCategory] = useState<SubCategory[] | null>(null);
+  const [id, setId] = useState<string | number>(0);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setId("");
   };
-  const [category, setCategory] = useState(null);
-  const [subCategory, setSubCategory] = useState(null);
-  const [id, setId] = useState("");
-
-  interface Brand {
-    No: number;
-    Image: string;
-    Brand_Name: string;
-    SubCategory_Name: string;
-    Category_Name: string;
-    Total_Count: number;
-  }
-
-  interface BrandResponse {
-    Total_Count: number | undefined;
-    result: Brand[];
-  }
 
   //getbrands
   const getbrands = async () => {
@@ -47,14 +59,13 @@ const page = () => {
         method: "get",
         url: `/get_brands?pageNumber=${page}&pageLimit=5&search=${search}`,
       });
-      const data = await res?.data?.data;
+      const data = res?.data?.data;
       setBrand(data);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching brands:", error);
     }
   };
 
-  console.log("page", page);
   useEffect(() => {
     getbrands();
   }, [search, page]);
@@ -64,7 +75,7 @@ const page = () => {
     getAllSubCategory();
   }, []);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedSearch = e.target.value.trim();
     setSearch(trimmedSearch);
     setPage(1);
@@ -78,10 +89,11 @@ const page = () => {
         url: `/getcategories?pageNumber=1&pageLimit=10`,
       });
 
-      const data = await res?.data?.data?.result;
-      // console.log("data", await data);
+      const data = res?.data?.data?.result;
       setCategory(data);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   //getSubCategory
@@ -91,11 +103,10 @@ const page = () => {
         method: "get",
         url: `/get_subcategories?pageNumber=1&pageLimit=10`,
       });
-      const data = await res?.data?.data?.result;
-      // console.log("subcate", data);
+      const data = res?.data?.data?.result;
       setSubCategory(data);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching subcategories:", error);
     }
   };
 
@@ -124,7 +135,7 @@ const page = () => {
                 type="text"
                 placeholder="Search Brands.. "
                 value={search}
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
                 className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
             </div>
@@ -133,9 +144,7 @@ const page = () => {
           <Button
             className="!bg-[#FCC827] !text-black !font-bold h-[45px] p-1"
             onClick={handleOpen}
-            // variant="outlined"
           >
-            {" "}
             Add Brand
           </Button>
           {open && (
@@ -152,7 +161,6 @@ const page = () => {
       </div>
 
       {/* USERS TABLE************  */}
-
       <div className=" m-auto mt-3">
         <Branditem
           filteredbrand={brand}
@@ -166,7 +174,7 @@ const page = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(brand?.Total_Count / 5))}
+            count={Math.ceil(Number(brand?.Total_Count) / 5)}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"
@@ -178,4 +186,4 @@ const page = () => {
   );
 };
 
-export default withAuth(page);
+export default withAuth(BrandsPage);

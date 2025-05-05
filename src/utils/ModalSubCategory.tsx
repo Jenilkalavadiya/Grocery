@@ -1,16 +1,52 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { FaUpload } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
-import { IoMdClose } from "react-icons/io";
 import { AddSubCategorySchema } from "@/_components/Validation";
 import uploadImage from "../../public/images/upload.png";
 import close from "../../public/images/close.svg";
-
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { apiRequest } from "@/api/ApiCall";
+
+interface CategoryItem {
+  No: number;
+  Image: string;
+  SubCategory_Name: string;
+  Category_id: number;
+  Category_Name: string;
+}
+
+interface SubcategoryItem {
+  No: number;
+  Image: string;
+  SubCategory_Name: string;
+  Category_id: number;
+  Category_Name: string;
+  Status: number;
+}
+
+interface SubcategoryResponse {
+  Total_Count: number;
+  result: SubcategoryItem[];
+}
+
+interface FormValues {
+  name: string;
+  category: string;
+  image: File | string | null;
+  status: number;
+}
+
+interface ModalSubCategoryProps {
+  open: boolean;
+  handleClose: () => void;
+  category: CategoryItem[] | null;
+  subcategory: SubcategoryResponse | null;
+  getAllSubCategory: () => Promise<void>;
+  itemID: number | string;
+}
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -27,10 +63,9 @@ export default function ModalSubCategory({
   open,
   handleClose,
   category,
-  subcategory,
   getAllSubCategory,
   itemID,
-}: any) {
+}: Omit<ModalSubCategoryProps, "subcategory">) {
   const {
     values,
     errors,
@@ -39,7 +74,7 @@ export default function ModalSubCategory({
     handleChange,
     handleSubmit,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<FormValues>({
     initialValues: { name: "", category: "", image: null, status: 0 },
     validationSchema: AddSubCategorySchema,
     onSubmit: async (values) => {
@@ -52,7 +87,7 @@ export default function ModalSubCategory({
           formData.append("image", values.image);
         }
         if (itemID) {
-          formData.append("id", itemID);
+          formData.append("id", itemID.toString());
         }
         //POST API
         const res = await apiRequest({
@@ -64,8 +99,8 @@ export default function ModalSubCategory({
         toast.success(res?.data?.data?.MESSAGE);
         getAllSubCategory();
         handleClose();
-      } catch (error) {
-        console.log("Error: ", error);
+      } catch (error: unknown) {
+        console.error("Error submitting form:", error);
       }
     },
   });
@@ -143,7 +178,7 @@ export default function ModalSubCategory({
                 className="w-full border border-gray-400 bg-white h-[50px] p-2 pr-10 appearance-none focus:outline-none"
               >
                 <option value="">Select</option>
-                {category?.map((data: any) => (
+                {category?.map((data: CategoryItem) => (
                   <option key={data?.No} value={data.No}>
                     {data.Category_Name}
                   </option>
@@ -191,7 +226,7 @@ export default function ModalSubCategory({
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
                     src={
                       typeof values.image === "string"
                         ? values.image
@@ -199,6 +234,8 @@ export default function ModalSubCategory({
                     }
                     className="w-[50%] "
                     alt="alt"
+                    width={50}
+                    height={50}
                   />
                 </div>
               ) : (

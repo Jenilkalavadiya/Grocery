@@ -5,35 +5,48 @@ import FaqModal from "@/utils/FaqModal";
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 interface Faq {
   Answer: string;
   Faq_id: number;
   Question: string;
 }
-const page = () => {
+
+const Page = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [open, setOpen] = useState(false);
+
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
-    const res = await apiRequest({
-      method: "delete",
-      url: `/delete_faqs?id=${itemID}`,
-    });
-    toast.success("Faq Deleted");
-    getfaqs();
+    try {
+      await apiRequest({
+        method: "delete",
+        url: `/delete_faqs?id=${itemID}`,
+      });
+      toast.success("Faq Deleted");
+      getfaqs();
+    } catch (error: unknown) {
+      console.error("Error deleting FAQ:", error);
+      toast.error("Failed to delete FAQ");
+    }
   };
-  const handleOpen = async () => {
+
+  const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
 
   const getfaqs = async () => {
-    const result = await apiRequest({ method: "get", url: "/get_all_faqs" });
-    const data = result?.data?.data?.result;
-    setFaqs(data);
-    console.log("result", data);
+    try {
+      const result = await apiRequest({ method: "get", url: "/get_all_faqs" });
+      const data = result?.data?.data?.result as Faq[];
+      setFaqs(data);
+    } catch (error: unknown) {
+      console.error("Error fetching FAQs:", error);
+      toast.error("Failed to fetch FAQs");
+    }
   };
 
   useEffect(() => {
@@ -98,4 +111,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

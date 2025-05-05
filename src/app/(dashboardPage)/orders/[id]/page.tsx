@@ -1,17 +1,51 @@
 "use client";
 import BottomOrder from "@/app/components/BottomOrder";
 import CustomSeparator from "@/app/components/Bradcrumbs";
-import OrderTable from "@/app/components/OrderTable";
 import TopOrder from "@/app/components/TopOrder";
 import { useEffect, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 import { Button } from "@mui/material";
 import { apiRequest } from "@/api/ApiCall";
 
+interface OrderDetailsData {
+  order_no: string;
+  order_type: number;
+  payment_type: number;
+  order_status: number;
+  user: {
+    firstname: string;
+    lastname: string;
+    mobile_no: string;
+    email: string;
+  };
+  address: {
+    address_line1: string;
+    address_line2: string;
+  };
+}
+
+interface OrderTableItem {
+  order_product_Id: string;
+  product_name: string;
+  Variation: string;
+  product_price: string;
+  product_quantity: string;
+  Total: string;
+}
+
+interface OrderTotal {
+  total: string;
+  shipping_charge: string;
+  total_tax: string;
+  Grand_Total: string;
+}
+
 const OrderDetails = () => {
-  const [orderDetails, setOrderDetails] = useState([]);
-  const [orderTable, setOrderTable] = useState([]);
-  const [total, setTotal] = useState([]);
+  const [orderDetails, setOrderDetails] = useState<OrderDetailsData | null>(
+    null
+  );
+  const [orderTable, setOrderTable] = useState<OrderTableItem[]>([]);
+  const [total, setTotal] = useState<OrderTotal | null>(null);
 
   const pathname = usePathname();
   const { id } = useParams();

@@ -2,7 +2,27 @@
 
 import Link from "next/link";
 import TableLoading from "./TableLoading";
-const OrderItems = ({ order }: any) => {
+
+interface OrderItem {
+  Order_no: string;
+  Order_id: string;
+  Date: string;
+  Firstname: string;
+  Lastname: string;
+  Total_Amount: string;
+  Payment_type: number;
+  Status: number;
+}
+
+interface OrderData {
+  result: OrderItem[];
+}
+
+interface OrderItemsProps {
+  order: OrderData | null;
+}
+
+const OrderItems = ({ order }: OrderItemsProps) => {
   return (
     <div>
       <div className="overflow-x-auto shadow-2xl ">
@@ -37,7 +57,7 @@ const OrderItems = ({ order }: any) => {
               </tr>
             ) : (
               // Show data
-              order?.result?.map((item: any) => (
+              order?.result?.map((item: OrderItem) => (
                 <tr
                   key={item.Order_no}
                   className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
@@ -63,10 +83,23 @@ const OrderItems = ({ order }: any) => {
 
                   <td
                     className={`py-3 px-4 text-md 
-       ${ item.Status === 0? "text-orange-500": item.Status === 1 ? "text-red-800": item.Status === 3 ? "text-green-800" : ""
+       ${
+         item.Status === 0
+           ? "text-orange-500"
+           : item.Status === 1
+             ? "text-red-800"
+             : item.Status === 3
+               ? "text-green-800"
+               : ""
        }`}
                   >
-                    {item.Status === 0? "Preparing": item.Status === 1? "Reject" : item.Status === 3 ? "Completed" : ""}
+                    {item.Status === 0
+                      ? "Preparing"
+                      : item.Status === 1
+                        ? "Reject"
+                        : item.Status === 3
+                          ? "Completed"
+                          : ""}
                   </td>
                 </tr>
               ))

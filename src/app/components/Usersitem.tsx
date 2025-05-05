@@ -1,14 +1,31 @@
 import GreenSwitch from "@/utils/Greenswitch";
 import React from "react";
-import { CiEdit } from "react-icons/ci";
 import TableLoading from "./TableLoading";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
-const Usersitem = ({ user, getUsers }: any) => {
+interface User {
+  User_id: string;
+  FullName: string;
+  Mobile_no: string;
+  Email: string;
+  Status: number;
+}
+
+interface UserData {
+  Total_Count: number;
+  result: User[];
+}
+
+interface UsersitemProps {
+  user: UserData | null;
+  getUsers: () => Promise<void>;
+}
+
+const Usersitem = ({ user, getUsers }: UsersitemProps) => {
   // CHANGE STATUS
-  const changeStatus = async (id: number, currentStatus: number) => {
+  const changeStatus = async (id: string, currentStatus: number) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     try {
@@ -21,13 +38,16 @@ const Usersitem = ({ user, getUsers }: any) => {
       console.log("status", res);
       if (res?.status === 200) {
         toast.success(res?.data?.data?.message);
-        // getUsers();
+        getUsers();
       } else {
         toast.error("Status update failed");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Status update error:", err);
-      toast.error(err?.response?.data?.message);
+      toast.error(
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "An error occurred"
+      );
     }
   };
 
@@ -65,7 +85,7 @@ const Usersitem = ({ user, getUsers }: any) => {
               </tr>
             ) : (
               // Show actual user rows
-              user?.result?.map((item: any) => (
+              user?.result?.map((item: User) => (
                 <tr
                   key={item?.User_id}
                   className="hover:bg-gray-50 transition-all duration-300 text-center"

@@ -1,7 +1,42 @@
 import Image from "next/image";
 import OrderTable from "./OrderTable";
 
-const BottomOrder = ({ orderDetails, orderTable, total }: any) => {
+interface OrderDetails {
+  user: {
+    firstname: string;
+    lastname: string;
+    mobile_no: string;
+    email: string;
+  };
+  address: {
+    address_line1: string;
+    address_line2: string;
+  };
+}
+
+interface OrderTableItem {
+  order_product_Id: string;
+  product_name: string;
+  Variation: string;
+  product_price: string;
+  product_quantity: string;
+  Total: string;
+}
+
+interface OrderTotal {
+  total: string;
+  shipping_charge: string;
+  total_tax: string;
+  Grand_Total: string;
+}
+
+interface BottomOrderProps {
+  orderDetails: OrderDetails | null;
+  orderTable: OrderTableItem[];
+  total: OrderTotal | null;
+}
+
+const BottomOrder = ({ orderDetails, orderTable, total }: BottomOrderProps) => {
   return (
     <div className=" flex gap-4 w-full ">
       {/* BOTTOM LEFT */}

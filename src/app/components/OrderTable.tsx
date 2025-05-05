@@ -1,6 +1,27 @@
 import TableLoading from "./TableLoading";
 
-const OrderTable = ({ orderTable, total }: any) => {
+interface OrderTableItem {
+  order_product_Id: string;
+  product_name: string;
+  Variation: string;
+  product_price: string;
+  product_quantity: string;
+  Total: string;
+}
+
+interface OrderTotal {
+  total: string;
+  shipping_charge: string;
+  total_tax: string;
+  Grand_Total: string;
+}
+
+interface OrderTableProps {
+  orderTable: OrderTableItem[];
+  total: OrderTotal;
+}
+
+const OrderTable = ({ orderTable, total }: OrderTableProps) => {
   return (
     <div className="w-full">
       <table className="w-full">
@@ -33,7 +54,7 @@ const OrderTable = ({ orderTable, total }: any) => {
             </tr>
           ) : (
             // Show data
-            orderTable?.map((item: any) => (
+            orderTable?.map((item: OrderTableItem) => (
               <tr
                 key={item.order_product_Id}
                 className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
@@ -56,19 +77,19 @@ const OrderTable = ({ orderTable, total }: any) => {
       <div className="w-full mt-2">
         <div className="flex w-full justify-between p-2 ">
           <p className="font-bold text-md">Total</p>
-          <p className="font-bold text-md">{total.total}</p>
+          <p className="font-bold text-md">{total?.total}</p>
         </div>
         <div className="flex w-full justify-between p-2 text-green-700">
           <p className="font-bold text-md">Shipping Charge</p>
-          <p className="font-bold text-md">{total.shipping_charge}</p>
+          <p className="font-bold text-md">{total?.shipping_charge}</p>
         </div>
         <div className="flex w-full justify-between p-2 ">
           <p className="font-bold text-md">Tax</p>
-          <p className="font-bold text-md">{total.total_tax}</p>
+          <p className="font-bold text-md">{total?.total_tax}</p>
         </div>
         <div className="flex w-full justify-between p-2 ">
           <p className="font-bold text-md">Grand Total</p>
-          <p className="font-bold text-md">{total.Grand_Total}</p>
+          <p className="font-bold text-md">{total?.Grand_Total}</p>
         </div>
       </div>
     </div>

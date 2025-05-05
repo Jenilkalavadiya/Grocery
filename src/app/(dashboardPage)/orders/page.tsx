@@ -6,29 +6,42 @@ import withAuth from "@/protected/withAuth";
 import { Pagination, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+interface OrderItem {
+  Order_no: string;
+  Order_id: string;
+  Date: string;
+  Firstname: string;
+  Lastname: string;
+  Total_Amount: string;
+  Payment_type: number;
+  Status: number;
+}
+
+interface OrderData {
+  result: OrderItem[];
+}
+
+const Order = () => {
   const [page, setPage] = useState(1);
-    const [order, setOrder] = useState<any>();
+  const [order, setOrder] = useState<OrderData | null>(null);
 
+  const getOrderList = async () => {
+    try {
+      const res = await apiRequest({
+        method: "get",
+        url: `/get_orders`,
+      });
+      console.log("order", res.data.data);
+      setOrder(res?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const getOrderList = async () => {
-      try {
-        const res = await apiRequest({
-          method: "get",
-          url: `/get_orders`,
-        });
-        console.log("order", res.data.data);
-        setOrder(res?.data?.data)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-    useEffect(() => {
-      getOrderList();
-    }, []);
-  
-  
+  useEffect(() => {
+    getOrderList();
+  }, []);
+
   return (
     <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
@@ -66,4 +79,4 @@ const page = () => {
   );
 };
 
-export default withAuth(page);
+export default withAuth(Order);

@@ -7,11 +7,34 @@ import Image from "next/image";
 import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const page = () => {
+interface Address {
+  address_line1: string;
+  address_line2: string;
+}
+
+interface Order {
+  order_no: string;
+  created_date: string;
+  grand_total: string;
+  payment_type: number;
+  order_status: number;
+}
+
+interface UserDetails {
+  firstname: string;
+  lastname: string;
+  mobile_no: string;
+  email: string;
+  is_active: number;
+  address: Address[];
+  order: Order[];
+}
+
+const Page = () => {
   const { id } = useParams();
 
-  const [userDetails, setUserDetails] = useState<any>(null);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const pathname = usePathname();
 
   const isUserDetailsPage = pathname.startsWith("/users/");
@@ -27,8 +50,8 @@ const page = () => {
         setUserDetails(res?.data?.data?.result[0]);
         setOrders(res?.data?.data?.result[0]?.order || []);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      console.error("Error fetching user details:", error);
     }
   };
 
@@ -103,11 +126,13 @@ const page = () => {
                   className="mb-1"
                 />
                 <p className="ml-2 mb-2">
-                  {userDetails?.address?.map((address: any, index: number) => (
-                    <span key={index}>
-                      {address?.address_line1}, {address?.address_line2}{" "}
-                    </span>
-                  ))}
+                  {userDetails?.address?.map(
+                    (address: Address, index: number) => (
+                      <span key={index}>
+                        {address?.address_line1}, {address?.address_line2}{" "}
+                      </span>
+                    )
+                  )}
                 </p>
               </div>
             </div>
@@ -150,7 +175,7 @@ const page = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders?.map((order: any, index: number) => (
+                {orders?.map((order: Order, index: number) => (
                   <tr key={index}>
                     <td className="py-3 px-4 text-md">{order.order_no}</td>
                     <td className="py-3 px-4 text-md">
@@ -194,4 +219,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

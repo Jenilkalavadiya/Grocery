@@ -12,6 +12,19 @@ import Image from "next/image";
 import uploadImage from "../../public/images/upload.png";
 import close from "../../public/images/close.svg";
 
+interface FormValues {
+  name: string;
+  image: File | string | null;
+  status: number;
+}
+
+interface ModalCategoryProps {
+  open: boolean;
+  handleClose: () => void;
+  getAllCategory: () => Promise<void>;
+  itemID: number | string;
+}
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -29,7 +42,7 @@ export default function ModalCategory({
   handleClose,
   getAllCategory,
   itemID,
-}: any) {
+}: ModalCategoryProps) {
   const {
     values,
     errors,
@@ -38,7 +51,7 @@ export default function ModalCategory({
     handleChange,
     handleSubmit,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<FormValues>({
     initialValues: { name: "", image: null, status: 0 },
     validationSchema: AddCategorySchema,
     onSubmit: async (values) => {
@@ -50,14 +63,14 @@ export default function ModalCategory({
         formData.append("image", values.image);
       }
       if (itemID) {
-        formData.append("id", itemID);
+        formData.append("id", itemID.toString());
       }
       const res = await apiRequest({
         method: "post",
         url: "/addcategory",
         data: formData,
       });
-  
+
       console.log("Response", res);
       toast.success(res?.data?.data?.MESSAGE);
       handleClose();
@@ -71,7 +84,6 @@ export default function ModalCategory({
       url: `/getcategory?id=${itemID}`,
     });
 
-   
     console.log("res", res);
     const result = res.data.data.DATA;
     setFieldValue("name", result.category);
@@ -86,7 +98,7 @@ export default function ModalCategory({
       getCategoryByID();
     }
   }, [itemID]);
-  
+
   return (
     <div className="">
       <Modal
@@ -149,7 +161,7 @@ export default function ModalCategory({
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
                     src={
                       typeof values.image === "string"
                         ? values.image
@@ -157,6 +169,8 @@ export default function ModalCategory({
                     }
                     className="w-[50%] "
                     alt="alt"
+                    width={50}
+                    height={50}
                   />
                 </div>
               ) : (

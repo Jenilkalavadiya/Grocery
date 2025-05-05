@@ -11,25 +11,26 @@ import icon from "../../../../public/search.png";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
 
-const page = () => {
+interface CategoryItemData {
+  No: number;
+  Image: string;
+  SubCategory_Name: string;
+  Category_id: number;
+  Category_Name: string;
+  Status: number;
+}
+
+interface CategoryResponse {
+  Total_Count: number;
+  result: CategoryItemData[];
+}
+
+const Page = () => {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<CategoryResponse>();
+  const [category, setCategory] = useState<CategoryResponse | null>(null);
   const [page, setPage] = useState(1);
-  const [itemID, setItemId] = useState("");
+  const [itemID, setItemId] = useState<number| string>(0);
   const [open, setOpen] = useState(false);
-
-  interface CategoryItem {
-    No: number;
-    Image: string;
-    SubCategory_Name: string;
-    Category_id: number;
-    Category_Name: string;
-  }
-
-  interface CategoryResponse {
-    Total_Count: number;
-    result: CategoryItem[];
-  }
 
   const handleOpen = async () => {
     setOpen(true);
@@ -39,6 +40,12 @@ const page = () => {
     setItemId("");
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const trimmedSearch = e.target.value.trim();
+    setSearch(trimmedSearch);
+    setPage(1);
+  };
+
   const getAllCategory = async () => {
     try {
       const res = await apiRequest({
@@ -46,11 +53,11 @@ const page = () => {
         url: `/getcategories?pageNumber=${page}&pageLimit=5&search=${search}`,
       });
 
-      // console.log("REs", res);
-
       const data = await res?.data?.data;
       setCategory(data);
-    } catch (error) {}
+    } catch (error: unknown) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   useEffect(() => {
@@ -83,9 +90,7 @@ const page = () => {
                 type="text"
                 placeholder="Search Categories.. "
                 value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value), setPage(1);
-                }}
+                onChange={handleChange}
                 className="px-2 focus:outline-none  w-[244px] h-[45px]"
               />
             </div>
@@ -136,4 +141,4 @@ const page = () => {
   );
 };
 
-export default withAuth(page);
+export default withAuth(Page);

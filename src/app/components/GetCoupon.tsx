@@ -2,17 +2,50 @@
 import { apiRequest } from "@/api/ApiCall";
 import DeleteDialog from "@/utils/DeleteDialog";
 import GreenSwitch from "@/utils/Greenswitch";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import TableLoading from "./TableLoading";
 
-const GetCoupon = ({ coupon, getCoupon, handleOpen, setId }: any) => {
-  const router = useRouter();
+interface Coupon {
+  No: number;
+  Coupon_Name: string;
+  Min_Purchase: number;
+  Discount_Price: number;
+  Coupon_Code: string;
+  Date: string;
+  Status: number;
+}
+
+interface CouponResponse {
+  Total_Count: number;
+  result: Coupon[];
+}
+
+interface GetCouponProps {
+  coupon: CouponResponse | null;
+  getCoupon: () => void;
+  handleOpen: () => void;
+  setId: (id: number) => void;
+}
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+const GetCoupon = ({
+  coupon,
+  getCoupon,
+  handleOpen,
+  setId,
+}: GetCouponProps) => {
   const [open, setOpen] = useState(false);
-  const [itemID, setItemID] = useState();
+  const [itemID, setItemID] = useState<number>();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,9 +84,9 @@ const GetCoupon = ({ coupon, getCoupon, handleOpen, setId }: any) => {
       } else {
         toast.error("Status update failed");
       }
-    } catch (err:any) {
+    } catch (err: unknown) {
       console.error("Status update error:", err);
-      toast.error(err?.response?.data?.message);
+      toast.error((err as ApiError)?.response?.data?.message);
     }
   };
 
@@ -75,7 +108,7 @@ const GetCoupon = ({ coupon, getCoupon, handleOpen, setId }: any) => {
         <tbody>
           {coupon ? (
             <>
-              {coupon?.result?.map((item: any) => (
+              {coupon?.result?.map((item: Coupon) => (
                 <tr
                   key={item?.No}
                   className="hover:bg-gray-50 transition-all duration-300 text-center"
@@ -112,14 +145,16 @@ const GetCoupon = ({ coupon, getCoupon, handleOpen, setId }: any) => {
                       <span className="text-xl cursor-pointer">
                         <CiEdit
                           onClick={() => {
-                            handleOpen(), setId(item?.No);
+                            handleOpen();
+                            setId(item?.No);
                           }}
                         />
                       </span>
                       <span
                         className="text-xl cursor-pointer "
                         onClick={() => {
-                          handleClickOpen(), setItemID(item.No);
+                          handleClickOpen();
+                          setItemID(item.No);
                         }}
                       >
                         <RiDeleteBin6Line />

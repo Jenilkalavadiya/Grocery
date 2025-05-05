@@ -8,7 +8,34 @@ import { toast } from "react-toastify";
 import close from "../../public/images/close.svg";
 import uploadImage from "../../public/images/upload.png";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+
+interface Category {
+  No: number;
+  Category_Name: string;
+}
+
+interface SubCategory {
+  No: number;
+  SubCategory_Name: string;
+}
+
+interface BrandFormValues {
+  name: string;
+  category: string;
+  subCategory: string;
+  image: File | string | null;
+  status: number;
+}
+
+interface ModalBrandProps {
+  open: boolean;
+  handleClose: () => void;
+  category: Category[];
+  subCategory: SubCategory[];
+  getbrands: () => void;
+  id?: string | number;
+}
 
 const style = {
   position: "absolute",
@@ -28,7 +55,7 @@ export default function ModalBrand({
   subCategory,
   getbrands,
   id,
-}: any) {
+}: ModalBrandProps) {
   const {
     values,
     errors,
@@ -37,7 +64,7 @@ export default function ModalBrand({
     handleChange,
     handleSubmit,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<BrandFormValues>({
     initialValues: {
       name: "",
       category: "",
@@ -47,7 +74,6 @@ export default function ModalBrand({
     },
 
     validationSchema: AddBrandSchema,
-    // Pass context to Yup for conditional validation
     onSubmit: async (values) => {
       console.log("values", values);
       try {
@@ -57,13 +83,16 @@ export default function ModalBrand({
         formData.append("fk_subcategory_id", values.subCategory);
         formData.append("status", values.status.toString());
 
-        formData.append("image", values?.image);
-
-        if (id) {
-          formData.append("id", id);
+        if (values.image instanceof File) {
+          formData.append("image", values.image);
+        } else if (typeof values.image === "string") {
+          formData.append("image", values.image);
         }
 
-        //POST API
+        if (id) {
+          formData.append("id", id.toString());
+        }
+
         const res = await apiRequest({
           method: "post",
           url: "/add_brand",
@@ -81,7 +110,6 @@ export default function ModalBrand({
     },
   });
 
-  // GETBRANDBYID
   const getBrandById = async () => {
     const res = await apiRequest({ method: "get", url: `/get_brand?id=${id}` });
 
@@ -153,7 +181,7 @@ export default function ModalBrand({
               className="w-[350px] border border-gray-400  focus:outline-none bg-white  h-[50px] p-2"
             >
               <option value="">Select</option>
-              {category?.map((data: any) => (
+              {category?.map((data: Category) => (
                 <option key={data?.No} value={data?.No}>
                   {data?.Category_Name}
                 </option>
@@ -174,7 +202,7 @@ export default function ModalBrand({
             >
               <option value="">Select</option>
 
-              {subCategory?.map((data: any) => (
+              {subCategory?.map((data: SubCategory) => (
                 <option key={data?.No} value={data?.No}>
                   {data?.SubCategory_Name}
                 </option>
@@ -202,13 +230,15 @@ export default function ModalBrand({
 
               {values.image ? (
                 <div className=" flex items-start justify-center">
-                  <img
+                  <Image
                     src={
                       typeof values.image === "string"
                         ? values.image
                         : URL.createObjectURL(values.image)
                     }
                     className="w-[40%]"
+                    width={80}
+                    height={20}
                     alt="Product"
                   />
                 </div>

@@ -11,8 +11,24 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { datePicker } from "@/_components/textFieldStyles";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
+
+interface CouponFormValues {
+  name: string;
+  minimumPurchase: string;
+  discountPrice: string;
+  couponCode: string;
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+}
+
+interface ModalCouponProps {
+  open: boolean;
+  handleClose: () => void;
+  getCoupon: () => void;
+  id?: number | string;
+}
 
 const style = {
   position: "absolute",
@@ -26,7 +42,12 @@ const style = {
   p: 4,
 };
 
-const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
+const ModalCoupon = ({
+  open,
+  handleClose,
+  getCoupon,
+  id,
+}: ModalCouponProps) => {
   const {
     values,
     errors,
@@ -35,7 +56,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
     handleChange,
     handleSubmit,
     setFieldValue,
-  } = useFormik({
+  } = useFormik<CouponFormValues>({
     initialValues: {
       name: "",
       minimumPurchase: "",
@@ -72,14 +93,14 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
 
         getCoupon();
         handleClose();
-      } catch (error) {
+      } catch (error: unknown) {
         console.log("Error: ", error);
       }
     },
   });
 
   // Handle Date change
-  const handleDateChange = (name: string, date: any) => {
+  const handleDateChange = (name: string, date: Dayjs | null) => {
     setFieldValue(name, date);
   };
 
@@ -204,7 +225,7 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
                 label="Start Date"
                 value={values.startDate}
                 slotProps={datePicker}
-                onChange={(newValue: any) =>
+                onChange={(newValue: Dayjs | null) =>
                   handleDateChange("startDate", newValue)
                 }
               />
@@ -213,16 +234,16 @@ const ModalCoupon = ({ open, handleClose, getCoupon, id }: any) => {
                 label="End Date"
                 value={values.endDate}
                 slotProps={datePicker}
-                onChange={(newValue: any) =>
+                onChange={(newValue: Dayjs | null) =>
                   handleDateChange("endDate", newValue)
                 }
               />
             </LocalizationProvider>
             {errors.startDate && touched.startDate && (
-              <div className="text-red-500">{errors.startDate}</div>
+              <div className="text-red-500">{String(errors.startDate)}</div>
             )}
             {errors.endDate && touched.endDate && (
-              <div className="text-red-500">{errors.endDate}</div>
+              <div className="text-red-500">{String(errors.endDate)}</div>
             )}
 
             {/* Coupon Code */}

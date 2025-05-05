@@ -9,10 +9,27 @@ import { apiRequest } from "@/api/ApiCall";
 import { Button } from "@mui/material";
 import ModalCoupon from "@/utils/ModalCoupon";
 import withAuth from "@/protected/withAuth";
-const page = () => {
+
+interface Coupon {
+  No: number;
+  Coupon_Name: string;
+  Min_Purchase: number;
+  Discount_Price: number;
+  Coupon_Code: string;
+  Date: string;
+  Total_Count: number;
+  Status: number;
+}
+
+interface CouponResponse {
+  Total_Count: number;
+  result: Coupon[];
+}
+
+const Coupon = () => {
   const [page, setPage] = useState(1);
-  const [coupon, setCoupon] = useState<any>(null);
-  const [id, setId] = useState("");
+  const [coupon, setCoupon] = useState<CouponResponse | null>(null);
+  const [id, setId] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -97,4 +114,4 @@ const page = () => {
   );
 };
 
-export default withAuth(page);
+export default withAuth(Coupon);

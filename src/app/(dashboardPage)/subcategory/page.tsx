@@ -9,26 +9,38 @@ import Button from "@mui/material/Button";
 import ModalSubCategory from "@/utils/ModalSubCategory";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
-function subcategory() {
+
+interface CategoryItem {
+  No: number;
+  Image: string;
+  SubCategory_Name: string;
+  Category_id: number;
+  Category_Name: string;
+}
+
+interface SubcategoryItem {
+  No: number;
+  Image: string;
+  SubCategory_Name: string;
+  Category_id: number;
+  Category_Name: string;
+  Status: number;
+}
+
+interface SubcategoryResponse {
+  Total_Count: number;
+  result: SubcategoryItem[];
+}
+
+function Subcategory() {
   const [search, setSearch] = useState("");
-  const [subcategory, setSubCategory] = useState<SubcategoryResponse>();
+  const [subcategory, setSubCategory] = useState<SubcategoryResponse | null>(
+    null
+  );
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState<CategoryItem[] | null>(null);
   const [page, setPage] = useState(1);
-  const [itemID, setItemId] = useState("");
-
-  interface SubcategoryItem {
-    No: number;
-    Image: string;
-    SubCategory_Name: string;
-    Category_id: number;
-    Category_Name: string;
-  }
-
-  interface SubcategoryResponse {
-    Total_Count: number;
-    result: SubcategoryItem[];
-  }
+  const [itemID, setItemId] = useState<number | string>("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -47,7 +59,15 @@ function subcategory() {
       const data = await res?.data?.data?.result;
       console.log("data", data);
       setCategory(data);
-    } catch (error) {}
+    } catch (error: unknown) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const trimmedSearch = e.target.value.trim();
+    setSearch(trimmedSearch);
+    setPage(1);
   };
 
   //getSubCategory
@@ -61,8 +81,8 @@ function subcategory() {
       const data = await res?.data?.data;
       console.log("subcategory", res);
       setSubCategory(data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      console.error("Error fetching subcategories:", error);
     }
   };
 
@@ -92,9 +112,7 @@ function subcategory() {
             type="text"
             placeholder="Search Sub Categories.. "
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value), setPage(1);
-            }}
+            onChange={handleChange}
             className="px-2 border-[#DADDE1] bg-white focus:outline-none border h-[45px]"
           />
 
@@ -111,7 +129,6 @@ function subcategory() {
                 open={open}
                 handleClose={handleClose}
                 category={category}
-                subcategory={subcategory}
                 getAllSubCategory={getAllSubCategory}
                 itemID={itemID}
               />
@@ -147,4 +164,4 @@ function subcategory() {
   );
 }
 
-export default withAuth(subcategory);
+export default withAuth(Subcategory);
