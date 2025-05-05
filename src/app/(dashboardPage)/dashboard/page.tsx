@@ -92,14 +92,21 @@ const Dashboard = () => {
               </Link>
             ))
           : cards.map((_, index) => (
-              <Skeleton
+              <div
                 key={index}
-                variant="rectangular"
-                animation="wave"
-                width="100%"
-                height={100}
-                className="rounded-lg"
-              />
+                className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  {/* <Skeleton variant="text" width="60%" /> */}
+                  <Skeleton variant="circular" width={20} height={40} />
+                </div>
+                <Skeleton
+                  variant="rectangular"
+                  animation="wave"
+                  width="100%"
+                  height={40}
+                />
+              </div>
             ))}
       </div>
       <div className="Chartys flex justify-between my-5">

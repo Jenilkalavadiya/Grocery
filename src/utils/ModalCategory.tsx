@@ -167,10 +167,10 @@ export default function ModalCategory({
                         ? values.image
                         : URL.createObjectURL(values.image)
                     }
-                    className="w-[50%] "
+                    className="w-[50%]"
                     alt="alt"
-                    width={50}
-                    height={50}
+                    width={250}
+                    height={250}
                   />
                 </div>
               ) : (
@@ -206,7 +206,7 @@ export default function ModalCategory({
                   onBlur={handleBlur}
                   className="sr-only peer !border-0"
                 />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+                <div className="relative w-11 h-6 bg-gray-200  dark:peer-focus:ring-green-800 rounded-full  dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-600 "></div>
               </label>
             </div>
 

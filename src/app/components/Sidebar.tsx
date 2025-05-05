@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { useState, useMemo, useCallback } from "react";
 import Grocery from "../../../public/Path 410.png";
 import Image from "next/image";
-// import styles from "@/styles/sidebar.module.css";
 
 interface SidebarItem {
   name: string;

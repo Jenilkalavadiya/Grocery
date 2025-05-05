@@ -11,7 +11,6 @@ interface Faq {
   Faq_id: number;
   Question: string;
 }
-
 const Page = () => {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [open, setOpen] = useState(false);
