@@ -4,7 +4,13 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { usePathname } from "next/navigation";
 
-export default function CustomSeparator({ value1, value2, value3 }: any) {
+interface CustomSeparatorProps {
+  value1: string;
+  value2: string;
+  value3?: string; // Optional prop
+}
+
+export default function CustomSeparator({ value1, value2, value3 }: CustomSeparatorProps) {
   const pathname = usePathname();
   const breadcrumbs = [
     <Link

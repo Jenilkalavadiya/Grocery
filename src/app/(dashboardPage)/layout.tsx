@@ -2,7 +2,11 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
-const layout = ({ children }: any) => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div>
       <Header />

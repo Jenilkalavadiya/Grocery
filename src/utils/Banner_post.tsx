@@ -19,7 +19,13 @@ const style = {
   p: 4,
 };
 
-export default function BannerModal({ open, handleClose, getComponents }: any) {
+interface BannerModalProps {
+  open: boolean;
+  handleClose: () => void;
+  getComponents: () => void;
+}
+
+export default function BannerModal({ open, handleClose, getComponents }: BannerModalProps) {
   const { values, handleBlur, handleSubmit, setFieldValue } = useFormik({
     initialValues: { image: null },
     onSubmit: async (values) => {
@@ -72,7 +78,9 @@ export default function BannerModal({ open, handleClose, getComponents }: any) {
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
+                    width={200}
+                    height={200}
                     src={
                       typeof values.image === "string"
                         ? values.image

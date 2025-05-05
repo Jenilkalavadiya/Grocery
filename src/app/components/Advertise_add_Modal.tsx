@@ -18,7 +18,13 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const Advertise_add_Modal = ({ open, handleClose, getComponents }: any) => {
+interface AdvertiseAddModalProps {
+  open: boolean;
+  handleClose: () => void;
+  getComponents: () => void;
+}
+
+const Advertise_add_Modal = ({ open, handleClose, getComponents }: AdvertiseAddModalProps) => {
   const { values, handleBlur, handleSubmit, setFieldValue } = useFormik({
     initialValues: { image: null },
     onSubmit: async (values) => {
@@ -71,7 +77,9 @@ const Advertise_add_Modal = ({ open, handleClose, getComponents }: any) => {
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
+                    width={250}
+                    height={250}
                     src={
                       typeof values.image === "string"
                         ? values.image

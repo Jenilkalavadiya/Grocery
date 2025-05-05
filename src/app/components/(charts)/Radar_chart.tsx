@@ -20,7 +20,20 @@ ChartJS.register(
   Legend
 );
 
-const RadarChart = ({ num }: any) => {
+// Define the type for the num prop
+interface RadarChartProps {
+  num: {
+    user_count: number;
+    brands_count: number;
+    product_count: number;
+    category_count: number;
+    sub_category_count: number;
+    order_count: number;
+    coupon_count: number;
+  };
+}
+
+const RadarChart = ({ num }: RadarChartProps) => {
   return (
     <div className="w-[470px] my-10">
       <h1 className="text-2xl text-black text-center font-bold">Radar Chart</h1>

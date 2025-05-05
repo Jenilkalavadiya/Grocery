@@ -1,10 +1,14 @@
 import React from "react";
 import { green } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
-import { alpha, styled } from "@mui/material/styles";
+import { alpha, styled, Theme } from "@mui/material/styles";
 
-function GreenSwitch({ status }: any) {
-  const ToggleSwitch = styled(Switch)(({ theme }: any) => ({
+interface GreenSwitchProps {
+  status: boolean | number;
+}
+
+function GreenSwitch({ status }: GreenSwitchProps) {
+  const ToggleSwitch = styled(Switch)(({ theme }: { theme: Theme }) => ({
     "& .MuiSwitch-switchBase.Mui-checked": {
       color: green[600],
       "&:hover": {
@@ -17,7 +21,7 @@ function GreenSwitch({ status }: any) {
   }));
 
   const label = { inputProps: { "aria-label": "Color switch demo" } };
-  return <ToggleSwitch {...label} checked={status} />;
+  return <ToggleSwitch {...label} checked={Boolean(status)} />;
 }
 
 export default GreenSwitch;

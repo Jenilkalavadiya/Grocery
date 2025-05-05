@@ -22,7 +22,19 @@ ChartJS.register(
   Legend
 );
 
-const Bar_chart = ({ num }: any) => {
+interface BarChartProps {
+  num: {
+    user_count: number;
+    brands_count: number;
+    product_count: number;
+    category_count: number;
+    sub_category_count: number;
+    order_count: number;
+    coupon_count: number;
+  };
+}
+
+const Bar_chart = ({ num }: BarChartProps) => {
   return (
     <div className="w-[750px] my-10">
       <h1 className="text-2xl text-black text-center font-bold">Bar Chart</h1>

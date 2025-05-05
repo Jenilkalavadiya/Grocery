@@ -9,7 +9,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import close from "../../../public/images/close.svg";
 
-const MangeForm = ({ boxOpen, handleClose }: any) => {
+interface MangeFormProps {
+  boxOpen: boolean;
+  handleClose: () => void;
+}
+
+const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
   const [manageDelivery, setManageDelivery] = useState(false);
   const [manageTax, setManageTax] = useState(false);
 
@@ -46,7 +51,12 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
     });
 
   // Handle API call for Manage Delivery
-  const handleManageDeliverySubmit = async (values: any) => {
+  interface DeliveryValues {
+    freeDelivery: string;
+    deliveryCharge: string;
+  }
+
+  const handleManageDeliverySubmit = async (values: DeliveryValues) => {
     const params = {
       free_delivery_upto: values.freeDelivery,
       delivery_charge: values.deliveryCharge,
@@ -75,7 +85,11 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
   };
 
   // Handle API call for Manage Tax
-  const handleManageTaxSubmit = async (values: any) => {
+  interface TaxValues {
+    tax: string;
+  }
+
+  const handleManageTaxSubmit = async (values: TaxValues) => {
     const params = {
       tax: values.tax,
       id: 1,
@@ -99,7 +113,7 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
       toast.error("Error while submitting Manage Tax.");
     }
 
-    handleClose(); 
+    handleClose();
   };
 
   return (

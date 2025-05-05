@@ -1,13 +1,8 @@
-import axios from "axios";
-import { headers } from "next/headers";
+import axios, { InternalAxiosRequestConfig, AxiosRequestHeaders } from "axios";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";
 
-const jwt =
-  typeof window !== "undefined" &&
-  window.localStorage &&
-  localStorage.getItem("auth_token");
 const refresh =
   typeof window !== "undefined" &&
   window.localStorage &&
@@ -26,8 +21,10 @@ type Method = "get" | "post" | "put" | "delete";
 
 interface ApiOptions {
   method: Method;
+
   url: string;
-  data?: any;
+
+  data?: Record<string, unknown> | FormData;
 }
 
 export const apiRequest = ({ method, url, data = {} }: ApiOptions) => {
@@ -64,30 +61,31 @@ export const refreshToken = async () => {
 // Request Interceptor
 
 apiClient.interceptors.request.use(
-  (config: any) => {
-    if (!config.url.endsWith("/refresh_token")) {
-      config.headers = config.headers || {};
-      config.headers["language"] = "en";
+  (config: InternalAxiosRequestConfig) => {
+    if (!config.url || config.url.endsWith("/refresh_token")) {
+      return config;
+    }
+    config.headers = config.headers || ({} as AxiosRequestHeaders);
+    config.headers["language"] = "en";
 
-      const authToken = localStorage.getItem("auth_token");
-      console.log("Request URL:", config.url);
+    const authToken = localStorage.getItem("auth_token");
+    console.log("Request URL:", config.url);
 
-      if (
-        authToken &&
-        ![
-          "/login",
-          "/forgot_password",
-          "/otp-verify",
-          "/reset-password",
-        ].includes(config.url)
-      ) {
-        config.headers["Authorizations"] = authToken;
-        console.log("Authorization header set:", config.headers);
-      } else {
-        config.headers["Authorizations"] =
-          "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY";
-        console.log("No Authorization token set:", config.headers);
-      }
+    if (
+      authToken &&
+      ![
+        "/login",
+        "/forgot_password",
+        "/otp-verify",
+        "/reset-password",
+      ].includes(config.url)
+    ) {
+      config.headers["Authorizations"] = authToken;
+      console.log("Authorization header set:", config.headers);
+    } else {
+      config.headers["Authorizations"] =
+        "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY";
+      console.log("No Authorization token set:", config.headers);
     }
     return config;
   },

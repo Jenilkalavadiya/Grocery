@@ -8,7 +8,6 @@ import { ForgotSchema } from "@/_components/Validation";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import { TextField } from "@mui/material";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import axios from "axios";
 import styles from "@/styles/forgot.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";

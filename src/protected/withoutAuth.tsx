@@ -1,9 +1,15 @@
 import Loader from "@/app/loading";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ComponentType } from "react";
 
-const withoutAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+interface WithoutAuthProps {
+  [key: string]: unknown;
+}
+
+const withoutAuth = <P extends WithoutAuthProps>(
+  WrappedComponent: ComponentType<P>
+) => {
+  const WithoutAuthComponent = (props: P) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -20,6 +26,9 @@ const withoutAuth = (WrappedComponent: any) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithoutAuthComponent.displayName = `withoutAuth(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
+  return WithoutAuthComponent;
 };
 
 export default withoutAuth;

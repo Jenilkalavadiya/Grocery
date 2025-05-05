@@ -6,26 +6,31 @@ import { Button } from "@mui/material";
 import Advertise_add_Modal from "./Advertise_add_Modal";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
-const Advertisment = ({ component, getComponents }: any) => {
+interface AdvertismentProps {
+  component: {
+    section_advertisements: { id: number; image: string }[];
+  }[];
+  getComponents: () => void;
+}
+
+const Advertisment = ({ component, getComponents }: AdvertismentProps) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
-    const res = await apiRequest({
+     await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=4`,
     });
     getComponents();
     toast.success("Banner Deleted");
   };
-  console.log("component", component);
   return (
     <section className="bg-white p-4 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Advertisement</h2>
       <div className="flex gap-4 overflow-x-auto">
-        {component[0]?.section_advertisements?.map((item: any, index: any) => (
+        {component[0]?.section_advertisements?.map((item: { id: number; image: string }, index: number) => (
           <div key={index} className="relative min-w-[300px]">
             <Image
               src={item?.image}

@@ -54,9 +54,14 @@ const Page = () => {
           } else {
             toast.error(res?.data?.message);
           }
-        } catch (error: any) {
-          console.log("error", error);
-          toast.error(error?.response?.data?.message);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            // console.log("error", error.message);
+            toast.error(error?.response?.data?.message);
+          } else {
+            console.log("An unknown error occurred");
+            toast.error("An unknown error occurred");
+          }
         }
       },
     });

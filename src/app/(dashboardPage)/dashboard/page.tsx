@@ -10,7 +10,17 @@ import Bar_chart from "@/app/components/(charts)/Bar_chart";
 import RadarChart from "@/app/components/(charts)/Radar_chart";
 
 const Dashboard = () => {
-  const [num, setNum] = useState<any>([]);
+  interface DashboardData {
+    user_count?: number;
+    product_count?: number;
+    brands_count?: number;
+    coupon_count?: number;
+    category_count?: number;
+    sub_category_count?: number;
+    order_count?: number;
+  }
+
+  const [num, setNum] = useState<DashboardData>({});
 
   const cards = useMemo(
     () => [
@@ -57,8 +67,12 @@ const Dashboard = () => {
         url: "/get_dashboard_detail",
       });
       setNum(res?.data?.data);
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message || "Something went wrong");
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

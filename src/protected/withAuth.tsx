@@ -1,9 +1,15 @@
 import Loader from "@/app/loading";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ComponentType } from "react";
 
-const withAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+interface WithAuthProps {
+  [key: string]: unknown;
+}
+
+const withAuth = <P extends WithAuthProps>(
+  WrappedComponent: ComponentType<P>
+) => {
+  const WithAuthComponent = (props: P) => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
       null
@@ -24,6 +30,9 @@ const withAuth = (WrappedComponent: any) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithAuthComponent.displayName = `withAuth(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
+  return WithAuthComponent;
 };
 
 export default withAuth;

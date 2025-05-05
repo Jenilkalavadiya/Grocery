@@ -90,7 +90,7 @@ const EditorPages = () => {
       return;
     }
 
-    const formdata = new URLSearchParams();
+    const formdata = new FormData();
     formdata.append("text", htmlContent);
 
     try {

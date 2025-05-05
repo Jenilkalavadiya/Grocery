@@ -4,6 +4,17 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
+interface FaqModalProps {
+  open: boolean;
+  handleClose: () => void;
+  getfaqs: () => void;
+}
+
+interface FaqFormValues {
+  question: string;
+  answer: string;
+}
+
 const validationSchema = Yup.object({
   question: Yup.string()
     .required("Question is required")
@@ -13,13 +24,13 @@ const validationSchema = Yup.object({
     .min(10, "Answer should be at least 10 characters long"),
 });
 
-const FaqModal = ({ open, handleClose, getfaqs }: any) => {
-  const initialValues = {
+const FaqModal = ({ open, handleClose, getfaqs }: FaqModalProps) => {
+  const initialValues: FaqFormValues = {
     question: "",
     answer: "",
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: FaqFormValues) => {
     console.log("FAQ submitted:", values);
     const params = {
       question: values.question,
@@ -47,7 +58,7 @@ const FaqModal = ({ open, handleClose, getfaqs }: any) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ setFieldValue }) => (
+          {() => (
             <Form>
               <div className="space-y-4">
                 {/* Question Field */}

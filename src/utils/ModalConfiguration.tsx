@@ -1,6 +1,6 @@
-"use client";   
+"use client";
 
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Modal } from "@mui/material";
 
 import MangeForm from "@/app/components/MangeForm";
 
@@ -35,9 +35,8 @@ export const ModalConfiguration = ({
         sx={style}
         className="!flex !justify-center !border-none !items-center"
       >
-
         {/* FORM DATA *******  */}
-        
+
         <MangeForm boxOpen={boxOpen} handleClose={handleClose} />
       </Box>
     </Modal>

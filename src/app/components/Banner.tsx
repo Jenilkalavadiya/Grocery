@@ -1,19 +1,38 @@
 import { apiRequest } from "@/api/ApiCall";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import off from "../../../public/off.svg";
 import plus from "../../../public/plus.png";
 import { Button } from "@mui/material";
 import BannerModal from "@/utils/Banner_post";
 import { toast } from "react-toastify";
 
-const Banner = ({ component, getComponents }: any) => {
+interface BannerItem {
+  id: number;
+  image: string;
+}
+interface ComponentProps {
+  banner: BannerItem[];
+}
+
+interface BannerProps {
+  banner: BannerItem[];
+  component?: ComponentProps;
+  getComponents: () => void;
+}
+
+const Banner = ({
+  component,
+  getComponents,
+}: {
+  component: BannerProps;
+  getComponents: () => void;
+}) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
-    const res = await apiRequest({
+    await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=1`,
     });
@@ -22,14 +41,15 @@ const Banner = ({ component, getComponents }: any) => {
     getComponents();
   };
 
-  // console.log("Addsection", banner);
   return (
     <section className="bg-white p-6 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Banner Slider</h2>
       <div className="flex gap-4 overflow-x-auto">
-        {component?.banner?.map((item: any, index: any) => (
+        {component?.banner?.map((item: BannerItem, index: number) => (
           <div key={index} className="relative min-w-[250px]">
-            <img
+            <Image
+              width={200}
+              height={200}
               src={item?.image}
               alt={`Banner ${index + 1}`}
               className="rounded-md h-40 w-full object-contain"

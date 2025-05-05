@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { DialogActions } from "@mui/material";
 import { apiRequest } from "@/api/ApiCall";
+
+interface ModalHomeProps {
+  open: boolean;
+  handleClose: () => void;
+  setRenderedSections: React.Dispatch<React.SetStateAction<string[]>>;
+  setAddSection: (sectionId: number) => void;
+}
+
+type SectionType = "banner" | "category" | "brand" | "advertise";
 
 const style = {
   position: "absolute",
@@ -15,7 +24,8 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const sectionIdMap = {
+
+const sectionIdMap: Record<SectionType, number> = {
   banner: 1,
   category: 2,
   brand: 3,
@@ -27,19 +37,19 @@ const ModalHome = ({
   handleClose,
   setRenderedSections,
   setAddSection,
-}: any) => {
-  const [selectedSection, setSelectedSection] = useState("");
+}: ModalHomeProps) => {
+  const [selectedSection, setSelectedSection] = useState<SectionType | "">("");
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setSelectedSection(value);
+    setSelectedSection(value as SectionType);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const sectionId = sectionIdMap[selectedSection];
+    const sectionId = sectionIdMap[selectedSection as SectionType];
     if (selectedSection) {
-      setRenderedSections((prev: any) => [...prev, selectedSection]);
+      setRenderedSections((prev) => [...prev, selectedSection]);
     }
     setSelectedSection("");
     handleClose();

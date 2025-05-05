@@ -4,13 +4,23 @@ import Image from "next/image";
 import close from "../../public/images/close.svg";
 import { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { ResetPassword } from "@/_components/Validation";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import password from "../../public/images/password.svg";
+
+interface ModalResetPasswordProps {
+  boxOpen: boolean;
+  handleClose: () => void;
+}
+
+interface FormValues {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 const style = {
   position: "absolute",
@@ -23,12 +33,14 @@ const style = {
   p: 2,
 };
 
-const ModalResetPassword = ({ boxOpen, handleClose }: any) => {
-  const [showOldPassword, setShowOldPassword] = useState(false);
+const ModalResetPassword = ({
+  boxOpen,
+  handleClose,
+}: ModalResetPasswordProps) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       oldPassword: "",
       newPassword: "",
@@ -58,7 +70,11 @@ const ModalResetPassword = ({ boxOpen, handleClose }: any) => {
         }
       } catch (error) {
         console.error("Error while submitting Reset Password:", error);
-        toast.error(error?.response?.data?.message);
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("An error occurred while changing password");
+        }
       }
     },
   });
