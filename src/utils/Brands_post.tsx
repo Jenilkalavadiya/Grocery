@@ -7,7 +7,17 @@ import uploadImage from "../../public/images/upload.png";
 import { useFormik } from "formik";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+
+interface BrandsPostProps {
+  open: boolean;
+  handleClose: () => void;
+  getComponents: () => Promise<void>;
+}
+
+interface FormValues {
+  image: File | string | null;
+}
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -20,10 +30,13 @@ const style = {
   p: 4,
 };
 
-export default function Brands_post({ open, handleClose, getComponents }: any) {
-  const [category, setCategory] = React.useState([]);
-  const { values, handleBlur, handleSubmit, setFieldValue, handleChange } =
-    useFormik({
+export default function Brands_post({
+  open,
+  handleClose,
+  getComponents,
+}: BrandsPostProps) {
+  const { values, handleBlur, handleSubmit, setFieldValue } =
+    useFormik<FormValues>({
       initialValues: { image: null },
       onSubmit: async (values) => {
         console.log(values);
@@ -79,7 +92,9 @@ export default function Brands_post({ open, handleClose, getComponents }: any) {
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
+                    width={50}
+                    height={50}
                     src={
                       typeof values.image === "string"
                         ? values.image

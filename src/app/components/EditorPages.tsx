@@ -37,13 +37,19 @@ import {
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 
-const EditorPages = () => {
-  interface Term {
-    terms_and_condition_id: string;
-    Terms_and_Conditions: string;
-  }
+interface TermsItem {
+  terms_and_condition_id: number;
+  Terms_and_Conditions: string;
+}
 
-  const [termsList, setTermsList] = useState<Term[]>([]);
+interface ToolbarButtonProps {
+  icon: React.ReactNode;
+  onClick: () => void;
+  active?: boolean;
+}
+
+const EditorPages = () => {
+  const [termsList, setTermsList] = useState<TermsItem[]>([]);
 
   const editor = useEditor({
     extensions: [
@@ -99,8 +105,6 @@ const EditorPages = () => {
         url: "/terms_and_condition",
         data: formdata,
       });
-      // const htmlContent = editor.getHTML().trim();
-      // const isEmpty = htmlContent === "";
 
       toast.success("Terms & Conditions saved successfully!");
       fetchTerms();
@@ -113,8 +117,8 @@ const EditorPages = () => {
   if (!editor) return null;
 
   return (
-    <main className="">
-      <div className="w-full p-6 bg-white rounded-md shadow my-3.5">
+    <main className="py-5">
+      <div className="w-full p-6 bg-white rounded-md shadow">
         {/* Toolbar */}
         <div className="flex flex-wrap gap-2 mb-4">
           <ToolbarButton
@@ -247,8 +251,8 @@ const EditorPages = () => {
         <h3 className="text-lg font-semibold mb-4">All Previous Entries</h3>
         <ul className="space-y-4">
           {termsList
-            .filter((item: Term) => item?.Terms_and_Conditions?.trim() !== "")
-            .map((item: Term) => (
+            .filter((item) => item?.Terms_and_Conditions?.trim() !== "")
+            .map((item) => (
               <li
                 key={item?.terms_and_condition_id}
                 className="bg-gray-100 p-3 rounded"
@@ -268,15 +272,7 @@ const EditorPages = () => {
 };
 
 // Toolbar Button
-function ToolbarButton({
-  icon,
-  onClick,
-  active,
-}: {
-  icon: React.ReactNode;
-  onClick: () => void;
-  active?: boolean;
-}) {
+function ToolbarButton({ icon, onClick, active }: ToolbarButtonProps) {
   return (
     <button
       onClick={onClick}

@@ -1,6 +1,5 @@
 // pages/404.js
 "use client";
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Custom404() {
@@ -12,7 +11,7 @@ export default function Custom404() {
       <div className="text-center">
         <h1 className="text-6xl font-bold mb-4">404</h1>
         <p className="text-xl mb-8">
-          Oops! The page you're looking for does not exist.
+          Oops! The page youre looking for does not exist.
         </p>
         <div className="mt-8">
           <p className="mb-4">Let’s get you back on track.</p>

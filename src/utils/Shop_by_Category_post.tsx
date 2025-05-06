@@ -8,6 +8,24 @@ import { useFormik } from "formik";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+
+interface Category {
+  No: number;
+  Category_Name: string;
+}
+
+interface ShopByCategoryPostProps {
+  open: boolean;
+  handleClose: () => void;
+  getComponents: () => Promise<void>;
+}
+
+interface FormValues {
+  image: File | string | null;
+  category: string;
+  offer: string;
+}
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,10 +42,10 @@ export default function Shop_by_Category_post({
   open,
   handleClose,
   getComponents,
-}: any) {
-  const [category, setCategory] = React.useState([]);
+}: ShopByCategoryPostProps) {
+  const [category, setCategory] = React.useState<Category[]>([]);
   const { values, handleBlur, handleSubmit, setFieldValue, handleChange } =
-    useFormik({
+    useFormik<FormValues>({
       initialValues: { image: null, category: "", offer: "" },
       onSubmit: async (values) => {
         console.log(values);
@@ -43,7 +61,6 @@ export default function Shop_by_Category_post({
           url: "/add_home_management",
           data: formData,
         });
-        // console.log("Response", res);
         getComponents();
         toast.success(res?.data?.data?.MESSAGE);
         handleClose();
@@ -60,8 +77,8 @@ export default function Shop_by_Category_post({
       const data = await res?.data?.data?.result;
       console.log("REs", data);
       setCategory(data);
-    } catch (error: any) {
-      error.message("Something went wrong");
+    } catch (error: unknown) {
+      console.error("Something went wrong", error);
     }
   };
   useEffect(() => {
@@ -100,7 +117,9 @@ export default function Shop_by_Category_post({
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
+                    width={250}
+                    height={250}
                     src={
                       typeof values.image === "string"
                         ? values.image
@@ -137,7 +156,7 @@ export default function Shop_by_Category_post({
                 <option value="Select" disabled>
                   Select
                 </option>
-                {category.map((item: any, index: number) => (
+                {category.map((item: Category, index: number) => (
                   <option key={index} value={item.No}>
                     {item.Category_Name}
                   </option>

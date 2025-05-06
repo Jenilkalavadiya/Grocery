@@ -43,7 +43,7 @@ const GetProduct = ({ product, getProduct }: GetProductProps) => {
   // DELETE PRODUCT
   const handleDelete = useCallback(async () => {
     try {
-      const res = await apiRequest({
+      await apiRequest({
         method: "delete",
         url: `/deleteproductvariation?id=${itemID}`,
       });

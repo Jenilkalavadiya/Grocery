@@ -8,7 +8,6 @@ import { ForgotSchema } from "@/_components/Validation";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import { TextField } from "@mui/material";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import axios from "axios";
 import styles from "@/styles/forgot.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -17,10 +16,9 @@ import { apiRequest } from "@/api/ApiCall";
 import withoutAuth from "@/protected/withoutAuth";
 
 const Page = () => {
-  const [input, setInput] = useState({
+  const [input] = useState({
     email: "",
   });
-  const [otp, setOtp] = useState("");
   const router = useRouter();
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -41,13 +39,17 @@ const Page = () => {
           const data = await res?.data?.data;
           console.log("OTP", await data?.otp);
 
-          setOtp(await data?.otp);
           localStorage.setItem("otp", await data?.otp);
           toast.success(res?.data?.message);
           router.push("/verifyotp");
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.log(error);
-          toast.error(error?.response?.data?.message);
+          if (error && typeof error === "object" && "response" in error) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err?.response?.data?.message || "Something went wrong");
+          } else {
+            toast.error("Something went wrong");
+          }
         }
       },
     });
@@ -81,7 +83,7 @@ const Page = () => {
             </h2>
           </div>
           <p className="text-sm text-center text-gray-500 mt-4">
-            Don't worry! It happens. Please enter the address <br />
+            Dont worry! It happens. Please enter the address <br />
             associated with your account.
           </p>
           <div className="flex mt-8 items-center justify-center">

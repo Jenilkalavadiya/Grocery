@@ -7,6 +7,17 @@ import uploadImage from "../../../public/images/upload.png";
 import { useFormik } from "formik";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
+
+interface AdvertiseAddModalProps {
+  open: boolean;
+  handleClose: () => void;
+  getComponents: () => Promise<void>;
+}
+
+interface FormValues {
+  image: File | string | null;
+}
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -18,27 +29,33 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const Advertise_add_Modal = ({ open, handleClose, getComponents }: any) => {
-  const { values, handleBlur, handleSubmit, setFieldValue } = useFormik({
-    initialValues: { image: null },
-    onSubmit: async (values) => {
-      console.log(values);
-      const formData = new FormData();
-      if (values?.image) {
-        formData.append("image", values.image);
-        formData.append("fk_section_id", "4");
-      }
-      const res = await apiRequest({
-        method: "post",
-        url: "/add_home_management",
-        data: formData,
-      });
-      console.log("Response", res);
-      getComponents();
-      toast.success(res?.data?.data?.MESSAGE);
-      handleClose();
-    },
-  });
+
+const Advertise_add_Modal = ({
+  open,
+  handleClose,
+  getComponents,
+}: AdvertiseAddModalProps) => {
+  const { values, handleBlur, handleSubmit, setFieldValue } =
+    useFormik<FormValues>({
+      initialValues: { image: null },
+      onSubmit: async (values) => {
+        console.log(values);
+        const formData = new FormData();
+        if (values?.image) {
+          formData.append("image", values.image);
+          formData.append("fk_section_id", "4");
+        }
+        const res = await apiRequest({
+          method: "post",
+          url: "/add_home_management",
+          data: formData,
+        });
+        console.log("Response", res);
+        getComponents();
+        toast.success(res?.data?.data?.MESSAGE);
+        handleClose();
+      },
+    });
   return (
     <div>
       <Modal
@@ -71,7 +88,9 @@ const Advertise_add_Modal = ({ open, handleClose, getComponents }: any) => {
             <label htmlFor="upload">
               {values.image ? (
                 <div className="w-full flex items-center justify-center">
-                  <img
+                  <Image
+                    width={250}
+                    height={250}
                     src={
                       typeof values.image === "string"
                         ? values.image

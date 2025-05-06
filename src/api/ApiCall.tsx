@@ -1,13 +1,13 @@
-import axios from "axios";
-import { headers } from "next/headers";
+import axios, {
+  InternalAxiosRequestConfig,
+  AxiosError,
+  AxiosResponse,
+  AxiosHeaders,
+} from "axios";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";
 
-const jwt =
-  typeof window !== "undefined" &&
-  window.localStorage &&
-  localStorage.getItem("auth_token");
 const refresh =
   typeof window !== "undefined" &&
   window.localStorage &&
@@ -27,7 +27,11 @@ type Method = "get" | "post" | "put" | "delete";
 interface ApiOptions {
   method: Method;
   url: string;
-  data?: any;
+  data?: unknown;
+}
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
 }
 
 export const apiRequest = ({ method, url, data = {} }: ApiOptions) => {
@@ -64,10 +68,10 @@ export const refreshToken = async () => {
 // Request Interceptor
 
 apiClient.interceptors.request.use(
-  (config: any) => {
-    if (!config.url.endsWith("/refresh_token")) {
-      config.headers = config.headers || {};
-      config.headers["language"] = "en";
+  (config: InternalAxiosRequestConfig) => {
+    if (!config.url?.endsWith("/refresh_token")) {
+      config.headers = new AxiosHeaders(config.headers);
+      config.headers.set("language", "en");
 
       const authToken = localStorage.getItem("auth_token");
       console.log("Request URL:", config.url);
@@ -79,19 +83,21 @@ apiClient.interceptors.request.use(
           "/forgot_password",
           "/otp-verify",
           "/reset-password",
-        ].includes(config.url)
+        ].includes(config.url || "")
       ) {
-        config.headers["Authorizations"] = authToken;
+        config.headers.set("Authorizations", authToken);
         console.log("Authorization header set:", config.headers);
       } else {
-        config.headers["Authorizations"] =
-          "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY";
+        config.headers.set(
+          "Authorizations",
+          "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY"
+        );
         console.log("No Authorization token set:", config.headers);
       }
     }
     return config;
   },
-  (error) => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
@@ -129,11 +135,11 @@ apiClient.interceptors.request.use(
 // );
 
 apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  (response: AxiosResponse) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as CustomAxiosRequestConfig;
 
-    if (originalRequest.url.includes("/refresh_token")) {
+    if (originalRequest.url?.includes("/refresh_token")) {
       return Promise.reject(error);
     }
 
@@ -144,7 +150,8 @@ apiClient.interceptors.response.use(
         const newAccessToken = await refreshToken();
 
         localStorage.setItem("auth_token", newAccessToken);
-        originalRequest.headers["Authorization"] = newAccessToken;
+        originalRequest.headers = new AxiosHeaders(originalRequest.headers);
+        originalRequest.headers.set("Authorization", newAccessToken);
 
         return apiClient(originalRequest);
       } catch (refreshError) {

@@ -9,8 +9,26 @@ import Link from "next/link";
 import Bar_chart from "@/app/components/(charts)/Bar_chart";
 import RadarChart from "@/app/components/(charts)/Radar_chart";
 
+interface DashboardData {
+  user_count: number;
+  product_count: number;
+  brands_count: number;
+  coupon_count: number;
+  category_count: number;
+  sub_category_count: number;
+  order_count: number;
+}
+
 const Dashboard = () => {
-  const [num, setNum] = useState<any>([]);
+  const [num, setNum] = useState<DashboardData>({
+    user_count: 0,
+    product_count: 0,
+    brands_count: 0,
+    coupon_count: 0,
+    category_count: 0,
+    sub_category_count: 0,
+    order_count: 0,
+  });
 
   const cards = useMemo(
     () => [
@@ -57,8 +75,12 @@ const Dashboard = () => {
         url: "/get_dashboard_detail",
       });
       setNum(res?.data?.data);
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message || "Something went wrong");
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

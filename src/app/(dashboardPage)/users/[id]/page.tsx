@@ -85,7 +85,7 @@ const Page = () => {
         <TableLoading />
       ) : (
         <>
-          <div className="flex flex-row items-center justify-between shadow-lg">
+          <div className="flex flex-row items-center justify-between shadow-md bg-white my-5">
             <div>
               <Image
                 src="/user.png"

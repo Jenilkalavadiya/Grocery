@@ -9,7 +9,29 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import close from "../../../public/images/close.svg";
 
-const MangeForm = ({ boxOpen, handleClose }: any) => {
+interface MangeFormProps {
+  boxOpen: boolean;
+  handleClose: () => void;
+}
+
+interface FormValues {
+  freeDelivery: string;
+  deliveryCharge: string;
+  tax: string;
+}
+
+interface DeliveryParams {
+  free_delivery_upto: string;
+  delivery_charge: string;
+  id: number;
+}
+
+interface TaxParams {
+  tax: string;
+  id: number;
+}
+
+const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
   const [manageDelivery, setManageDelivery] = useState(false);
   const [manageTax, setManageTax] = useState(false);
 
@@ -31,11 +53,11 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
+    useFormik<FormValues>({
       initialValues: { freeDelivery: "", deliveryCharge: "", tax: "" },
       validationSchema: manageDelivery
         ? Configuration.deliverySchema
-        : Configuration.taxSchema, // Conditionally load validation schema
+        : Configuration.taxSchema,
       onSubmit: async (values) => {
         if (manageDelivery) {
           await handleManageDeliverySubmit(values);
@@ -45,15 +67,12 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
       },
     });
 
-  // Handle API call for Manage Delivery
-  const handleManageDeliverySubmit = async (values: any) => {
-    const params = {
+  const handleManageDeliverySubmit = async (values: FormValues) => {
+    const params: DeliveryParams = {
       free_delivery_upto: values.freeDelivery,
       delivery_charge: values.deliveryCharge,
       id: 1,
     };
-
-    console.log("Submitting to Manage Delivery API with data:", params);
 
     try {
       const res = await apiRequest({
@@ -62,9 +81,8 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
         data: params,
       });
 
-      console.log("Delivery Response", res);
       if (res?.data?.data?.MESSAGE) {
-        toast.success(res?.data?.data?.MESSAGE);
+        toast.success(res.data.data.MESSAGE);
       }
     } catch (error) {
       console.error("Error while submitting Manage Delivery:", error);
@@ -74,14 +92,11 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
     handleClose();
   };
 
-  // Handle API call for Manage Tax
-  const handleManageTaxSubmit = async (values: any) => {
-    const params = {
+  const handleManageTaxSubmit = async (values: FormValues) => {
+    const params: TaxParams = {
       tax: values.tax,
       id: 1,
     };
-
-    console.log("Submitting to Manage Tax API with data:", params);
 
     try {
       const res = await apiRequest({
@@ -90,16 +105,15 @@ const MangeForm = ({ boxOpen, handleClose }: any) => {
         data: params,
       });
 
-      console.log("Tax Response", res);
       if (res?.data?.data?.MESSAGE) {
-        toast.success(res?.data?.data?.MESSAGE);
+        toast.success(res.data.data.MESSAGE);
       }
     } catch (error) {
       console.error("Error while submitting Manage Tax:", error);
       toast.error("Error while submitting Manage Tax.");
     }
 
-    handleClose(); 
+    handleClose();
   };
 
   return (
