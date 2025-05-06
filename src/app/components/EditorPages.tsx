@@ -117,7 +117,7 @@ const EditorPages = () => {
   if (!editor) return null;
 
   return (
-    <main className="p-6">
+    <main className="py-5">
       <div className="w-full p-6 bg-white rounded-md shadow">
         {/* Toolbar */}
         <div className="flex flex-wrap gap-2 mb-4">
