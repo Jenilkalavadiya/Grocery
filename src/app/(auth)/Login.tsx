@@ -54,9 +54,14 @@ const Page = () => {
           } else {
             toast.error(res?.data?.message);
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.log("error", error);
-          toast.error(error?.response?.data?.message);
+          if (error && typeof error === "object" && "response" in error) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err?.response?.data?.message || "Something went wrong");
+          } else {
+            toast.error("Something went wrong");
+          }
         }
       },
     });

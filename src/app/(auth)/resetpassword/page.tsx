@@ -9,7 +9,6 @@ import { ResetPasswordSchema } from "@/_components/Validation";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -42,9 +41,14 @@ const ResetPassword = () => {
           }
 
           console.log("resetPassword", res);
-        } catch (error:any) {
+        } catch (error: unknown) {
           console.log("error", error);
-          toast.error(error?.response?.data?.message);
+          if (error && typeof error === "object" && "response" in error) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err?.response?.data?.message || "Something went wrong");
+          } else {
+            toast.error("Something went wrong");
+          }
         }
       },
     });

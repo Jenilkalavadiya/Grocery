@@ -4,6 +4,17 @@ import Modal from "@mui/material/Modal";
 import { DialogActions } from "@mui/material";
 import { apiRequest } from "@/api/ApiCall";
 
+interface ModalHomeProps {
+  open: boolean;
+  handleClose: () => void;
+  setRenderedSections: React.Dispatch<React.SetStateAction<string[]>>;
+  setAddSection: (sectionId: number) => void;
+}
+
+interface SectionIdMap {
+  [key: string]: number;
+}
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -15,7 +26,8 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const sectionIdMap = {
+
+const sectionIdMap: SectionIdMap = {
   banner: 1,
   category: 2,
   brand: 3,
@@ -27,19 +39,19 @@ const ModalHome = ({
   handleClose,
   setRenderedSections,
   setAddSection,
-}: any) => {
+}: ModalHomeProps) => {
   const [selectedSection, setSelectedSection] = useState("");
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSelectedSection(value);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const sectionId = sectionIdMap[selectedSection];
     if (selectedSection) {
-      setRenderedSections((prev: any) => [...prev, selectedSection]);
+      setRenderedSections((prev) => [...prev, selectedSection]);
     }
     setSelectedSection("");
     handleClose();

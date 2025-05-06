@@ -9,14 +9,12 @@ import React, { useState } from "react";
 import config from "../../../public/images/config.svg";
 import changePassword from "../../../public/images/change-passwod.svg";
 import logout from "../../../public/images/logout.svg";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 
 function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const router = useRouter();
 
   // Separate state for managing modals
   const [boxOpenConfig, setBoxOpenConfig] = useState(false);

@@ -37,8 +37,19 @@ import {
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 
+interface TermsItem {
+  terms_and_condition_id: number;
+  Terms_and_Conditions: string;
+}
+
+interface ToolbarButtonProps {
+  icon: React.ReactNode;
+  onClick: () => void;
+  active?: boolean;
+}
+
 const EditorPages = () => {
-  const [termsList, setTermsList] = useState([]);
+  const [termsList, setTermsList] = useState<TermsItem[]>([]);
 
   const editor = useEditor({
     extensions: [
@@ -94,8 +105,6 @@ const EditorPages = () => {
         url: "/terms_and_condition",
         data: formdata,
       });
-      const htmlContent = editor.getHTML().trim();
-      const isEmpty = htmlContent === "";
 
       toast.success("Terms & Conditions saved successfully!");
       fetchTerms();
@@ -242,8 +251,8 @@ const EditorPages = () => {
         <h3 className="text-lg font-semibold mb-4">All Previous Entries</h3>
         <ul className="space-y-4">
           {termsList
-            .filter((item: any) => item?.Terms_and_Conditions?.trim() !== "")
-            .map((item: any) => (
+            .filter((item) => item?.Terms_and_Conditions?.trim() !== "")
+            .map((item) => (
               <li
                 key={item?.terms_and_condition_id}
                 className="bg-gray-100 p-3 rounded"
@@ -263,7 +272,7 @@ const EditorPages = () => {
 };
 
 // Toolbar Button
-function ToolbarButton({ icon, onClick, active }: any) {
+function ToolbarButton({ icon, onClick, active }: ToolbarButtonProps) {
   return (
     <button
       onClick={onClick}

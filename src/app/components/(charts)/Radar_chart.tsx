@@ -7,6 +7,7 @@ import {
   Filler,
   Tooltip,
   Legend,
+  ChartOptions,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
 
@@ -20,7 +21,41 @@ ChartJS.register(
   Legend
 );
 
-const RadarChart = ({ num }: any) => {
+interface ChartData {
+  user_count: number;
+  brands_count: number;
+  product_count: number;
+  category_count: number;
+  sub_category_count: number;
+  order_count: number;
+  coupon_count: number;
+}
+
+interface RadarChartProps {
+  num: ChartData;
+}
+
+const RadarChart = ({ num }: RadarChartProps) => {
+  const options: ChartOptions<"radar"> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: false,
+      },
+    },
+    scales: {
+      r: {
+        min: 0,
+        ticks: {
+          stepSize: 1,
+        },
+      },
+    },
+  };
+
   return (
     <div className="w-[470px] my-10">
       <h1 className="text-2xl text-black text-center font-bold">Radar Chart</h1>
@@ -54,24 +89,7 @@ const RadarChart = ({ num }: any) => {
             },
           ],
         }}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "top",
-            },
-            title: {
-              display: false,
-            },
-          },
-          scales: {
-            r: {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          },
-        }}
+        options={options}
       />
     </div>
   );

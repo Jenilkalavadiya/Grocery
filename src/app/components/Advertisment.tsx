@@ -6,14 +6,32 @@ import { Button } from "@mui/material";
 import Advertise_add_Modal from "./Advertise_add_Modal";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
-const Advertisment = ({ component, getComponents }: any) => {
+
+interface AdvertisementItem {
+  id: number;
+  image: string;
+}
+
+interface ComponentData {
+  section_advertisements: 
+  {
+    section_advertisements: AdvertisementItem[];
+  }[];
+}
+
+interface AdvertismentProps {
+  component: ComponentData[];
+  getComponents: () => Promise<void>;
+}
+
+const Advertisment = ({ component, getComponents }: AdvertismentProps) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleDelete = async (itemID: number) => {
     console.log("res", itemID);
-    const res = await apiRequest({
+    await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=4`,
     });
@@ -25,30 +43,32 @@ const Advertisment = ({ component, getComponents }: any) => {
     <section className="bg-white p-4 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Advertisement</h2>
       <div className="flex gap-4 overflow-x-auto">
-        {component[0]?.section_advertisements?.map((item: any, index: any) => (
-          <div key={index} className="relative min-w-[300px]">
-            <Image
-              src={item?.image}
-              alt={`Banner ${index + 1}`}
-              width={135}
-              height={125}
-              className="rounded-md h-40 w-full object-cover"
-            />
-            <button
-              onClick={() => {
-                handleDelete(item?.id);
-              }}
-            >
+        {component[0]?.section_advertisements[0]?.section_advertisements?.map(
+          (item: AdvertisementItem, index: number) => (
+            <div key={index} className="relative min-w-[300px]">
               <Image
-                src={off}
-                alt="close"
-                width={35}
-                height={25}
-                className="absolute top-1 right-1"
+                src={item?.image }
+                alt={`Banner ${index + 1}`}
+                width={135}
+                height={125}
+                className="rounded-md h-40 w-full object-cover"
               />
-            </button>
-          </div>
-        ))}
+              <button
+                onClick={() => {
+                  handleDelete(item?.id);
+                }}
+              >
+                <Image
+                  src={off}
+                  alt="close"
+                  width={35}
+                  height={25}
+                  className="absolute top-1 right-1"
+                />
+              </button>
+            </div>
+          )
+        )}
 
         <div className="flex items-center justify-center min-w-[300px] h-40 bg-[#FAFAFA] rounded-md cursor-pointer">
           <Button onClick={handleOpen}>

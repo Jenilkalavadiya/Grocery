@@ -11,6 +11,8 @@ import Advertisment from "@/app/components/Advertisment";
 import BrandHomemange from "@/app/components/BrandHomemange";
 import { apiRequest } from "@/api/ApiCall";
 import withAuth from "@/protected/withAuth";
+import Image from "next/image";
+import Basket from "../../../../public/basket.png";
 
 const sectionIdMap: Record<string, number> = {
   banner: 1,
@@ -32,9 +34,19 @@ const modalStyle = {
 };
 
 interface Banners {
-  Image: string;
+  id: number;
+  image: string;
   Section_Name: string;
   Id: number;
+  category: {
+    category_name: string;
+  };
+  offer: string;
+  section_brand?: {
+    id: number;
+    image: string;
+    name: string;
+  }[];
 }
 
 interface AddSectionModalProps {
@@ -184,13 +196,17 @@ const Page = () => {
     switch (section) {
       case "banner":
         return (
-          <Banner key="banner" component={data} getComponents={fetchAll} />
+          <Banner
+            key="banner"
+            component={{ banner: data }}
+            getComponents={fetchAll}
+          />
         );
       case "category":
         return (
           <ShopByCategory
             key="category"
-            component={data}
+            component={[{ shop_by_category: data }]}
             getComponents={fetchAll}
           />
         );
@@ -198,7 +214,7 @@ const Page = () => {
         return (
           <Advertisment
             key="advertise"
-            component={data}
+            component={[{ section_advertisements: data }]}
             getComponents={fetchAll}
           />
         );
@@ -206,7 +222,7 @@ const Page = () => {
         return (
           <BrandHomemange
             key="brand"
-            component={data}
+            component={[{ section_brand: data }]}
             getComponents={fetchAll}
           />
         );
@@ -233,8 +249,10 @@ const Page = () => {
               </div>
             </div>
             <div className="py-4 px-2">
-              <img
-                src="./basket.png"
+              <Image
+                width={200}
+                height={200}
+                src={Basket}
                 alt="Basket-img"
                 className="grayscale-100"
               />

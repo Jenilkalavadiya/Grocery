@@ -1,19 +1,35 @@
 import { apiRequest } from "@/api/ApiCall";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
 import off from "../../../public/off.svg";
 import plus from "../../../public/plus.png";
 import { Button } from "@mui/material";
 import BannerModal from "@/utils/Banner_post";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
-const Banner = ({ component, getComponents }: any) => {
-  const [open, setOpen] = React.useState(false);
+interface BannerItem {
+  id: number;
+  image: string;
+}
+
+interface ComponentData {
+  banner: {
+    banner: BannerItem[];
+  }[];
+}
+
+interface BannerProps {
+  component: ComponentData;
+  getComponents: () => Promise<void>;
+}
+
+const Banner = ({ component, getComponents }: BannerProps) => {
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDelete = async (itemID: number) => {
     console.log("res", itemID);
-    const res = await apiRequest({
+    await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=1`,
     });
@@ -23,22 +39,22 @@ const Banner = ({ component, getComponents }: any) => {
   };
 
   // console.log("Addsection", banner);
+  console.log("component.banner", component);
+
   return (
     <section className="bg-white p-6 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Banner Slider</h2>
       <div className="flex gap-4 overflow-x-auto">
-        {component?.banner?.map((item: any, index: any) => (
+        {component?.banner?.banner?.map((item, index) => (
           <div key={index} className="relative min-w-[250px]">
-            <img
+            <Image
               src={item?.image}
+              width={250}
+              height={150}
               alt={`Banner ${index + 1}`}
               className="rounded-md h-40 w-full object-contain"
             />
-            <button
-              onClick={() => {
-                handleDelete(item?.id);
-              }}
-            >
+            <button onClick={() => handleDelete(item?.id)}>
               <Image
                 src={off}
                 alt="close"
@@ -49,6 +65,7 @@ const Banner = ({ component, getComponents }: any) => {
             </button>
           </div>
         ))}
+
         {/* Add new banner */}
         <div className="flex items-center justify-center min-w-[250px] h-40 bg-[#FAFAFA] rounded-md cursor-pointer">
           <Button onClick={handleOpen}>

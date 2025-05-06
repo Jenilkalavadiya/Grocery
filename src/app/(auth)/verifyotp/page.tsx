@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { FaArrowLeftLong } from "react-icons/fa6";
-import axios from "axios";
 // import styles from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -15,11 +14,19 @@ import OtpInput from "react-otp-input";
 import { apiRequest } from "@/api/ApiCall";
 import withoutAuth from "@/protected/withoutAuth";
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
   const router = useRouter();
 
-  const handleVerifyOtp = async (e: any) => {
+  const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!otp) {
@@ -34,8 +41,6 @@ const VerifyOtpPage = () => {
         data: new URLSearchParams({ otp }),
       });
 
-      
-
       console.log("first", await response.data);
 
       if (response?.data?.code === 1) {
@@ -44,9 +49,10 @@ const VerifyOtpPage = () => {
       } else {
         toast.error(response?.data?.message || "OTP verification failed.");
       }
-    } catch (error:any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
       console.error(error);
-      toast.error(error?.response?.data?.message);
+      toast.error(apiError?.response?.data?.message || "An error occurred");
     }
   };
 
@@ -77,7 +83,7 @@ const VerifyOtpPage = () => {
             </div>
           </div>
           <p className="text-sm text-center  text-gray-500 mt-4">
-            Don't worry! It happens.Please Enter Otp. <br />
+            Dont worry! It happens.Please Enter Otp. <br />
           </p>
 
           <div className="div mt-12">

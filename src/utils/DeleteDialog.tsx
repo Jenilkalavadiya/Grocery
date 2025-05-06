@@ -5,7 +5,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 
-export default function DeleteDialog({ open, handleClose, handleDelete }: any) {
+interface DeleteDialogProps {
+  open: boolean;
+  handleClose: () => void;
+  handleDelete: () => void;
+}
+
+export default function DeleteDialog({
+  open,
+  handleClose,
+  handleDelete,
+}: DeleteDialogProps) {
   // const handleClose = (event, reason) => {
   //   if (reason !== "backdropClick") {
   //     setOpen(false);

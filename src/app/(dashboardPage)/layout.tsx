@@ -1,8 +1,12 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
-const layout = ({ children }: any) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div>
       <Header />
@@ -17,4 +21,4 @@ const layout = ({ children }: any) => {
   );
 };
 
-export default layout;
+export default Layout;

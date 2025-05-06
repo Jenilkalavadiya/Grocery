@@ -4,13 +4,31 @@ import Image from "next/image";
 import close from "../../public/images/close.svg";
 import { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { ResetPassword } from "@/_components/Validation";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import password from "../../public/images/password.svg";
+
+interface ModalResetPasswordProps {
+  boxOpen: boolean;
+  handleClose: () => void;
+}
+
+interface FormValues {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 const style = {
   position: "absolute",
@@ -23,12 +41,14 @@ const style = {
   p: 2,
 };
 
-const ModalResetPassword = ({ boxOpen, handleClose }: any) => {
-  const [showOldPassword, setShowOldPassword] = useState(false);
+const ModalResetPassword = ({
+  boxOpen,
+  handleClose,
+}: ModalResetPasswordProps) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       oldPassword: "",
       newPassword: "",
@@ -49,16 +69,16 @@ const ModalResetPassword = ({ boxOpen, handleClose }: any) => {
           url: "/change_password",
           data: params,
         });
-        console.log("first", res);
 
-        if (res?.status == 200) {
+        if (res?.status === 200) {
           toast.success(res?.data?.data?.MESSAGE);
-        } else if (res?.status == 501) {
+        } else if (res?.status === 501) {
           toast.error(res?.data?.message);
         }
-      } catch (error) {
+      } catch (error: unknown) {
+        const apiError = error as ApiError;
         console.error("Error while submitting Reset Password:", error);
-        toast.error(error?.response?.data?.message);
+        toast.error(apiError?.response?.data?.message || "An error occurred");
       }
     },
   });
