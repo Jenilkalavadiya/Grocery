@@ -11,6 +11,8 @@ import changePassword from "../../../public/images/change-passwod.svg";
 import logout from "../../../public/images/logout.svg";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { FaChevronDown } from "react-icons/fa6";
+import profile from "../../../public/profile.png";
 
 function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -88,16 +90,26 @@ function Header() {
           {/* Ensure the button is on top */}
 
           {/* <Avatar alt="Remy Sharp" src={config} /> */}
-          <Button
-            id="demo-positioned-button"
-            aria-controls={open ? "demo-positioned-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            className="!text-black !mr-5 !text-xl !font-bold relative z-20"
-          >
-            Admin
-          </Button>
+          <div className="flex items-center justify-center">
+            <Image
+              src={profile}
+              alt="Profile Icon"
+              width={60}
+              height={50}
+              className="rounded-full mt-3"
+            />
+            <Button
+              id="demo-positioned-button"
+              aria-controls={open ? "demo-positioned-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+              className="!text-black !mr-5 !text-xl relative z-20 !p-0 flex items-center gap-2"
+            >
+              Admin
+              <FaChevronDown size={16} />
+            </Button>
+          </div>
 
           {/* Menu Dropdown */}
           <Menu
