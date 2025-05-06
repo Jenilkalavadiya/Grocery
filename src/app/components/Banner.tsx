@@ -11,23 +11,15 @@ interface BannerItem {
   id: number;
   image: string;
 }
-interface ComponentProps {
-  banner: BannerItem[];
-}
 
 interface BannerProps {
-  banner: BannerItem[];
-  component?: ComponentProps;
+  component: {
+    banner: BannerItem[];
+  };
   getComponents: () => void;
 }
 
-const Banner = ({
-  component,
-  getComponents,
-}: {
-  component: BannerProps;
-  getComponents: () => void;
-}) => {
+const Banner = ({ component, getComponents }: BannerProps) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

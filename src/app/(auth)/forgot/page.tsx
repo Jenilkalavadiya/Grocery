@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { useFormik } from "formik";
 import { ForgotSchema } from "@/_components/Validation";
 import { textFieldStyles } from "@/_components/textFieldStyles";
@@ -15,17 +14,21 @@ import l2 from "../../../../public/l2.png";
 import { apiRequest } from "@/api/ApiCall";
 import withoutAuth from "@/protected/withoutAuth";
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 const Page = () => {
-  const [input, setInput] = useState({
-    email: "",
-  });
-  const [otp, setOtp] = useState("");
   const router = useRouter();
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       initialValues: {
-        email: input.email,
+        email: "",
       },
       validationSchema: ForgotSchema,
       onSubmit: async (values) => {
@@ -40,13 +43,13 @@ const Page = () => {
           const data = await res?.data?.data;
           console.log("OTP", await data?.otp);
 
-          setOtp(await data?.otp);
           localStorage.setItem("otp", await data?.otp);
           toast.success(res?.data?.message);
           router.push("/verifyotp");
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.log(error);
-          toast.error(error?.response?.data?.message);
+          const apiError = error as ApiError;
+          toast.error(apiError?.response?.data?.message);
         }
       },
     });
@@ -80,7 +83,7 @@ const Page = () => {
             </h2>
           </div>
           <p className="text-sm text-center text-gray-500 mt-4">
-            Don't worry! It happens. Please enter the address <br />
+            Dont worry! It happens. Please enter the address <br />
             associated with your account.
           </p>
           <div className="flex mt-8 items-center justify-center">

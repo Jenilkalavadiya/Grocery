@@ -11,6 +11,7 @@ import Advertisment from "@/app/components/Advertisment";
 import BrandHomemange from "@/app/components/BrandHomemange";
 import { apiRequest } from "@/api/ApiCall";
 import withAuth from "@/protected/withAuth";
+import Image from "next/image";
 
 const sectionIdMap: Record<string, number> = {
   banner: 1,
@@ -32,10 +33,41 @@ const modalStyle = {
 };
 
 interface Banners {
-  Image: string;
+  id: number;
+  image: string;
   Section_Name: string;
   Id: number;
 }
+
+interface ShopByCategoryComponent {
+  shop_by_category: {
+    id: number;
+    image: string;
+    category: { category_name: string };
+    offer: string;
+  }[];
+}
+
+interface BrandComponent {
+  section_brand: {
+    id: number;
+    image: string;
+    name: string;
+  }[];
+}
+
+interface AdvertisementComponent {
+  section_advertisements: {
+    id: number;
+    image: string;
+  }[];
+}
+
+type SectionData =
+  | Banners[]
+  | ShopByCategoryComponent[]
+  | BrandComponent[]
+  | AdvertisementComponent[];
 
 interface AddSectionModalProps {
   open: boolean;
@@ -129,7 +161,7 @@ const Page = () => {
   const [open, setOpen] = useState(false);
   const [renderedSections, setRenderedSections] = useState<string[]>([]);
   const [componentsData, setComponentsData] = useState<
-    Record<string, Banners[]>
+    Record<string, SectionData>
   >({});
 
   const handleOpen = () => setOpen(true);
@@ -153,7 +185,7 @@ const Page = () => {
   }, [renderedSections]);
 
   const fetchAll = async () => {
-    const dataMap: Record<string, Banners[]> = {};
+    const dataMap: Record<string, SectionData> = {};
 
     await Promise.all(
       renderedSections.map(async (section) => {
@@ -163,7 +195,29 @@ const Page = () => {
             method: "get",
             url: `/get_all_home_management?fk_section_id=${sectionId}`,
           });
-          dataMap[section] = res?.data?.data?.result || [];
+          const result = res?.data?.data?.result || [];
+
+          // Transform data based on section type
+          switch (section) {
+            case "banner":
+              dataMap[section] = result as Banners[];
+              break;
+            case "category":
+              dataMap[section] = [
+                { shop_by_category: result },
+              ] as ShopByCategoryComponent[];
+              break;
+            case "brand":
+              dataMap[section] = [
+                { section_brand: result },
+              ] as BrandComponent[];
+              break;
+            case "advertise":
+              dataMap[section] = [
+                { section_advertisements: result },
+              ] as AdvertisementComponent[];
+              break;
+          }
         } catch (err) {
           console.error(`Error fetching section ${section}`, err);
         }
@@ -184,13 +238,17 @@ const Page = () => {
     switch (section) {
       case "banner":
         return (
-          <Banner key="banner" component={data} getComponents={fetchAll} />
+          <Banner
+            key="banner"
+            component={{ banner: data as Banners[] }}
+            getComponents={fetchAll}
+          />
         );
       case "category":
         return (
           <ShopByCategory
             key="category"
-            component={data}
+            component={data as ShopByCategoryComponent[]}
             getComponents={fetchAll}
           />
         );
@@ -198,7 +256,7 @@ const Page = () => {
         return (
           <Advertisment
             key="advertise"
-            component={data}
+            component={data as AdvertisementComponent[]}
             getComponents={fetchAll}
           />
         );
@@ -206,7 +264,7 @@ const Page = () => {
         return (
           <BrandHomemange
             key="brand"
-            component={data}
+            component={data as BrandComponent[]}
             getComponents={fetchAll}
           />
         );
@@ -233,7 +291,9 @@ const Page = () => {
               </div>
             </div>
             <div className="py-4 px-2">
-              <img
+              <Image
+                width={200}
+                height={200}
                 src="./basket.png"
                 alt="Basket-img"
                 className="grayscale-100"

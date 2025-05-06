@@ -9,13 +9,20 @@ import { ResetPasswordSchema } from "@/_components/Validation";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { textFieldStyles } from "@/_components/textFieldStyles";
 import styles from "@/styles/login.module.css";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import l2 from "../../../../public/l2.png";
 import { apiRequest } from "@/api/ApiCall";
 import withoutAuth from "@/protected/withoutAuth";
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 const ResetPassword = () => {
   const [eye, setEye] = useState(true);
@@ -42,9 +49,10 @@ const ResetPassword = () => {
           }
 
           console.log("resetPassword", res);
-        } catch (error:any) {
+        } catch (error: unknown) {
           console.log("error", error);
-          toast.error(error?.response?.data?.message);
+          const apiError = error as ApiError;
+          toast.error(apiError?.response?.data?.message);
         }
       },
     });

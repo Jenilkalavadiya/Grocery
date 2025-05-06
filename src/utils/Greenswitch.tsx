@@ -21,7 +21,9 @@ function GreenSwitch({ status }: GreenSwitchProps) {
   }));
 
   const label = { inputProps: { "aria-label": "Color switch demo" } };
-  return <ToggleSwitch {...label} checked={Boolean(status)} />;
+  // Convert numeric status to boolean while maintaining the same logic
+  const isChecked = typeof status === "number" ? status === 1 : status;
+  return <ToggleSwitch {...label} checked={isChecked} />;
 }
 
 export default GreenSwitch;

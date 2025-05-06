@@ -7,10 +7,15 @@ import { usePathname } from "next/navigation";
 interface CustomSeparatorProps {
   value1: string;
   value2: string;
-  value3?: string; // Optional prop
+  value3?: string;
+  className?: string; // Optional prop
 }
 
-export default function CustomSeparator({ value1, value2, value3 }: CustomSeparatorProps) {
+export default function CustomSeparator({
+  value1,
+  value2,
+  value3,
+}: CustomSeparatorProps) {
   const pathname = usePathname();
   const breadcrumbs = [
     <Link
