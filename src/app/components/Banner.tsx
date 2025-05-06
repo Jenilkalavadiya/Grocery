@@ -7,23 +7,7 @@ import BannerModal from "@/utils/Banner_post";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
-interface BannerItem {
-  id: number;
-  image: string;
-}
-
-interface ComponentData {
-  banner: {
-    banner: BannerItem[];
-  }[];
-}
-
-interface BannerProps {
-  component: ComponentData;
-  getComponents: () => Promise<void>;
-}
-
-const Banner = ({ component, getComponents }: BannerProps) => {
+const Banner = ({ component, getComponents }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,9 +21,6 @@ const Banner = ({ component, getComponents }: BannerProps) => {
     toast.success("Banner Deleted");
     getComponents();
   };
-
-  // console.log("Addsection", banner);
-  console.log("component.banner", component);
 
   return (
     <section className="bg-white p-6 rounded shadow mt-5">

@@ -87,7 +87,8 @@ export const AddCoupon = Yup.object({
     .test(
       "start-date-valid",
       "Start date must be a valid date",
-      (value) => value !== null && value instanceof Date && !isNaN(value)
+      (value) =>
+        value !== null && value instanceof Date && !isNaN(value.getTime())
     ),
   endDate: Yup.date()
     .nullable()
@@ -95,7 +96,8 @@ export const AddCoupon = Yup.object({
     .test(
       "end-date-valid",
       "End date must be a valid date",
-      (value) => value !== null && value instanceof Date && !isNaN(value)
+      (value) =>
+        value !== null && value instanceof Date && !isNaN(value.getTime())
     )
     .test(
       "end-after-start",

@@ -7,24 +7,9 @@ import Advertise_add_Modal from "./Advertise_add_Modal";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 
-interface AdvertisementItem {
-  id: number;
-  image: string;
-}
 
-interface ComponentData {
-  section_advertisements: 
-  {
-    section_advertisements: AdvertisementItem[];
-  }[];
-}
 
-interface AdvertismentProps {
-  component: ComponentData[];
-  getComponents: () => Promise<void>;
-}
-
-const Advertisment = ({ component, getComponents }: AdvertismentProps) => {
+const Advertisment = ({ component, getComponents }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,10 +29,10 @@ const Advertisment = ({ component, getComponents }: AdvertismentProps) => {
       <h2 className="text-lg font-semibold mb-3">Advertisement</h2>
       <div className="flex gap-4 overflow-x-auto">
         {component[0]?.section_advertisements[0]?.section_advertisements?.map(
-          (item: AdvertisementItem, index: number) => (
+          (item, index) => (
             <div key={index} className="relative min-w-[300px]">
               <Image
-                src={item?.image }
+                src={item?.image}
                 alt={`Banner ${index + 1}`}
                 width={135}
                 height={125}

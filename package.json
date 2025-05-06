@@ -31,7 +31,7 @@
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
     "dayjs": "^1.11.13",
-    "flowbite-react": "^0.11.5",
+    "flowbite-react": "^0.11.7",
     "formik": "^2.4.6",
     "jose": "^6.0.10",
     "js-cookie": "^3.0.5",

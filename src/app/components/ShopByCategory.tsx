@@ -7,29 +7,7 @@ import { toast } from "react-toastify";
 import Shop_by_Category_post from "@/utils/Shop_by_Category_post";
 import { useState } from "react";
 
-interface Category {
-  category_name: string;
-}
-
-interface ShopByCategoryItem {
-  id: number;
-  image: string;
-  category: Category;
-  offer: string;
-}
-
-interface ComponentData {
-  shop_by_category: {
-    shop_by_category: ShopByCategoryItem[];
-  }[];
-}
-
-interface ShopByCategoryProps {
-  component: ComponentData[];
-  getComponents: () => Promise<void>;
-}
-
-const ShopByCategory = ({ component, getComponents }: ShopByCategoryProps) => {
+const ShopByCategory = ({ component, getComponents }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,9 +28,9 @@ const ShopByCategory = ({ component, getComponents }: ShopByCategoryProps) => {
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold ">Shop by Category</h2>
         </div>
-        <div className="flex gap-4 p-3.5">
+        <div className="flex gap-4 p-3.5 overflow-x-auto w-full">
           {component[0]?.shop_by_category[0]?.shop_by_category?.map(
-            (item: ShopByCategoryItem, index: number) => (
+            (item, index) => (
               <div
                 key={index}
                 className="w-[160px] bg-white overflow-y-hidden  text-center p-2 relative shadow-sm"

@@ -56,6 +56,13 @@ interface AddSectionModalProps {
   renderedSections: string[];
 }
 
+const sectionOptions = [
+  { key: "banner", label: "Slider with Banner" },
+  { key: "category", label: "Shop By Category" },
+  { key: "brand", label: "Slider with Brand" },
+  { key: "advertise", label: "Slider with Advertisement" },
+] as const;
+
 const AddSectionModal: React.FC<AddSectionModalProps> = ({
   open,
   handleClose,
@@ -96,27 +103,21 @@ const AddSectionModal: React.FC<AddSectionModalProps> = ({
         >
           <h1 className="text-2xl font-bold">Add Section</h1>
           <div className="flex flex-col justify-start mt-5 space-y-5">
-            {Object.keys(sectionIdMap).map((key, index) => (
-              <div className="flex flex-row space-x-5 justify-start" key={key}>
+            {sectionOptions.map((option, index) => (
+              <div
+                className="flex flex-row space-x-5 justify-start"
+                key={option.key}
+              >
                 <input
                   type="radio"
                   name="section"
-                  value={key}
+                  value={option.key}
                   id={String(index + 1)}
-                  checked={selectedSection === key}
+                  checked={selectedSection === option.key}
                   onChange={handleChange}
-                  disabled={renderedSections.includes(key)}
+                  disabled={renderedSections.includes(option.key)}
                 />
-
-                <label htmlFor={String(index + 1)}>
-                  {key === "banner"
-                    ? "Slider with Banner"
-                    : key === "category"
-                      ? "Shop By Category"
-                      : key === "brand"
-                        ? "Slider with Brand"
-                        : "Slider with Advertisement"}
-                </label>
+                <label htmlFor={String(index + 1)}>{option.label}</label>
               </div>
             ))}
           </div>
@@ -165,24 +166,27 @@ const Page = () => {
   }, [renderedSections]);
 
   const fetchAll = async () => {
-    const dataMap: Record<string, Banners[]> = {};
+    try {
+      const dataMap = await Promise.all(
+        renderedSections.map(async (section) => {
+          const sectionId = sectionIdMap[section];
+          try {
+            const res = await apiRequest({
+              method: "get",
+              url: `/get_all_home_management?fk_section_id=${sectionId}`,
+            });
+            return [section, res?.data?.data?.result || []] as const;
+          } catch (err) {
+            console.error(`Error fetching section ${section}:`, err);
+            return [section, []] as const;
+          }
+        })
+      );
 
-    await Promise.all(
-      renderedSections.map(async (section) => {
-        const sectionId = sectionIdMap[section];
-        try {
-          const res = await apiRequest({
-            method: "get",
-            url: `/get_all_home_management?fk_section_id=${sectionId}`,
-          });
-          dataMap[section] = res?.data?.data?.result || [];
-        } catch (err) {
-          console.error(`Error fetching section ${section}`, err);
-        }
-      })
-    );
-
-    setComponentsData(dataMap);
+      setComponentsData(Object.fromEntries(dataMap));
+    } catch (err) {
+      console.error("Error fetching sections:", err);
+    }
   };
   useEffect(() => {
     if (renderedSections.length > 0) {
@@ -190,45 +194,39 @@ const Page = () => {
     }
   }, [renderedSections]);
 
+  const componentMap = {
+    banner: {
+      component: Banner,
+      transform: (data: Banners[]) => ({ banner: data }),
+    },
+    category: {
+      component: ShopByCategory,
+      transform: (data: Banners[]) => [{ shop_by_category: data }],
+    },
+    advertise: {
+      component: Advertisment,
+      transform: (data: Banners[]) => [{ section_advertisements: data }],
+    },
+    brand: {
+      component: BrandHomemange,
+      transform: (data: Banners[]) => [{ section_brand: data }],
+    },
+  } as const;
+
   const renderComponent = (section: string) => {
     const data = componentsData[section] || [];
+    const config = componentMap[section as keyof typeof componentMap];
 
-    switch (section) {
-      case "banner":
-        return (
-          <Banner
-            key="banner"
-            component={{ banner: data }}
-            getComponents={fetchAll}
-          />
-        );
-      case "category":
-        return (
-          <ShopByCategory
-            key="category"
-            component={[{ shop_by_category: data }]}
-            getComponents={fetchAll}
-          />
-        );
-      case "advertise":
-        return (
-          <Advertisment
-            key="advertise"
-            component={[{ section_advertisements: data }]}
-            getComponents={fetchAll}
-          />
-        );
-      case "brand":
-        return (
-          <BrandHomemange
-            key="brand"
-            component={[{ section_brand: data }]}
-            getComponents={fetchAll}
-          />
-        );
-      default:
-        return null;
-    }
+    if (!config) return null;
+
+    const { component: Component, transform } = config;
+    return (
+      <Component
+        key={section}
+        component={transform(data)}
+        getComponents={fetchAll}
+      />
+    );
   };
 
   return (
