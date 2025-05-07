@@ -9,10 +9,10 @@ import CustomSeparator from "@/app/components/Bradcrumbs";
 import ShopByCategory from "@/app/components/ShopByCategory";
 import Advertisment from "@/app/components/Advertisment";
 import BrandHomemange from "@/app/components/BrandHomemange";
-import { apiRequest } from "@/api/ApiCall";
 import withAuth from "@/protected/withAuth";
 import Image from "next/image";
 import Basket from "../../../../public/basket.png";
+import { signalApiCall } from "@/utils/apiSignals";
 
 const sectionIdMap: Record<string, number> = {
   banner: 1,
@@ -84,11 +84,12 @@ const AddSectionModal: React.FC<AddSectionModalProps> = ({
       return [...prev, selectedSection];
     });
 
-    await apiRequest({
-      method: "post",
-      url: "/add_section",
-      data: { id: sectionIdMap[selectedSection] },
-    });
+    await signalApiCall<{ success: boolean }>(
+      "post",
+      "/add_section",
+      { id: sectionIdMap[selectedSection] },
+      { showLoading: true }
+    );
 
     setSelectedSection("");
     handleClose();
@@ -156,6 +157,7 @@ const Page = () => {
       setRenderedSections(JSON.parse(saved));
     }
   }, []);
+
   useEffect(() => {
     if (renderedSections.length > 0) {
       localStorage.setItem(
@@ -171,11 +173,13 @@ const Page = () => {
         renderedSections.map(async (section) => {
           const sectionId = sectionIdMap[section];
           try {
-            const res = await apiRequest({
-              method: "get",
-              url: `/get_all_home_management?fk_section_id=${sectionId}`,
-            });
-            return [section, res?.data?.data?.result || []] as const;
+            const res = await signalApiCall<{ result: Banners[] }>(
+              "get",
+              `/get_all_home_management?fk_section_id=${sectionId}`,
+              undefined,
+              { showLoading: true }
+            );
+            return [section, res?.result || []] as const;
           } catch (err) {
             console.error(`Error fetching section ${section}:`, err);
             return [section, []] as const;
@@ -188,6 +192,7 @@ const Page = () => {
       console.error("Error fetching sections:", err);
     }
   };
+
   useEffect(() => {
     if (renderedSections.length > 0) {
       fetchAll();

@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.181:3000/admin";
+  process.env.NEXT_PUBLIC_BASEAPI || "http://192.168.2.180:3000/admin";
 
 const refresh =
   typeof window !== "undefined" &&

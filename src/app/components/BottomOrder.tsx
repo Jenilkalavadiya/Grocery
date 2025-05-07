@@ -40,7 +40,7 @@ const BottomOrder = ({ orderDetails, orderTable, total }: BottomOrderProps) => {
   return (
     <div className=" flex gap-4 w-full ">
       {/* BOTTOM LEFT */}
-      <div className="w-[300px] p-5 mt-4 shadow-md h-[250px] border-gray-200 border">
+      <div className="w-[350px] p-5 mt-4 shadow-md h-[250px] border-gray-200 border bg-white">
         <div className="flex gap-2 items-center">
           <Image
             src="/user.png"
@@ -92,7 +92,7 @@ const BottomOrder = ({ orderDetails, orderTable, total }: BottomOrderProps) => {
       </div>
 
       {/* BOTTOM RIGHT TABLE DATA */}
-      <div className="shadow-md border-gray-200 border  w-[1000px] mt-[-55px] p-5 flex ">
+      <div className="shadow-md border-gray-200 border w-[1100px] mt-[-15px] p-5 flex bg-white">
         {/* Order Table */}
         <OrderTable orderTable={orderTable} total={total} />
       </div>

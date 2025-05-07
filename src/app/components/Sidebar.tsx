@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { useState, useMemo, useCallback } from "react";
 import Grocery from "../../../public/Path 410.png";
 import Image from "next/image";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+// import styles from "@/styles/sidebar.module.css";
 
 interface SidebarItem {
   name: string;
@@ -16,26 +18,41 @@ interface SidebarItem {
   isCategory?: boolean;
 }
 
+import DashboardIcon from "../../../public/images/1.svg";
+import UsersIcon from "../../../public/images/2.svg";
+import ProductsIcon from "../../../public/images/3.svg";
+import OrdersIcon from "../../../public/images/4.svg";
+import CategoryIcon from "../../../public/images/5.svg";
+import BrandsIcon from "../../../public/images/6.svg";
+import CouponManagementIcon from "../../../public/images/7.svg";
+import HomeManagementIcon from "../../../public/images/8.svg";
+import PagesIcon from "../../../public/images/9.svg";
+import FAQIcon from "../../../public/images/10.svg";
+
 const sidebarItems: SidebarItem[] = [
-  { name: "Dashboard", image: "./images/1.svg", link: "/dashboard" },
-  { name: "Users", image: "./images/2.svg", link: "/users" },
-  { name: "Products", image: "./images/3.svg", link: "/products" },
-  { name: "Orders", image: "./images/4.svg", link: "/orders" },
+  { name: "Dashboard", image: DashboardIcon, link: "/dashboard" },
+  { name: "Users", image: UsersIcon, link: "/users" },
+  { name: "Products", image: ProductsIcon, link: "/products" },
+  { name: "Orders", image: OrdersIcon, link: "/orders" },
   {
     name: "Category",
-    image: "./images/5.svg",
+    image: CategoryIcon,
     link: "/category",
     isCategory: true,
   },
-  { name: "Brands", image: "./images/6.svg", link: "/brands" },
+  { name: "Brands", image: BrandsIcon, link: "/brands" },
   {
     name: "Coupon Management",
-    image: "./images/7.svg",
+    image: CouponManagementIcon,
     link: "/couponmanagment",
   },
-  { name: "Home Management", image: "./images/8.svg", link: "/homemanagement" },
-  { name: "Pages", image: "./images/9.svg", link: "/pages" },
-  { name: "FAQ", image: "./images/10.svg", link: "/faq" },
+  {
+    name: "Home Management",
+    image: HomeManagementIcon,
+    link: "/homemanagement",
+  },
+  { name: "Pages", image: PagesIcon, link: "/pages" },
+  { name: "FAQ", image: FAQIcon, link: "/faq" },
 ];
 
 const drawerWidth = 325;
@@ -63,25 +80,31 @@ const SidebarItem = React.memo(
       return (
         <div className="flex flex-col">
           <div
-            className="flex items-center gap-3 px-4 py-3 rounded-md cursor-pointer transition-colors hover:bg-gray-700"
+            className="flex items-center justify-between px-4 py-3 rounded-md cursor-pointer transition-colors hover:bg-gray-700"
             onClick={() => onCategoryToggle(item.name)}
           >
-            <Image
-              className="w-5 h-5"
-              width={5}
-              height={5}
-              src={item.image}
-              alt=""
+            <div className="flex items-center gap-3">
+              <Image
+                className="w-5 h-5"
+                width={5}
+                height={5}
+                src={item.image}
+                alt="../../../public/images/1.svg"
+              />
+              <span
+                className={`${isActive ? "text-yellow-400 font-semibold" : "text-gray-300"}`}
+              >
+                {item.name}
+              </span>
+            </div>
+            <KeyboardArrowDownIcon
+              className={`transition-transform duration-200 ${isCategoryActive ? "rotate-180" : ""}`}
+              sx={{ color: "gray" }}
             />
-            <span
-              className={`${isActive ? "text-yellow-400 font-semibold" : "text-gray-300"}`}
-            >
-              {item.name}
-            </span>
           </div>
 
           {isCategoryActive && (
-            <div className="ml-10 mt-2 space-y-2 text-sm">
+            <div className="ml-10 mt-2 space-y-2 text-md">
               <Link
                 href="/category"
                 className={`block px-3 py-2 rounded-md transition hover:bg-gray-700 ${
@@ -109,21 +132,21 @@ const SidebarItem = React.memo(
     }
 
     return (
-      <div className="flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover:bg-gray-700">
-        <Image
-          className="w-5 h-5"
-          width={5}
-          height={5}
-          src={item.image}
-          alt="icon"
-        />
-        <Link
-          href={item.link}
-          className={`${isActive ? "text-yellow-400 font-semibold" : "text-gray-300"}`}
-        >
+      <Link
+        href={item.link}
+        className={`${isActive ? "text-yellow-400 font-semibold" : "text-gray-300"}`}
+      >
+        <div className="flex items-center gap-3 px-4 py-3 rounded-md transition-colors hover:bg-gray-700">
+          <Image
+            className="w-5 h-5"
+            width={5}
+            height={5}
+            src={item.image}
+            alt="icon"
+          />
           {item.name}
-        </Link>
-      </div>
+        </div>
+      </Link>
     );
   }
 );
