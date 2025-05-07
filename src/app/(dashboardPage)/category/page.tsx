@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import CategoryItem from "@/app/components/CategoryItem";
-import { apiRequest } from "@/api/ApiCall";
 import Button from "@mui/material/Button";
 import ModalCategory from "@/utils/ModalCategory";
 import Image from "next/image";
 import icon from "../../../../public/search.png";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
+import { signalApiCall } from "@/utils/apiSignals";
 
 interface CategoryItemData {
   No: number;
@@ -29,7 +29,7 @@ const Page = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<CategoryResponse | null>(null);
   const [page, setPage] = useState(1);
-  const [itemID, setItemId] = useState<number| string>(0);
+  const [itemID, setItemId] = useState<number | string>(0);
   const [open, setOpen] = useState(false);
 
   const handleOpen = async () => {
@@ -48,13 +48,16 @@ const Page = () => {
 
   const getAllCategory = async () => {
     try {
-      const res = await apiRequest({
-        method: "get",
-        url: `/getcategories?pageNumber=${page}&pageLimit=5&search=${search}`,
-      });
+      const data = await signalApiCall<CategoryResponse>(
+        "get",
+        `/getcategories?pageNumber=${page}&pageLimit=5&search=${search}`,
+        undefined,
+        { showLoading: true }
+      );
 
-      const data = await res?.data?.data;
-      setCategory(data);
+      if (data) {
+        setCategory(data);
+      }
     } catch (error: unknown) {
       console.error("Error fetching categories:", error);
     }

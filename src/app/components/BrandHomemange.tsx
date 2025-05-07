@@ -30,14 +30,14 @@ const BrandHomemange = ({ component, getComponents }) => {
         {component[0]?.section_brand[0]?.section_brand?.map((item, index) => (
           <div
             key={index}
-            className="w-[160px] bg-white rounded-sm relative shadow-sm h-[150px]"
+            className="w-[160px] bg-white rounded-sm relative shadow-md border border-gray-300 flex items-center justify-center cursor-pointer"
           >
             <Image
               src={item.image}
               width={150}
               height={100}
               alt={item.name || ""}
-              className="w-[150px] h-[100px] object-contain mx-auto mb-2 border-gray-500 "
+              className=" object-contain mx-auto border-gray-500 "
             />
 
             <button

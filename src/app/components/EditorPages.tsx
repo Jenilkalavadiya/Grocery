@@ -255,7 +255,7 @@ const EditorPages = () => {
             .map((item) => (
               <li
                 key={item?.terms_and_condition_id}
-                className="bg-gray-100 p-3 rounded"
+                className="bg-gray-100 p-3 rounded flex justify-between items-center"
               >
                 <div
                   className="prose prose-sm max-w-none"
@@ -263,6 +263,19 @@ const EditorPages = () => {
                     __html: item.Terms_and_Conditions,
                   }}
                 />
+                <button
+                  onClick={async () => {
+                    await apiRequest({
+                      method: "delete",
+                      url: `/delete_terms_condition?id=${item?.terms_and_condition_id}`,
+                    });
+                    toast.success("Terms & Conditions Deleted");
+                    fetchTerms();
+                  }}
+                  className="text-red-500 cursor-pointer"
+                >
+                  <Trash size={16} />
+                </button>
               </li>
             ))}
         </ul>

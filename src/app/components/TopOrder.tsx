@@ -32,8 +32,8 @@ const TopOrder = ({ orderDetails }: TopOrderProps) => {
   return (
     <div className="mt-10 flex gap-4 w-full">
       {/* Left Column - Order Details */}
-      <div className="w-[300px] p-6 shadow-md border-gray-200 border">
-        <p className="font-bold mb-3 text-lg text-center">
+      <div className="w-[350px] p-6 shadow-md border-gray-200 border bg-white">
+        <p className="font-bold mb-3 text-xl text-center">
           {orderDetails?.order_no}
         </p>
         <div className="flex justify-between p-2">
@@ -51,7 +51,7 @@ const TopOrder = ({ orderDetails }: TopOrderProps) => {
       </div>
 
       {/* Right Column - Custom Stepper */}
-      <div className="shadow-md border border-gray-200 w-[1000px] h-[120px] px-10 py-6 flex items-center">
+      <div className="shadow-md border border-gray-200 w-[1100px] h-[160px] px-10 py-6  flex items-center bg-white">
         <div className="flex items-center w-full relative">
           {stepLabels.map((label, index) => {
             const isCompleted = index < activeStep;

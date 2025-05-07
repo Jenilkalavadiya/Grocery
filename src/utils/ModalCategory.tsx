@@ -6,11 +6,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import { AddCategorySchema } from "@/_components/Validation";
-import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import uploadImage from "../../public/images/upload.png";
 import close from "../../public/images/close.svg";
+import { signalApiCall } from "@/utils/apiSignals";
 
 interface FormValues {
   name: string;
@@ -55,7 +55,6 @@ export default function ModalCategory({
     initialValues: { name: "", image: null, status: 0 },
     validationSchema: AddCategorySchema,
     onSubmit: async (values) => {
-      console.log(values);
       const formData = new FormData();
       formData.append("category_name", values.name);
       formData.append("status", values.status.toString());
@@ -65,34 +64,42 @@ export default function ModalCategory({
       if (itemID) {
         formData.append("id", itemID.toString());
       }
-      const res = await apiRequest({
-        method: "post",
-        url: "/addcategory",
-        data: formData,
-      });
 
-      console.log("Response", res);
-      toast.success(res?.data?.data?.MESSAGE);
-      handleClose();
-      getAllCategory();
+      const response = await signalApiCall<{ MESSAGE: string }>(
+        "post",
+        "/addcategory",
+        formData,
+        { showLoading: true }
+      );
+
+      if (response?.MESSAGE) {
+        toast.success(response.MESSAGE);
+        handleClose();
+        getAllCategory();
+      }
     },
   });
 
   const getCategoryByID = async () => {
-    const res = await apiRequest({
-      method: "get",
-      url: `/getcategory?id=${itemID}`,
-    });
+    const response = await signalApiCall<{
+      DATA: {
+        category: string;
+        image?: string;
+        status: number;
+      };
+    }>("get", `/getcategory?id=${itemID}`, undefined, { showLoading: true });
 
-    console.log("res", res);
-    const result = res.data.data.DATA;
-    setFieldValue("name", result.category);
+    if (response?.DATA) {
+      const result = response.DATA;
+      setFieldValue("name", result.category);
 
-    if (result?.image && typeof result.image === "string") {
-      setFieldValue("image", result.image);
+      if (result?.image && typeof result.image === "string") {
+        setFieldValue("image", result.image);
+      }
+      setFieldValue("status", result.status);
     }
-    setFieldValue("status", result.status);
   };
+
   useEffect(() => {
     if (itemID) {
       getCategoryByID();
