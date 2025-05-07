@@ -1,32 +1,21 @@
-import React from "react";
 import { FormikErrors, FormikTouched } from "formik";
+
+interface ProductDetail {
+  variation: string;
+  productPrice: string;
+  discount: string;
+  discountPrice: string;
+}
+
+interface FormValues {
+  productDetails: ProductDetail[];
+}
 
 interface ProductDetailInputProps {
   index: number;
-  values: {
-    productDetails: Array<{
-      variation: string;
-      productPrice: string;
-      discount: string;
-      discountPrice: string;
-    }>;
-  };
-  errors: FormikErrors<{
-    productDetails: Array<{
-      variation: string;
-      productPrice: string;
-      discount: string;
-      discountPrice: string;
-    }>;
-  }>;
-  touched: FormikTouched<{
-    productDetails: Array<{
-      variation: string;
-      productPrice: string;
-      discount: string;
-      discountPrice: string;
-    }>;
-  }>;
+  values: FormValues;
+  errors: FormikErrors<FormValues>;
+  touched: FormikTouched<FormValues>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   remove: (index: number) => void;
@@ -41,49 +30,48 @@ export const ProductDetailInput = ({
   handleBlur,
   remove,
 }: ProductDetailInputProps) => {
+  const isNumericField = (field: string) =>
+    ["productPrice", "discount", "discountPrice"].includes(field);
+
   return (
-    <div className="flex gap-8 flex-wrap items-end">
+    <div className="flex justify-between flex-wrap">
       {["variation", "productPrice", "discount", "discountPrice"].map(
         (field) => (
           <div key={field} className="flex flex-col mt-3 gap-2">
             <span className="text-gray-400 font-bold capitalize">{field}</span>
             <input
-              type="text"
+              type={isNumericField(field) ? "number" : "text"}
               name={`productDetails[${index}].${field}`}
-              value={
-                values?.productDetails[index]?.[
-                  field as keyof (typeof values.productDetails)[0]
-                ]
-              }
+              value={values?.productDetails[index]?.[field]?.trim() || ""}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
+              onKeyDown={
+                isNumericField(field)
+                  ? (e) => {
+                      if (["e", "E", "+", "-"].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }
+                  : undefined
+              }
+              className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[48px] p-1"
               placeholder={field}
             />
-            {touched?.productDetails?.[index]?.[
-              field as keyof (typeof values.productDetails)[0]
-            ] &&
-              errors?.productDetails?.[index]?.[
-                field as keyof (typeof values.productDetails)[0]
-              ] && (
+            {touched?.productDetails?.[index]?.[field] &&
+              errors?.productDetails?.[index]?.[field] && (
                 <div className="text-red-500">
-                  {
-                    errors.productDetails[index][
-                      field as keyof (typeof values.productDetails)[0]
-                    ]
-                  }
+                  {errors?.productDetails[index]?.[field]}
                 </div>
               )}
           </div>
         )
       )}
-
       {values.productDetails.length > 1 && (
         <div className="flex items-end">
           <button
             type="button"
             onClick={() => remove(index)}
-            className="text-red-600 cursor-pointer"
+            className="text-red-600"
           >
             Remove
           </button>
@@ -92,5 +80,3 @@ export const ProductDetailInput = ({
     </div>
   );
 };
-
-export default ProductDetailInput;

@@ -92,7 +92,7 @@ function Users() {
       </div>
 
       {/* // PAGINATION ******* */}
-      <div className="flex justify-end mt-6 mr-8 mb-8">
+      <div className="flex justify-end mt-6 mr-6 mb-8">
         <Stack spacing={2}>
           <Pagination
             count={Math.ceil(Number(user?.Total_Count) / 5)}
@@ -100,6 +100,7 @@ function Users() {
             onChange={(e, value) => setPage(value)}
             variant="outlined"
             shape="rounded"
+          
           />
         </Stack>
       </div>

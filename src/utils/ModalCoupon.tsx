@@ -167,7 +167,7 @@ const ModalCoupon = ({
             <input
               type="text"
               name="name"
-              value={values.name}
+              value={values.name.trim()}
               onChange={handleChange}
               onBlur={handleBlur}
               className="w-[350px] border border-gray-400 focus:outline-none bg-white text-black h-[45px] p-2"
@@ -251,7 +251,7 @@ const ModalCoupon = ({
             <input
               type="text"
               name="couponCode"
-              value={values.couponCode}
+              value={values.couponCode.trim()}
               onChange={handleChange}
               onBlur={handleBlur}
               className="w-[350px] border border-gray-400 focus:outline-none bg-white text-black h-[45px] p-2"

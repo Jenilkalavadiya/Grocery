@@ -238,10 +238,10 @@ const AddProducts = ({
             <input
               type="text"
               name="name"
-              value={values.name}
+              value={values.name.trim()}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
+              className="w-[300px] border border-gray-400 focus:outline-none bg-white text-black h-[48px] p-1"
               placeholder="Item Name"
             />
             {errors.name && touched.name && (
@@ -257,7 +257,7 @@ const AddProducts = ({
               value={values.category}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
+              className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[48px] p-1"
             >
               <option value="">Select</option>
               {category?.map((data) => (
@@ -279,7 +279,7 @@ const AddProducts = ({
               value={values.subCategory}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
+              className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[48px] p-1"
             >
               <option value="">Select</option>
               {subCategory?.map((data) => (
@@ -301,7 +301,7 @@ const AddProducts = ({
               value={values.brand}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[42px] p-1"
+              className="w-[300px]  border border-gray-400 focus:outline-none bg-white text-black h-[48px] p-1"
             >
               <option value="">Select</option>
               {brand?.map((data) => (
@@ -353,8 +353,6 @@ const AddProducts = ({
             key={index}
             index={index}
             values={values}
-            errors={errors}
-            touched={touched}
             handleChange={handleChange}
             handleBlur={handleBlur}
             remove={removeOtherInfo}
@@ -362,7 +360,7 @@ const AddProducts = ({
         ))}
 
         {/* Image Upload */}
-        <label htmlFor="upload" className="w-full">
+        <label htmlFor="upload" className="w-[400px]">
           <input
             type="file"
             name="image"
@@ -391,7 +389,7 @@ const AddProducts = ({
               />
             </div>
           ) : (
-            <div className="w-full max-w-[400px] mt-3 bg-[#FAFAFA] text-black h-[125px] flex flex-col justify-center items-center">
+            <div className="w-[400px] mt-3 bg-[#FAFAFA] text-black h-[125px] flex flex-col justify-center items-center">
               <Image
                 src={uploadImage}
                 alt="uploadimg"
