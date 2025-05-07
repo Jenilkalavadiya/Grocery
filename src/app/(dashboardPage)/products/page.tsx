@@ -54,7 +54,7 @@ const Product = () => {
 
   useEffect(() => {
     getProduct();
-  }, [search, page]);
+  }, [page, search]);
 
   const router = useRouter();
   return (
@@ -116,6 +116,7 @@ const Product = () => {
             }
             variant="outlined"
             shape="rounded"
+          
           />
         </Stack>
       </div>

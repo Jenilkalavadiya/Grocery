@@ -144,7 +144,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className=" my-6 m-auto p-2 h-[calc(100vh-89px)]">
+    <div className=" my-6 m-auto p-2 ">
       <AddProducts
         brand={brand}
         category={category}

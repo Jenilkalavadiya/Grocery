@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
   images:{
-    domains:['192.168.2.181']
+    domains:['192.168.2.181','192.168.2.180']
   }
 };
 
