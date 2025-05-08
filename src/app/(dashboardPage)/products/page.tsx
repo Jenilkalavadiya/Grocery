@@ -47,7 +47,6 @@ const Product = () => {
       url: `/get_products?pageNumber=${page}&pageLimit=5&search=${search}`,
     });
 
-    console.log("getProduct", res?.data);
     const data = await res?.data?.data;
     setProduct(data);
   };
@@ -116,7 +115,8 @@ const Product = () => {
             }
             variant="outlined"
             shape="rounded"
-          
+            hidePrevButton={!!search}
+            hideNextButton={!!search}
           />
         </Stack>
       </div>

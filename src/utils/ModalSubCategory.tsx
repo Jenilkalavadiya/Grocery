@@ -112,7 +112,6 @@ export default function ModalSubCategory({
     });
 
     const result = res.data.data.DATA;
-    console.log("result", result);
     setFieldValue("name", result.SubCategory_Name);
     setFieldValue("category", result.Category_id);
 

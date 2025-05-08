@@ -47,13 +47,12 @@ const CategoryItem = ({
     setOpen(false);
   };
   const handleDelete = async () => {
-    const res = await apiRequest({
+     await apiRequest({
       method: "delete",
       url: `/deletecategory?id=${itemID}`,
     });
     getAllCategory();
     handleClose();
-    console.log(res);
   };
 
   const statusChange = async (id: number, currentStatus: number) => {
@@ -65,7 +64,6 @@ const CategoryItem = ({
         url: "/status_change1",
         data: { id, status: newStatus },
       });
-      console.log("resssponse", res);
       if (res?.status === 200) {
         toast.success("Status updated");
         getAllCategory();

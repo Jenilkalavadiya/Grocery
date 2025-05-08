@@ -40,7 +40,6 @@ function Users() {
         method: "get",
         url: `/getusers?pageNumber=${page}&pageLimit=5&search=${search}`,
       });
-      console.log("first", res);
       const data = await res?.data?.data;
       setUser(data);
     } catch (error: unknown) {
@@ -51,7 +50,6 @@ function Users() {
   useEffect(() => {
     getUsers();
   }, [page, search]);
-  console.log("Userslist", user);
 
   return (
     <div className="text-black h-[calc(100vh-111px)]">
@@ -100,6 +98,8 @@ function Users() {
             onChange={(e, value) => setPage(value)}
             variant="outlined"
             shape="rounded"
+            hidePrevButton={!!search} 
+            hideNextButton={!!search}
           
           />
         </Stack>

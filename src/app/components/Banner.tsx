@@ -12,7 +12,6 @@ const Banner = ({ component, getComponents }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
     await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=1`,

@@ -43,7 +43,6 @@ const Coupon = () => {
       url: `/get_coupons?pageNumber=${page}&pageLimit=5`,
     });
 
-    console.log("coupon", res);
 
     setCoupon(res?.data?.data);
   };
@@ -107,6 +106,7 @@ const Coupon = () => {
             onChange={(e, value) => setPage(value)}
             variant="outlined"
             shape="rounded"
+            
           />
         </Stack>
       </div>

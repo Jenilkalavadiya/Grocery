@@ -35,7 +35,6 @@ const Usersitem = ({ user, getUsers }: UsersitemProps) => {
         data: { id, status: newStatus },
       });
 
-      console.log("status", res);
       if (res?.status === 200) {
         toast.success(res?.data?.data?.message);
         getUsers();

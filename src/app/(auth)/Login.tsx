@@ -68,8 +68,8 @@ const Page = () => {
   // Updated to trim leading spaces and trigger validation
   const handleTrimmedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const trimmedValue = value.replace(/^\s+/, ""); // Remove only leading spaces
-    formik.setFieldValue(name, trimmedValue, true); // 'true' triggers validation
+    const trimmedValue = value.replace(/^\s+/, "");
+    formik.setFieldValue(name, trimmedValue, true);
   };
 
   return (
@@ -84,7 +84,7 @@ const Page = () => {
         />
       </div>
 
-      <div className="flex flex-col items-center justify-center w-full z-10 my-30">
+      <div className="flex flex-col items-center justify-center w-full   z-10 my-30">
         <div
           className={`${styles.content} bg-white shadow-2xl flex flex-col items-center text-black`}
         >

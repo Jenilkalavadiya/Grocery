@@ -39,7 +39,6 @@ export default function BannerModal({
     useFormik<FormValues>({
       initialValues: { image: null },
       onSubmit: async (values) => {
-        console.log(values);
         const formData = new FormData();
         if (values?.image) {
           formData.append("image", values.image);
@@ -50,7 +49,6 @@ export default function BannerModal({
           url: "/add_home_management",
           data: formData,
         });
-        // console.log("Response", res);
         getComponents();
         toast.success(res?.data?.data?.MESSAGE);
         handleClose();

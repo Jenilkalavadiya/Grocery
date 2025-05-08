@@ -89,7 +89,6 @@ const AddProducts = ({
   newProductId,
 }: AddProductsProps) => {
   const router = useRouter();
-  console.log("variationId", newProductId);
   const {
     values,
     errors,
@@ -139,7 +138,7 @@ const AddProducts = ({
           toast.error(res?.data?.message);
         }
       } catch (error: unknown) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
         if (error && typeof error === "object" && "response" in error) {
           const err = error as { response?: { data?: { message?: string } } };
           toast.error(err?.response?.data?.message);
@@ -149,7 +148,6 @@ const AddProducts = ({
   });
 
   useEffect(() => {
-    console.log("getProductDetail:", getProductDetail);
     if (getProductDetail && variationId && selectBox) {
       setFieldValue("name", getProductDetail?.Product_Name || "");
       setFieldValue("category", selectBox?.Category_id?.toString() || "");
@@ -179,8 +177,6 @@ const AddProducts = ({
       if (getProductDetail?.Image) {
         setFieldValue("image", getProductDetail.Image);
       }
-
-      console.log("imagePassed", getProductDetail.Image);
     }
   }, [getProductDetail, variationId, setFieldValue, selectBox]);
 
@@ -375,16 +371,16 @@ const AddProducts = ({
           />
 
           {values?.image ? (
-            <div className="flex items-start justify-center">
+            <div className="flex items-start ">
               <Image
                 src={
                   typeof values?.image === "string"
                     ? values?.image
                     : URL.createObjectURL(values.image)
                 }
-                className="w-[150px] mt-3"
+                className="w-[180px] mt-3"
                 alt="Product"
-                width={150}
+                width={180}
                 height={40}
               />
             </div>

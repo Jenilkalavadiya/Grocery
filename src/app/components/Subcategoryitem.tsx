@@ -44,13 +44,12 @@ const Subcategoryitem = ({
     setOpen(false);
   };
   const handleDelete = async () => {
-    const res = await apiRequest({
+     await apiRequest({
       method: "delete",
       url: `/delete_subcategory?id=${itemID}`,
     });
     getAllSubCategory();
     handleClose();
-    console.log(res);
   };
 
   const statusChange = async (id: number, currentStatus: number) => {
@@ -62,7 +61,6 @@ const Subcategoryitem = ({
         url: "/status_change2",
         data: { id, status: newStatus },
       });
-      // console.log("resssponse", res);
       if (res?.status === 200) {
         toast.success("Status updated");
         getAllSubCategory();

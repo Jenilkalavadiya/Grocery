@@ -35,7 +35,6 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 export const apiRequest = ({ method, url, data = {} }: ApiOptions) => {
-  console.log(`API Call [${method.toUpperCase()}]`, url, data);
 
   if (method === "get" || method === "delete") {
     return apiClient[method](url, method === "delete" ? { data } : undefined);
@@ -55,7 +54,6 @@ export const refreshToken = async () => {
         },
       }
     );
-    console.log("response", response?.data?.data?.new_jwt_token);
     const newAccessToken = response?.data?.data?.new_jwt_token;
     return newAccessToken;
   } catch (error) {
@@ -74,7 +72,6 @@ apiClient.interceptors.request.use(
       config.headers.set("language", "en");
 
       const authToken = localStorage.getItem("auth_token");
-      console.log("Request URL:", config.url);
 
       if (
         authToken &&
@@ -86,13 +83,11 @@ apiClient.interceptors.request.use(
         ].includes(config.url || "")
       ) {
         config.headers.set("Authorizations", authToken);
-        console.log("Authorization header set:", config.headers);
       } else {
         config.headers.set(
           "Authorizations",
           "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY"
         );
-        console.log("No Authorization token set:", config.headers);
       }
     }
     return config;
@@ -102,37 +97,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// apiClient.interceptors.request.use(
-//   (config: any) => {
-//     if (!config.url.endsWith("/refresh_token")) {
-//       config.headers = config.headers || {};
-//       config.headers["language"] = "en";
-//       const authToken = localStorage.getItem("auth_token");
-//       console.log("result", config.url);
 
-//       if (
-//         authToken &&
-//         ![
-//           "/login",
-//           "/forgot_password",
-//           "/otp-verify",
-//           "/reset-password",
-//         ].includes(config.url)
-//       ) {
-//         config.headers["Authorization"] = authToken;
-//         console.log("if0-------------------->>>>>>", config.headers);
-//       } else {
-//         config.headers["Authorizations"] =
-//           "@#Slsjpoq$S1o08#MnbAiB%UVUV&Y*5EU@exS1o!08L9TSlsjpo#FKDFJSDLFJSDLFJSDLFJSDQY";
-//         console.log("else0-------------------->>>>>>", config.headers);
-//       }
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,

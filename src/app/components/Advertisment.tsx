@@ -15,7 +15,6 @@ const Advertisment = ({ component, getComponents }) => {
   const handleClose = () => setOpen(false);
 
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
     await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=4`,
@@ -23,7 +22,6 @@ const Advertisment = ({ component, getComponents }) => {
     getComponents();
     toast.success("Banner Deleted");
   };
-  console.log("component", component);
   return (
     <section className="bg-white p-4 rounded shadow mt-5">
       <h2 className="text-lg font-semibold mb-3">Advertisement</h2>

@@ -39,7 +39,6 @@ export default function Brands_post({
     useFormik<FormValues>({
       initialValues: { image: null },
       onSubmit: async (values) => {
-        console.log(values);
         const formData = new FormData();
         if (values?.image) {
           //   formData.append("fk_category_id", values.category);
@@ -52,7 +51,6 @@ export default function Brands_post({
           url: "/add_home_management",
           data: formData,
         });
-        // console.log("Response", res);
         getComponents();
         toast.success(res?.data?.data?.MESSAGE);
         handleClose();

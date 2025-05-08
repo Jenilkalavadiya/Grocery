@@ -75,7 +75,6 @@ export default function ModalBrand({
 
     validationSchema: AddBrandSchema,
     onSubmit: async (values) => {
-      console.log("values", values);
       try {
         const formData = new FormData();
         formData.append("brand_name", values.name);
@@ -93,7 +92,7 @@ export default function ModalBrand({
           formData.append("id", id.toString());
         }
 
-        const res = await apiRequest({
+         await apiRequest({
           method: "post",
           url: "/add_brand",
           data: formData,
@@ -101,11 +100,10 @@ export default function ModalBrand({
         toast.success(
           id ? "Brand Updated Successfully" : "Brand Added Successfully"
         );
-        console.log("Response: ", res);
         handleClose();
         getbrands();
       } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
       }
     },
   });
@@ -113,7 +111,6 @@ export default function ModalBrand({
   const getBrandById = async () => {
     const res = await apiRequest({ method: "get", url: `/get_brand?id=${id}` });
 
-    console.log("res12", res?.data);
     const result = res?.data?.data?.DATA;
     setFieldValue("name", result.Brand_Name || "");
     setFieldValue("category", result.Category_id || "");
@@ -279,7 +276,7 @@ export default function ModalBrand({
             </div>
 
             <div className="flex mb-3">
-              <button type="submit" className="w-[350px] bg-amber-300 p-3">
+              <button type="submit" className="w-[350px] bg-amber-300 p-3 cursor-pointer">
                 {id ? "Update" : "Save"}
               </button>
             </div>

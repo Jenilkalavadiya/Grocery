@@ -5,6 +5,7 @@ import OrderItems from "@/app/components/OrderItems";
 import withAuth from "@/protected/withAuth";
 import { Pagination, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface OrderItem {
   Order_no: string;
@@ -31,10 +32,9 @@ const Order = () => {
         method: "get",
         url: `/get_orders`,
       });
-      console.log("order", res.data.data);
       setOrder(res?.data?.data);
     } catch (error) {
-      console.log(error);
+      toast.error(error)
     }
   };
 

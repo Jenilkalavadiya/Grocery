@@ -87,7 +87,6 @@ const Dashboard = () => {
   useEffect(() => {
     getDashboard();
   }, []);
-  // console.log("response", Object.keys(num).length);
 
   // const skeletonLength = Object.keys(num).length;
   return (

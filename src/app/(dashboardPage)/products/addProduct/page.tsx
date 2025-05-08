@@ -5,6 +5,7 @@ import AddProducts from "@/app/components/AddProducts";
 import withAuth from "@/protected/withAuth";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Category {
   No: number;
@@ -43,7 +44,6 @@ interface SelectBox {
 const AddProduct = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get("id");
-  console.log("serach", search);
   useEffect(() => {
     if (search) {
       setProductId(search);
@@ -59,7 +59,6 @@ const AddProduct = () => {
     useState<ProductDetail | null>(null);
   const [selectBox, setSelectBox] = useState<SelectBox | null>(null);
 
-  console.log("productId", productId);
   // GET CATEGORY ****************
   const getAllCategory = async () => {
     try {
@@ -71,7 +70,7 @@ const AddProduct = () => {
       const data = await res?.data?.data?.result;
       setCategory(data);
     } catch (error) {
-      console.log(error);
+      toast.error(error)
     }
   };
 
@@ -118,11 +117,10 @@ const AddProduct = () => {
 
   // GET PRODUCT ****************
   const getProduct = async () => {
-    const res = await apiRequest({
+     await apiRequest({
       method: "get",
       url: `/get_products?pageNumber=1&pageLimit=10`,
     });
-    console.log("getProduct", res);
   };
 
   // GET PRODUCT BY ID
@@ -132,7 +130,6 @@ const AddProduct = () => {
         method: "get",
         url: `/get_product_by_variation?id=${productId}`,
       });
-      console.log("getProductById", res);
       if (res?.data?.code === 1) {
         setGetProductDetail(res?.data?.data?.DATA[0]);
         setNewProductId(res?.data?.data?.DATA[0].Product_id);

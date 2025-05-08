@@ -41,8 +41,6 @@ const VerifyOtpPage = () => {
         data: new URLSearchParams({ otp }),
       });
 
-      console.log("first", await response.data);
-
       if (response?.data?.code === 1) {
         toast.success("OTP verified successfully!");
         router.push("/resetpassword");
@@ -72,21 +70,23 @@ const VerifyOtpPage = () => {
         <div
           className={`flex bg-white shadow-2xl py-10 flex-col items-center text-black w-[90%] sm:w-[80%]  md:w-[50%] lg:w-[33%] xl:w-[30%]`}
         >
-          <div className=" flex items-start justify-start w-[90%] ">
-            <div className="flex items-center ">
+          <div className="flex w-[90%]">
+            <div className="flex items-center">
               <span className="">
                 <Link href="/forgot" className="cursor-pointer ">
                   <FaArrowLeftLong />
                 </Link>
               </span>
-              <h2 className="font-bold text-xl ml-38">Verify Otp</h2>
+              <div className="flex items-center ml-40">
+                <h2 className="font-bold text-xl text-center">Verify Otp</h2>
+              </div>
             </div>
           </div>
-          <p className="text-sm text-center  text-gray-500 mt-4">
+          <p className="text-sm text-center text-gray-500 mt-4">
             Dont worry! It happens.Please Enter Otp. <br />
           </p>
 
-          <div className="div mt-12">
+          <div className="div mt-6">
             <form action="" onSubmit={handleVerifyOtp}>
               <div className="lg:flex lg:flex-col md:flex md:flex-col gap-8">
                 <div className="flex justify-center">
@@ -111,11 +111,6 @@ const VerifyOtpPage = () => {
                     Submit
                   </button>
                 </div>
-                {/* <div className="forget text-center ">
-                  <Link href="/" className="text-center">
-                    Login Now
-                  </Link>
-                </div> */}
               </div>
             </form>
           </div>

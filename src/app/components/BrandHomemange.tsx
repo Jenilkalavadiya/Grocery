@@ -12,7 +12,6 @@ const BrandHomemange = ({ component, getComponents }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleDelete = async (itemID: number) => {
-    console.log("res", itemID);
     await apiRequest({
       method: "delete",
       url: `/delete_home_management?id=${itemID}&fk_section_id=3`,
@@ -20,7 +19,6 @@ const BrandHomemange = ({ component, getComponents }) => {
     toast.success("Banner Deleted");
     getComponents();
   };
-  console.log("brandsss", component);
   return (
     <section className="bg-white p-4 rounded shadow mt-3">
       <div className="flex items-center justify-between mb-3">

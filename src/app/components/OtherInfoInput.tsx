@@ -1,3 +1,5 @@
+import { RiDeleteBin6Line } from "react-icons/ri";
+
 interface OtherInfo {
   title: string;
   description: string;
@@ -23,7 +25,7 @@ export const OtherInfoInput = ({
   remove,
 }: OtherInfoInputProps) => {
   return (
-    <div className="flex gap-16 flex-wrap ">
+    <div className="flex gap-14 flex-wrap ">
       {["title", "description"].map((field) => (
         <div key={field} className="flex mb-3 flex-col mt-3 gap-2">
           <span className="text-gray-400 font-bold capitalize">{field}</span>
@@ -39,13 +41,13 @@ export const OtherInfoInput = ({
       ))}
 
       {values.otherInfo.length > 1 && (
-        <div className="flex items-end">
+        <div className="flex flex-col mt-5 justify-center items-center h-[80px]">
           <button
             type="button"
             onClick={() => remove(index)}
-            className="text-red-600 cursor-pointer"
+            className=" text-2xl cursor-pointer mt-5 "
           >
-            Remove
+            <RiDeleteBin6Line />
           </button>
         </div>
       )}

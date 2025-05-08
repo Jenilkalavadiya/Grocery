@@ -137,6 +137,8 @@ const Page = () => {
             shape="rounded"
             page={page}
             onChange={(e, page) => setPage(page)}
+            hidePrevButton={!!search} 
+            hideNextButton={!!search}
           />
         </Stack>
       </div>

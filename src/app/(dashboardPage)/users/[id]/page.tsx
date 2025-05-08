@@ -45,7 +45,6 @@ const Page = () => {
         method: "get",
         url: `/get_user_details?id=${id}`,
       });
-      console.log("order", res);
       if (res?.data) {
         setUserDetails(res?.data?.data?.result[0]);
         setOrders(res?.data?.data?.result[0]?.order || []);
@@ -59,8 +58,7 @@ const Page = () => {
     getUserDetails();
   }, [id]);
 
-  console.log("User Details:", userDetails);
-  console.log("Orders:", orders);
+  
 
   return (
     <div className="h-[calc(100vh-109px)]">

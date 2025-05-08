@@ -1,4 +1,5 @@
 import { FormikErrors, FormikTouched } from "formik";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 interface ProductDetail {
   variation: string;
@@ -42,7 +43,13 @@ export const ProductDetailInput = ({
             <input
               type={isNumericField(field) ? "number" : "text"}
               name={`productDetails[${index}].${field}`}
-              value={values?.productDetails[index]?.[field]?.trim() || ""}
+              value={
+                isNumericField(field)
+                  ? (values?.productDetails[index]?.[field] ?? "")
+                  : ((
+                      values?.productDetails[index]?.[field] as string
+                    )?.trim() ?? "")
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               onKeyDown={
@@ -67,13 +74,13 @@ export const ProductDetailInput = ({
         )
       )}
       {values.productDetails.length > 1 && (
-        <div className="flex items-end">
+        <div className="flex flex-col mt-5 justify-center items-center h-[80px]">
           <button
             type="button"
             onClick={() => remove(index)}
-            className="text-red-600"
+            className="text-2xl cursor-pointer"
           >
-            Remove
+            <RiDeleteBin6Line />
           </button>
         </div>
       )}

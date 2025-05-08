@@ -57,7 +57,6 @@ function Subcategory() {
       });
 
       const data = await res?.data?.data?.result;
-      console.log("data", data);
       setCategory(data);
     } catch (error: unknown) {
       console.error("Error fetching categories:", error);
@@ -79,7 +78,6 @@ function Subcategory() {
       });
 
       const data = await res?.data?.data;
-      console.log("subcategory", res);
       setSubCategory(data);
     } catch (error: unknown) {
       console.error("Error fetching subcategories:", error);
@@ -90,7 +88,6 @@ function Subcategory() {
     getAllCategory();
     getAllSubCategory();
   }, [page, search]);
-  console.log("subcategory", subcategory);
   return (
     <div className="text-black h-[calc(100vh-111px)]">
       <div className="flex justify-between items-center w-[100%] my-[30px]">
@@ -157,6 +154,8 @@ function Subcategory() {
             shape="rounded"
             page={page}
             onChange={(e, page) => setPage(page)}
+            hidePrevButton={!!search} 
+            hideNextButton={!!search}
           />
         </Stack>
       </div>

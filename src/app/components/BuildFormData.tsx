@@ -51,7 +51,6 @@ export const buildFormData = (
   if (values?.image instanceof File) {
   
     formData.append("image", values.image);
-    console.log("submit",values?.image)
   }
 
   if (newProductId) formData.append("id", newProductId);

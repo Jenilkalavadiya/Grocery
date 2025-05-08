@@ -80,13 +80,12 @@ const ModalCoupon = ({
           ...(id && { id }),
         };
 
-        const res = await apiRequest({
+         await apiRequest({
           method: "post",
           url: "/add_coupon",
           data: params,
         });
 
-        console.log("coupon", res);
         toast.success(
           id ? "Coupon Updated Successfully" : "Coupon Added Successfully"
         );
@@ -94,7 +93,7 @@ const ModalCoupon = ({
         getCoupon();
         handleClose();
       } catch (error: unknown) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
       }
     },
   });
@@ -111,7 +110,6 @@ const ModalCoupon = ({
       url: `/get_coupon_by_id?id=${id}`,
     });
 
-    console.log("res12", res?.data);
     const result = res?.data?.data?.DATA;
 
     // Populate form fields with fetched data

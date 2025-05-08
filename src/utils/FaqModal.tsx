@@ -31,18 +31,16 @@ const FaqModal = ({ open, handleClose, getfaqs }: FaqModalProps) => {
   };
 
   const handleSubmit = async (values: FormValues) => {
-    console.log("FAQ submitted:", values);
     const params = {
       question: values.question,
       answer: values.answer,
     };
 
-    const res = await apiRequest({
+   await apiRequest({
       method: "post",
       url: "/add_faqs",
       data: params,
     });
-    console.log("Qwert", res);
     toast.success("Question Added");
     getfaqs();
     handleClose();

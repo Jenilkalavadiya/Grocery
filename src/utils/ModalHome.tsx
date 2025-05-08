@@ -61,7 +61,6 @@ const ModalHome = ({
       url: "/add_section",
       data: { id: sectionId },
     });
-    console.log("setAddFunc", res?.data?.data?.section_id);
     setAddSection(res?.data?.data?.section_id);
   };
 

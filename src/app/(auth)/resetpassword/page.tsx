@@ -40,9 +40,7 @@ const ResetPassword = () => {
             toast.error("their is something error");
           }
 
-          console.log("resetPassword", res);
         } catch (error: unknown) {
-          console.log("error", error);
           if (error && typeof error === "object" && "response" in error) {
             const err = error as { response?: { data?: { message?: string } } };
             toast.error(err?.response?.data?.message || "Something went wrong");

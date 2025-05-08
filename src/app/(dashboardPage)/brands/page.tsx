@@ -11,6 +11,8 @@ import ModalBrand from "@/utils/ ModalBrand";
 import Image from "next/image";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
+import { saveAs } from "file-saver";
+import { unparse } from "papaparse";
 
 interface Brand {
   No: number;
@@ -67,7 +69,11 @@ const BrandsPage = () => {
   };
 
   useEffect(() => {
-    getbrands();
+    const delayDebounce = setTimeout(() => {
+      getbrands();
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
   }, [search, page]);
 
   useEffect(() => {
@@ -108,6 +114,16 @@ const BrandsPage = () => {
     } catch (error) {
       console.error("Error fetching subcategories:", error);
     }
+  };
+
+  const handleExport = () => {
+    if (!brand?.result || brand.result.length === 0) return;
+
+    const exportData = brand.result;
+
+    const csv = unparse(exportData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "brands.csv");
   };
 
   return (
@@ -157,6 +173,12 @@ const BrandsPage = () => {
               id={id}
             />
           )}
+          <Button
+            className="!bg-green-600 !text-black !font-bold h-[45px] p-1"
+            onClick={handleExport}
+          >
+            Export
+          </Button>
         </div>
       </div>
 
@@ -179,6 +201,8 @@ const BrandsPage = () => {
             onChange={(e, value) => setPage(value)}
             variant="outlined"
             shape="rounded"
+            hidePrevButton={!!search}
+            hideNextButton={!!search}
           />
         </Stack>
       </div>

@@ -48,7 +48,6 @@ export default function Shop_by_Category_post({
     useFormik<FormValues>({
       initialValues: { image: null, category: "", offer: "" },
       onSubmit: async (values) => {
-        console.log(values);
         const formData = new FormData();
         if (values?.image) {
           formData.append("fk_category_id", values.category);
@@ -75,7 +74,6 @@ export default function Shop_by_Category_post({
       });
 
       const data = await res?.data?.data?.result;
-      console.log("REs", data);
       setCategory(data);
     } catch (error: unknown) {
       console.error("Something went wrong", error);

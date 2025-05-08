@@ -57,13 +57,12 @@ const GetCoupon = ({
 
   // DELETE PRODUCT
   const handleDelete = async () => {
-    const res = await apiRequest({
+    await apiRequest({
       method: "delete",
       url: `/delete_coupon?id=${itemID}`,
     });
     toast.success("Deleted SuccessFull");
     getCoupon();
-    console.log(res);
     setOpen(false);
   };
 

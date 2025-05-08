@@ -35,7 +35,6 @@ const Page = () => {
             data: values,
           });
 
-          console.log("Signin values", await res?.data);
           const data = await res?.data?.data;
           console.log("OTP", await data?.otp);
 
@@ -43,7 +42,6 @@ const Page = () => {
           toast.success(res?.data?.message);
           router.push("/verifyotp");
         } catch (error: unknown) {
-          console.log(error);
           if (error && typeof error === "object" && "response" in error) {
             const err = error as { response?: { data?: { message?: string } } };
             toast.error(err?.response?.data?.message || "Something went wrong");

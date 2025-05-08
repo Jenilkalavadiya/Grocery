@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 import { Button } from "@mui/material";
 import { apiRequest } from "@/api/ApiCall";
+import { toast } from "react-toastify";
 
 interface OrderDetailsData {
   order_no: string;
@@ -58,14 +59,14 @@ const OrderDetails = () => {
         method: "get",
         url: `/get_order_products_details?id=${id}`,
       });
-      console.log("order", res);
       if (res?.data) {
         setOrderDetails(res?.data?.data?.getDataById);
         setOrderTable(res?.data?.data?.getData);
         setTotal(res?.data?.data);
       }
     } catch (error) {
-      console.log(error);
+           toast.error(error)
+     
     }
   };
 
