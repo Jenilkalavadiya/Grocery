@@ -9,7 +9,8 @@ import Button from "@mui/material/Button";
 import ModalSubCategory from "@/utils/ModalSubCategory";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
-
+import Image from "next/image";
+import icon from "../../../../public/search.png";
 interface CategoryItem {
   No: number;
   Image: string;
@@ -108,13 +109,20 @@ function Subcategory() {
         {/* SEARCH USERS INPUT ***************** */}
 
         <div className="searchfiled flex gap-2">
-          <input
-            type="text"
-            placeholder="Search Sub Categories.. "
-            value={search}
-            onChange={handleChange}
-            className="px-2 border-[#DADDE1] bg-white focus:outline-none border h-[45px]"
-          />
+          <div className="border border-[#DADDE1] bg-white flex justify-center">
+            <div className="flex items-center justify-center ml-3">
+              <Image src={icon} alt="pp" width={20} height={20} />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Search Sub Categories.. "
+                value={search}
+                onChange={handleChange}
+                className="px-2 focus:outline-none  w-[244px] h-[45px]"
+              />
+            </div>
+          </div>
 
           <div className="w-[166px]">
             <Button

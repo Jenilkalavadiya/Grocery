@@ -10,6 +10,7 @@ import DeleteDialog from "@/utils/DeleteDialog";
 import { toast } from "react-toastify";
 import TableLoading from "./TableLoading";
 import DataIcon from "../../../public/data.svg";
+import { orderBy } from "lodash";
 
 interface CategoryItem {
   No: number;
@@ -40,6 +41,11 @@ const CategoryItem = ({
 }: CategoryItemProps) => {
   const [open, setOpen] = useState(false);
   const [itemID, setItemID] = useState<number | undefined>(undefined);
+  const [sortConfig, setSortConfig] = useState<{
+    key: "No" | "Category_Name";
+    direction: "asc" | "desc";
+  }>({ key: "Category_Name", direction: "asc" });
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -78,19 +84,49 @@ const CategoryItem = ({
     }
   };
 
+  const handleSort = (key: "No" | "Category_Name") => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction:
+        prevConfig.key === key && prevConfig.direction === "asc"
+          ? "desc"
+          : "asc",
+    }));
+  };
+
+  const sortedData = filteredCategories?.result
+    ? orderBy(
+        filteredCategories.result,
+        [sortConfig.key],
+        [sortConfig.direction]
+      )
+    : [];
+
   return (
     <div className="overflow-x-auto shadow-2xl mt-4">
       <table className="min-w-full bg-white rounded-2xl ">
         <thead className="bg-[#FAFAFA] text-[#202020]">
-          <tr className="text-md  font-bold border-gray-300">
-            <th className="px-4 py-3  flex justify-center gap-1.5">
+          <tr className="text-md font-bold border-gray-300">
+            <th className="px-4 py-3 flex justify-center gap-1.5">
               No.
-              <Image src={DataIcon} alt="ab" width={12} />
+              <Image
+                src={DataIcon}
+                alt="sort"
+                width={12}
+                className="cursor-pointer"
+                onClick={() => handleSort("No")}
+              />
             </th>
             <th className="px-4 py-3 text-left w-[205px]">Image</th>
-            <th className="px-4 py-3 text-left min-w-[500px] flex gap-1.5">
+            <th className="px-4 py-3 text-left min-w-[500px] flex gap-1.5 items-center">
               Category
-              <Image src={DataIcon} alt="ab" width={12} />
+              <Image
+                src={DataIcon}
+                alt="sort"
+                width={12}
+                className="cursor-pointer"
+                onClick={() => handleSort("Category_Name")}
+              />
             </th>
 
             <th className="px-4 py-3 text-left">Status</th>
@@ -106,70 +142,68 @@ const CategoryItem = ({
                 </div>
               </td>
             </tr>
-          ) : filteredCategories?.result?.length === 0 ? (
+          ) : sortedData.length === 0 ? (
             <tr>
               <td colSpan={5} className="py-6 text-center text-gray-500">
                 No categories found.
               </td>
             </tr>
           ) : (
-            filteredCategories?.result?.map(
-              (item: CategoryItem, index: number) => (
-                <tr
-                  key={item.No}
-                  className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
-                >
-                  <td className="px-4 py-5 text-lg border-b border-gray-200">
-                    {index + 1}
-                  </td>
-                  <td className="px-4 py-5 border-b border-gray-200">
-                    <Image
-                      src={item.Image}
-                      width={60}
-                      height={60}
-                      alt="category_image"
-                    />
-                  </td>
-                  <td className="px-4 py-5 text-lg border-b border-gray-200 text-left">
-                    {item?.Category_Name}
-                  </td>
-                  <td className="px-4 py-5 text-md border-b border-gray-200 text-left">
-                    <div onClick={() => statusChange(item?.No, item?.Status)}>
-                      <Greenswitch status={item?.Status} />
-                    </div>
-                  </td>
-                  <td className="px-4 py-5 text-sm text-gray-700 border-b border-gray-200">
-                    <div className="flex gap-4 items-center">
-                      <span
-                        className="text-2xl cursor-pointer"
-                        onClick={() => {
-                          handleOpen();
-                          setid(item.No);
-                        }}
-                      >
-                        <CiEdit />
-                      </span>
-                      <span
-                        className="text-2xl cursor-pointer"
-                        onClick={() => {
-                          handleClickOpen();
-                          setItemID(item.No);
-                        }}
-                      >
-                        <RiDeleteBin6Line />
-                      </span>
-                      {open && (
-                        <DeleteDialog
-                          open={open}
-                          handleClose={handleClose}
-                          handleDelete={handleDelete}
-                        />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )
-            )
+            sortedData.map((item: CategoryItem, index: number) => (
+              <tr
+                key={item.No}
+                className="hover:bg-gray-50 w-[90px] text-center transition-all duration-200"
+              >
+                <td className="px-4 py-5 text-lg border-b border-gray-200">
+                  {index + 1}
+                </td>
+                <td className="px-4 py-5 border-b border-gray-200">
+                  <Image
+                    src={item.Image}
+                    width={60}
+                    height={60}
+                    alt="category_image"
+                  />
+                </td>
+                <td className="px-4 py-5 text-lg border-b border-gray-200 text-left">
+                  {item?.Category_Name}
+                </td>
+                <td className="px-4 py-5 text-md border-b border-gray-200 text-left">
+                  <div onClick={() => statusChange(item?.No, item?.Status)}>
+                    <Greenswitch status={item?.Status} />
+                  </div>
+                </td>
+                <td className="px-4 py-5 text-sm text-gray-700 border-b border-gray-200">
+                  <div className="flex gap-4 items-center">
+                    <span
+                      className="text-2xl cursor-pointer"
+                      onClick={() => {
+                        handleOpen();
+                        setid(item.No);
+                      }}
+                    >
+                      <CiEdit />
+                    </span>
+                    <span
+                      className="text-2xl cursor-pointer"
+                      onClick={() => {
+                        handleClickOpen();
+                        setItemID(item.No);
+                      }}
+                    >
+                      <RiDeleteBin6Line />
+                    </span>
+                    {open && (
+                      <DeleteDialog
+                        open={open}
+                        handleClose={handleClose}
+                        handleDelete={handleDelete}
+                      />
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))
           )}
         </tbody>
       </table>

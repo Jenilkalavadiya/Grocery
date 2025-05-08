@@ -10,6 +10,7 @@ import icon from "../../../../public/search.png";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import withAuth from "@/protected/withAuth";
 import { signalApiCall } from "@/utils/apiSignals";
+import { CSVLink } from "react-csv";
 
 interface CategoryItemData {
   No: number;
@@ -67,6 +68,21 @@ const Page = () => {
     getAllCategory();
   }, [page, search]);
 
+  const csvData =
+    category?.result.map((item) => ({
+      No: item.No,
+      Category_Name: item.Category_Name,
+      Status: item.Status === 1 ? "Active" : "Inactive",
+    })) || [];
+
+  const headers =
+    csvData.length > 0
+      ? Object.keys(csvData[0]).map((key) => ({
+          label: key,
+          key: key,
+        }))
+      : [];
+  console.log("CSVData", csvData);
   return (
     <div className="text-black h-[calc(100vh-111px)]">
       {/* SERCH INPUT  */}
@@ -99,10 +115,18 @@ const Page = () => {
             </div>
           </div>
 
+          <CSVLink
+            data={csvData}
+            headers={headers}
+            filename="categories.csv"
+            className="!bg-[#1db038] !text-black !font-semibold h-[45px] px-4 flex items-center"
+          >
+            Export CSV
+          </CSVLink>
+
           <Button
             className="!bg-[#FCC827] !text-black !font-extrabold h-[45px] p-1"
             onClick={handleOpen}
-            // variant="outlined"
           >
             Add Category
           </Button>

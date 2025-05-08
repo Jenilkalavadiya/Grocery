@@ -17,7 +17,7 @@ const withoutAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
       }
     }, []);
 
-    if (isLoading) return <Loader />; // or loading spinner
+    if (isLoading) return <Loader />; // or loading spinner.
 
     return <WrappedComponent {...props} />;
   };

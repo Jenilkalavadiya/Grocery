@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { FaChevronDown } from "react-icons/fa6";
 
-
 function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

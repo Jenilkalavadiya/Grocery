@@ -87,9 +87,7 @@ const Dashboard = () => {
   useEffect(() => {
     getDashboard();
   }, []);
-  // console.log("response", Object.keys(num).length);
 
-  // const skeletonLength = Object.keys(num).length;
   return (
     <div className="p-6 h-[calc(100vh-80px)]">
       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
@@ -119,7 +117,6 @@ const Dashboard = () => {
                 className="bg-white shadow-md rounded-lg p-5 flex flex-col justify-between hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-center justify-between mb-3">
-                  {/* <Skeleton variant="text" width="60%" /> */}
                   <Skeleton variant="circular" width={20} height={40} />
                 </div>
                 <Skeleton
