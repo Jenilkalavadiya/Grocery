@@ -28,7 +28,7 @@ interface SubcategoryItem {
 }
 
 interface SubcategoryResponse {
-  Total_Count: number;
+  totalCount: number;
   result: SubcategoryItem[];
 }
 
@@ -149,7 +149,7 @@ function Subcategory() {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(subcategory?.Total_Count) / 5)}
+            count={Math.ceil(Number(subcategory?.totalCount) / 5)}
             variant="outlined"
             shape="rounded"
             page={page}

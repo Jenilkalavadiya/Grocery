@@ -21,8 +21,8 @@ interface FormValues {
 }
 
 interface DeliveryParams {
-  free_delivery_upto: string;
-  delivery_charge: string;
+  freeDeliveryUpto: string;
+  deliveryCharge: string;
   id: number;
 }
 
@@ -69,8 +69,8 @@ const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
 
   const handleManageDeliverySubmit = async (values: FormValues) => {
     const params: DeliveryParams = {
-      free_delivery_upto: values.freeDelivery,
-      delivery_charge: values.deliveryCharge,
+      freeDeliveryUpto: values.freeDelivery,
+      deliveryCharge: values.deliveryCharge,
       id: 1,
     };
 
@@ -81,8 +81,8 @@ const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
         data: params,
       });
 
-      if (res?.data?.data?.MESSAGE) {
-        toast.success(res.data.data.MESSAGE);
+      if (res?.data?.data?.message) {
+        toast.success(res.data.data.message);
       }
     } catch (error) {
       console.error("Error while submitting Manage Delivery:", error);
@@ -105,8 +105,8 @@ const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
         data: params,
       });
 
-      if (res?.data?.data?.MESSAGE) {
-        toast.success(res.data.data.MESSAGE);
+      if (res?.data?.data?.message) {
+        toast.success(res.data.data.message);
       }
     } catch (error) {
       console.error("Error while submitting Manage Tax:", error);
@@ -161,7 +161,7 @@ const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
           <div className="flex flex-col">
             <span className="text-gray-400 font-bold">Free Delivery Upto</span>
             <input
-              type="text"
+              type="number"
               name="freeDelivery"
               className="w-[320px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-4 mb-4"
               placeholder="Free Delivery Upto"
@@ -175,7 +175,7 @@ const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
 
             <span className="text-gray-400 font-bold">Delivery Charge</span>
             <input
-              type="text"
+              type="number"
               name="deliveryCharge"
               className="w-[320px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-4"
               placeholder="Delivery Charge"
@@ -205,7 +205,7 @@ const MangeForm = ({ boxOpen, handleClose }: MangeFormProps) => {
           <div className="flex flex-col">
             <span className="text-gray-400 font-bold">Tax%</span>
             <input
-              type="text"
+              type="number"
               name="tax"
               className="w-[320px] border border-gray-400 focus:outline-none bg-white text-black h-[50px] p-4"
               placeholder="Tax%"

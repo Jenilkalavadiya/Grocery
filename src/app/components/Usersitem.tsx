@@ -14,7 +14,6 @@ interface User {
 }
 
 interface UserData {
-  Total_Count: number;
   result: User[];
 }
 

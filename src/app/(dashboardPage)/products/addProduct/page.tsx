@@ -131,8 +131,8 @@ const AddProduct = () => {
         url: `/get_product_by_variation?id=${productId}`,
       });
       if (res?.data?.code === 1) {
-        setGetProductDetail(res?.data?.data?.DATA[0]);
-        setNewProductId(res?.data?.data?.DATA[0].Product_id);
+        setGetProductDetail(res?.data?.data?.data[0]);
+        setNewProductId(res?.data?.data?.data[0].Product_id);
         setSelectBox(res?.data?.data?.result[0]);
       }
     } catch (error) {

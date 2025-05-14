@@ -131,7 +131,7 @@ const AddProducts = ({
         });
 
         if (res?.status === 200) {
-          toast.success(res?.data?.data?.MESSAGE);
+          toast.success(res?.data?.data?.message);
           router.push("/products");
           getProduct();
         } else {

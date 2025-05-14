@@ -71,16 +71,16 @@ const ModalCoupon = ({
         const startDateFormatted = dayjs(values.startDate).format("YYYY-MM-DD");
         const endDateFormatted = dayjs(values.endDate).format("YYYY-MM-DD");
         const params = {
-          coupon_name: values.name,
-          minimum_purchase: values.minimumPurchase,
-          discount_price: values.discountPrice,
-          start_date: startDateFormatted,
-          end_date: endDateFormatted,
-          coupon_code: values.couponCode,
+          couponName: values.name,
+          minimumPurchase: values.minimumPurchase,
+          discountPrice: values.discountPrice,
+          startDate: startDateFormatted,
+          endDate: endDateFormatted,
+          couponCode: values.couponCode,
           ...(id && { id }),
         };
 
-         await apiRequest({
+        await apiRequest({
           method: "post",
           url: "/add_coupon",
           data: params,
@@ -110,7 +110,7 @@ const ModalCoupon = ({
       url: `/get_coupon_by_id?id=${id}`,
     });
 
-    const result = res?.data?.data?.DATA;
+    const result = res?.data?.data?.data;
 
     // Populate form fields with fetched data
     setFieldValue("name", result.Coupon_Name || "");

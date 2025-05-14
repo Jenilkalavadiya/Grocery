@@ -80,8 +80,8 @@ export default function ModalSubCategory({
     onSubmit: async (values) => {
       try {
         const formData = new FormData();
-        formData.append("subcategory_name", values.name);
-        formData.append("fk_category_id", values.category);
+        formData.append("subcategoryName", values.name);
+        formData.append("fkCategoryId", values.category);
         formData.append("status", values.status.toString());
         if (values.image) {
           formData.append("image", values.image);
@@ -111,7 +111,7 @@ export default function ModalSubCategory({
       url: `/get_subcategory?id=${itemID}`,
     });
 
-    const result = res.data.data.DATA;
+    const result = res.data.data.data;
     setFieldValue("name", result.SubCategory_Name);
     setFieldValue("category", result.Category_id);
 

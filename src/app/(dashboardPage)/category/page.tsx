@@ -21,7 +21,7 @@ interface CategoryItemData {
 }
 
 interface CategoryResponse {
-  Total_Count: number;
+  totalCount: number;
   result: CategoryItemData[];
 }
 
@@ -132,7 +132,7 @@ const Page = () => {
       <div className="flex justify-end my-6 mr-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(category?.Total_Count) / 5)}
+            count={Math.ceil(Number(category?.totalCount) / 5)}
             variant="outlined"
             shape="rounded"
             page={page}

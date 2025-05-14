@@ -57,9 +57,9 @@ const ModalResetPassword = ({
     validationSchema: ResetPassword,
     onSubmit: async (values) => {
       const params = {
-        old_password: values.oldPassword,
-        new_password: values.newPassword,
-        confirm_password: values.confirmPassword,
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+        confirmPassword: values.confirmPassword,
         id: 1,
       };
 
@@ -71,7 +71,7 @@ const ModalResetPassword = ({
         });
 
         if (res?.status === 200) {
-          toast.success(res?.data?.data?.MESSAGE);
+          toast.success(res?.data?.data?.message);
         } else if (res?.status === 501) {
           toast.error(res?.data?.message);
         }

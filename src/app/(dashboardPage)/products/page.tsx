@@ -25,7 +25,7 @@ interface ProductItem {
 }
 
 interface ProductData {
-  Total_Count: number;
+  totalCount: number;
   result: ProductItem[];
 }
 
@@ -108,7 +108,7 @@ const Product = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(product?.Total_Count / 5))}
+            count={Math.ceil(Number(product?.totalCount / 5))}
             page={page}
             onChange={(_event: React.ChangeEvent<unknown>, value: number) =>
               setPage(value)

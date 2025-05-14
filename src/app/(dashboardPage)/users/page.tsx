@@ -18,7 +18,7 @@ interface User {
 }
 
 interface UserData {
-  Total_Count: number;
+  totalCount: number;
   result: User[];
 }
 
@@ -93,14 +93,13 @@ function Users() {
       <div className="flex justify-end mt-6 mr-6 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(user?.Total_Count) / 5)}
+            count={Math.ceil(Number(user?.totalCount) / 5)}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"
             shape="rounded"
-            hidePrevButton={!!search} 
+            hidePrevButton={!!search}
             hideNextButton={!!search}
-          
           />
         </Stack>
       </div>

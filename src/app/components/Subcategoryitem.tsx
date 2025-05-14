@@ -18,7 +18,6 @@ interface SubcategoryItem {
 }
 
 interface SubcategoryResponse {
-  Total_Count: number;
   result: SubcategoryItem[];
 }
 

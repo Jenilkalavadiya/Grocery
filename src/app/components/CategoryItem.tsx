@@ -21,7 +21,6 @@ interface CategoryItem {
 }
 
 interface CategoryResponse {
-  Total_Count: number;
   result: CategoryItem[];
 }
 

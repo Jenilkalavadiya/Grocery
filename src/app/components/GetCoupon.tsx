@@ -19,7 +19,6 @@ interface Coupon {
 }
 
 interface CouponResponse {
-  Total_Count: number;
   result: Coupon[];
 }
 

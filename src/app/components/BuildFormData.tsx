@@ -27,11 +27,11 @@ export const buildFormData = (
   newProductId: string | null
 ) => {
   const formData = new FormData();
-  formData.append("product_name", values.name);
-  formData.append("fk_category_id", values.category);
-  formData.append("fk_subcategory_id", values.subCategory);
-  formData.append("fk_brand_id", values.brand);
-  formData.append("stock_status", values.status.toString());
+  formData.append("productName", values.name);
+  formData.append("fkCategoryId", values.category);
+  formData.append("fkSubcategoryId", values.subCategory);
+  formData.append("fkBrandId", values.brand);
+  formData.append("stockStatus", values.status.toString());
 
   values?.productDetails.forEach((detail: ProductDetail, index: number) => {
     formData.append(`products[${index}][product_price]`, detail.productPrice);

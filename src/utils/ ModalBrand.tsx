@@ -77,9 +77,9 @@ export default function ModalBrand({
     onSubmit: async (values) => {
       try {
         const formData = new FormData();
-        formData.append("brand_name", values.name);
-        formData.append("fk_category_id", values.category);
-        formData.append("fk_subcategory_id", values.subCategory);
+        formData.append("brandName", values.name);
+        formData.append("fkCategoryId", values.category);
+        formData.append("fkSubcategoryId", values.subCategory);
         formData.append("status", values.status.toString());
 
         if (values.image instanceof File) {
@@ -92,7 +92,7 @@ export default function ModalBrand({
           formData.append("id", id.toString());
         }
 
-         await apiRequest({
+        await apiRequest({
           method: "post",
           url: "/add_brand",
           data: formData,
@@ -110,8 +110,8 @@ export default function ModalBrand({
 
   const getBrandById = async () => {
     const res = await apiRequest({ method: "get", url: `/get_brand?id=${id}` });
-
-    const result = res?.data?.data?.DATA;
+    console.log("res", res);
+    const result = res?.data?.data?.data;
     setFieldValue("name", result.Brand_Name || "");
     setFieldValue("category", result.Category_id || "");
     setFieldValue("subCategory", result.SubCategory_id || "");
@@ -276,7 +276,10 @@ export default function ModalBrand({
             </div>
 
             <div className="flex mb-3">
-              <button type="submit" className="w-[350px] bg-amber-300 p-3 cursor-pointer">
+              <button
+                type="submit"
+                className="w-[350px] bg-amber-300 p-3 cursor-pointer"
+              >
                 {id ? "Update" : "Save"}
               </button>
             </div>

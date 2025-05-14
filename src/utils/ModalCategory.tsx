@@ -56,7 +56,7 @@ export default function ModalCategory({
     validationSchema: AddCategorySchema,
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("category_name", values.name);
+      formData.append("categoryName", values.name);
       formData.append("status", values.status.toString());
       if (values.image) {
         formData.append("image", values.image);
@@ -65,15 +65,15 @@ export default function ModalCategory({
         formData.append("id", itemID.toString());
       }
 
-      const response = await signalApiCall<{ MESSAGE: string }>(
+      const response = await signalApiCall<{ message: string }>(
         "post",
         "/addcategory",
         formData,
         { showLoading: true }
       );
 
-      if (response?.MESSAGE) {
-        toast.success(response.MESSAGE);
+      if (response?.message) {
+        toast.success(response.message);
         handleClose();
         getAllCategory();
       }
@@ -82,15 +82,15 @@ export default function ModalCategory({
 
   const getCategoryByID = async () => {
     const response = await signalApiCall<{
-      DATA: {
+      data: {
         category: string;
         image?: string;
         status: number;
       };
     }>("get", `/getcategory?id=${itemID}`, undefined, { showLoading: true });
 
-    if (response?.DATA) {
-      const result = response.DATA;
+    if (response?.data) {
+      const result = response.data;
       setFieldValue("name", result.category);
 
       if (result?.image && typeof result.image === "string") {

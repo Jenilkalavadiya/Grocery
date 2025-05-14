@@ -22,7 +22,7 @@ interface Coupon {
 }
 
 interface CouponResponse {
-  Total_Count: number;
+  totalCount: number;
   result: Coupon[];
 }
 
@@ -101,7 +101,7 @@ const Coupon = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(coupon?.Total_Count / 5))}
+            count={Math.ceil(Number(coupon?.totalCount / 5))}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

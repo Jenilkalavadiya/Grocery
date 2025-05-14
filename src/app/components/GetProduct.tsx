@@ -65,7 +65,7 @@ const GetProduct = ({ product, getProduct }: GetProductProps) => {
         const res = await apiRequest({
           method: "post",
           url: `/status_change_variation`,
-          data: { id, stock_status: newStatus },
+          data: { id, stockStatus: newStatus },
         });
 
         if (res?.status === 200) {

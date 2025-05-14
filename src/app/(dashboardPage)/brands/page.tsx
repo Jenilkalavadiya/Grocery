@@ -25,7 +25,7 @@ interface Brand {
 }
 
 interface BrandResponse {
-  Total_Count: number | undefined;
+  totalCount: number | undefined;
   result: Brand[];
 }
 
@@ -196,7 +196,7 @@ const BrandsPage = () => {
       <div className="flex justify-end mt-6 mr-8 mb-8">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(Number(brand?.Total_Count) / 5)}
+            count={Math.ceil(Number(brand?.totalCount) / 5)}
             page={page}
             onChange={(e, value) => setPage(value)}
             variant="outlined"

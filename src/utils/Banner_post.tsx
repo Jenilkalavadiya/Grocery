@@ -42,7 +42,7 @@ export default function BannerModal({
         const formData = new FormData();
         if (values?.image) {
           formData.append("image", values.image);
-          formData.append("fk_section_id", "1");
+          formData.append("fkSectionId", "1");
         }
         const res = await apiRequest({
           method: "post",
