@@ -7,8 +7,6 @@ import Advertise_add_Modal from "./Advertise_add_Modal";
 import { apiRequest } from "@/api/ApiCall";
 import { toast } from "react-toastify";
 
-
-
 const Advertisment = ({ component, getComponents }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -17,7 +15,7 @@ const Advertisment = ({ component, getComponents }) => {
   const handleDelete = async (itemID: number) => {
     await apiRequest({
       method: "delete",
-      url: `/delete_home_management?id=${itemID}&fk_section_id=4`,
+      url: `/delete_home_management?id=${itemID}&fkSectionId=4`,
     });
     getComponents();
     toast.success("Banner Deleted");

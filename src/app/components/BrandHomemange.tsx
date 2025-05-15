@@ -14,7 +14,7 @@ const BrandHomemange = ({ component, getComponents }) => {
   const handleDelete = async (itemID: number) => {
     await apiRequest({
       method: "delete",
-      url: `/delete_home_management?id=${itemID}&fk_section_id=3`,
+      url: `/delete_home_management?id=${itemID}&fkSectionId=3`,
     });
     toast.success("Banner Deleted");
     getComponents();

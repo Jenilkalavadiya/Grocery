@@ -42,7 +42,7 @@ export default function Brands_post({
         const formData = new FormData();
         if (values?.image) {
           //   formData.append("fk_category_id", values.category);
-          formData.append("fk_section_id", "3");
+          formData.append("fkSectionId", "3");
           //   formData.append("offer", values.offer);
           formData.append("image", values.image);
         }
@@ -52,7 +52,7 @@ export default function Brands_post({
           data: formData,
         });
         getComponents();
-        toast.success(res?.data?.data?.MESSAGE);
+        toast.success(res?.data?.data?.message);
         handleClose();
       },
     });

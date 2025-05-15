@@ -50,8 +50,8 @@ export default function Shop_by_Category_post({
       onSubmit: async (values) => {
         const formData = new FormData();
         if (values?.image) {
-          formData.append("fk_category_id", values.category);
-          formData.append("fk_section_id", "2");
+          formData.append("fkCategoryId", values.category);
+          formData.append("fkSectionId", "2");
           formData.append("offer", values.offer);
           formData.append("image", values.image);
         }
@@ -61,7 +61,7 @@ export default function Shop_by_Category_post({
           data: formData,
         });
         getComponents();
-        toast.success(res?.data?.data?.MESSAGE);
+        toast.success(res?.data?.data?.message);
         handleClose();
       },
     });

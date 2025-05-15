@@ -50,7 +50,7 @@ export default function BannerModal({
           data: formData,
         });
         getComponents();
-        toast.success(res?.data?.data?.MESSAGE);
+        toast.success(res?.data?.data?.message);
         handleClose();
       },
     });

@@ -42,7 +42,7 @@ const Advertise_add_Modal = ({
         const formData = new FormData();
         if (values?.image) {
           formData.append("image", values.image);
-          formData.append("fk_section_id", "4");
+          formData.append("fkSectionId", "4");
         }
         const res = await apiRequest({
           method: "post",
@@ -50,7 +50,7 @@ const Advertise_add_Modal = ({
           data: formData,
         });
         getComponents();
-        toast.success(res?.data?.data?.MESSAGE);
+        toast.success(res?.data?.data?.message);
         handleClose();
       },
     });

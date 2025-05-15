@@ -175,7 +175,7 @@ const Page = () => {
           try {
             const res = await signalApiCall<{ result: Banners[] }>(
               "get",
-              `/get_all_home_management?fk_section_id=${sectionId}`,
+              `/get_all_home_management?fkSectionId=${sectionId}`,
               undefined,
               { showLoading: true }
             );
