@@ -1,7 +1,9 @@
+// app/layout.tsx or app/layout.ts
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { ToastContainer } from "react-toastify";
+import Providers from "@/_common/provider";
+
 
 export const metadata: Metadata = {
   title: "Grocery",
@@ -16,8 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div>{children}</div>
-        <ToastContainer />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

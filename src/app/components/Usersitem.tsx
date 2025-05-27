@@ -1,3 +1,5 @@
+"use client";
+
 import GreenSwitch from "@/utils/Greenswitch";
 import React from "react";
 import TableLoading from "./TableLoading";
@@ -19,10 +21,9 @@ interface UserData {
 
 interface UsersitemProps {
   user: UserData | null;
-  getUsers: () => Promise<void>;
 }
 
-const Usersitem = ({ user, getUsers }: UsersitemProps) => {
+const Usersitem = ({ user, refetch }: UsersitemProps) => {
   // CHANGE STATUS
   const changeStatus = async (id: string, currentStatus: number) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
@@ -36,7 +37,7 @@ const Usersitem = ({ user, getUsers }: UsersitemProps) => {
 
       if (res?.status === 200) {
         toast.success(res?.data?.data?.message);
-        getUsers();
+        refetch();
       } else {
         toast.error("Status update failed");
       }

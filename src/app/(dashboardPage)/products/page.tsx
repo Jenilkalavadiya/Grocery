@@ -35,7 +35,7 @@ const Product = () => {
   const [page, setPage] = useState<number>(1);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const trimmedSearch = e.target.value.trim();
+    const trimmedSearch = e.target.value;
     setSearch(trimmedSearch);
     setPage(1);
   };

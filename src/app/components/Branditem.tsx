@@ -172,7 +172,7 @@ const Branditem: React.FC<BranditemProps> = ({
                       <DeleteDialog
                         open={open}
                         handleClose={handleClose}
-                        handleDelete={handleDelete}
+                        handleDelete={handleDelete}                                              
                       />
                     )}
                   </div>

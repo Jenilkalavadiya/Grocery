@@ -35,7 +35,6 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 export const apiRequest = ({ method, url, data = {} }: ApiOptions) => {
-
   if (method === "get" || method === "delete") {
     return apiClient[method](url, method === "delete" ? { data } : undefined);
   }
@@ -96,8 +95,6 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,

@@ -28,6 +28,7 @@ import CouponManagementIcon from "../../../public/images/7.svg";
 import HomeManagementIcon from "../../../public/images/8.svg";
 import PagesIcon from "../../../public/images/9.svg";
 import FAQIcon from "../../../public/images/10.svg";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const sidebarItems: SidebarItem[] = [
   { name: "Dashboard", image: DashboardIcon, link: "/dashboard" },
@@ -155,6 +156,8 @@ SidebarItem.displayName = "SidebarItem";
 
 export default function ResponsiveDrawer({ window }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const pathname = usePathname();
 
@@ -174,9 +177,17 @@ export default function ResponsiveDrawer({ window }: Props) {
       <div className="bg-gray-800 h-screen">
         <List disablePadding className="bg-gray-800">
           <div className="sticky top-0 z-50 py-4.5">
-            <Link href="#" className="flex items-center justify-center">
-              <Image src={Grocery} width={150} height={100} alt="Logo" />
-            </Link>
+            <div className="flex items-center ">
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="focus:outline-none ml-3 text-yellow-400 cursor-pointer"
+              >
+                <MenuIcon />
+              </button>
+              <Link href="#" className="flex items-center ml-8 justify-center">
+                <Image src={Grocery} width={150} height={100} alt="Logo" />
+              </Link>
+            </div>
           </div>
 
           <ul className="space-y-4 mb-2 overflow-y-auto text-lg font-medium leading-6 max-h-[calc(100vh-80px)] px-4 text-gray-300 cursor-pointer">
@@ -230,7 +241,7 @@ export default function ResponsiveDrawer({ window }: Props) {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: isSidebarOpen ? { xs: "none", sm: "block" } : "block",
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,

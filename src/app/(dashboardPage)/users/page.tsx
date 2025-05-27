@@ -1,13 +1,14 @@
 "use client";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Usersitem from "@/app/components/Usersitem";
-import { apiRequest } from "@/api/ApiCall";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import Image from "next/image";
 import icon from "../../../../public/images/search.svg";
 import withAuth from "@/protected/withAuth";
+import { useQuery } from "@tanstack/react-query";
+import { getUsers } from "@/_common/commonapi";
 
 interface User {
   User_id: string;
@@ -25,7 +26,7 @@ interface UserData {
 function Users() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [user, setUser] = useState<UserData | null>(null);
+  // const [user, setUser] = useState<UserData | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedSearch = e.target.value.trim();
@@ -33,23 +34,10 @@ function Users() {
     setPage(1);
   };
 
-  // GET USER DETAILS
-  const getUsers = async () => {
-    try {
-      const res = await apiRequest({
-        method: "get",
-        url: `/getusers?pageNumber=${page}&pageLimit=5&search=${search}`,
-      });
-      const data = await res?.data?.data;
-      setUser(data);
-    } catch (error: unknown) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, [page, search]);
+  const { data: user,refetch } = useQuery({
+    queryKey: ["useGetUsers", { page, search }],
+    queryFn: () => getUsers({ page, search }),
+  });
 
   return (
     <div className="text-black h-[calc(100vh-111px)]">
@@ -86,7 +74,7 @@ function Users() {
 
       {/* USERS TABLE************  */}
       <div className=" m-auto mt-3">
-        <Usersitem user={user} getUsers={getUsers} />
+        <Usersitem user={user} refetch={refetch}  />
       </div>
 
       {/* // PAGINATION ******* */}

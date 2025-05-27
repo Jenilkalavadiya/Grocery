@@ -1,11 +1,12 @@
 "use client";
 
-import { apiRequest } from "@/api/ApiCall";
+import { getUserDetails } from "@/_common/commonapi";
 import CustomSeparator from "@/app/components/Bradcrumbs";
 import TableLoading from "@/app/components/TableLoading";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useParams, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Address {
   address_line1: string;
@@ -33,32 +34,18 @@ interface UserDetails {
 const Page = () => {
   const { id } = useParams();
 
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-  const [orders, setOrders] = useState<Order[]>([]);
   const pathname = usePathname();
 
   const isUserDetailsPage = pathname.startsWith("/users/");
 
-  const getUserDetails = async () => {
-    try {
-      const res = await apiRequest({
-        method: "get",
-        url: `/get_user_details?id=${id}`,
-      });
-      if (res?.data) {
-        setUserDetails(res?.data?.data?.result[0]);
-        setOrders(res?.data?.data?.result[0]?.order || []);
-      }
-    } catch (error: unknown) {
-      console.error("Error fetching user details:", error);
-    }
-  };
+ 
+  const { data: userDetails } = useQuery({
+    queryKey: ["userDetails", id],
+    queryFn: () => getUserDetails(id),
+    enabled: !!id, // only run if id is truthy
+  });
 
-  useEffect(() => {
-    getUserDetails();
-  }, [id]);
-
-  
+  const orders = userDetails?.order ?? [];
 
   return (
     <div className="h-[calc(100vh-109px)]">
